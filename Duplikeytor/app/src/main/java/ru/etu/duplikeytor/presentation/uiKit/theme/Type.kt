@@ -6,8 +6,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-// TODO определеить все шрифты из макета сюда
-
 val Typography = Typography(
     // Заголовки экранов
     titleMedium = TextStyle(
