@@ -1,17 +1,20 @@
 package ru.etu.duplikeytor.presentation.navigation.view
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
@@ -27,24 +30,34 @@ internal fun NavigationButton(
     isSelected: State<Boolean>,
     onClick: () -> Unit,
 ) {
-    Box(
+    Box( // TODO use UiKitButton
         modifier = modifier
             .clip(RoundedCornerShape(24.dp))
             .size(64.dp)
-            .colorOnSelected(isSelected)
+            .colorOnSelected(isSelected.value)
             .clickable { onClick() },
+        contentAlignment = Alignment.Center,
     ) {
-        Image(
+        Icon(
             modifier = Modifier.padding(12.dp),
             painter = painterResource(state.iconRes),
+            tint = getIconColor(isSelected.value),
             contentDescription = null,
         )
     }
 }
 
+@ReadOnlyComposable
 @Composable
-private fun Modifier.colorOnSelected(isSelected: State<Boolean>) = this.then(
-    if (isSelected.value) {
+private fun getIconColor(isSelected: Boolean) = when {
+    isSystemInDarkTheme() -> MaterialTheme.colorScheme.onSurface
+    isSelected -> MaterialTheme.colorScheme.onPrimary
+    else -> MaterialTheme.colorScheme.onSurface
+}
+
+@Composable
+private fun Modifier.colorOnSelected(isSelected: Boolean) = this.then(
+    if (isSelected) {
         Modifier.background(MaterialTheme.colorScheme.primary)
     } else {
         Modifier
