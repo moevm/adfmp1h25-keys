@@ -29,7 +29,7 @@ internal fun NavigationBar(
     state: NavigationBarState,
     paddingValues: PaddingValues, // TODO костыль
 ) {
-    val selectedButton = remember { mutableIntStateOf(0) } // TODO remove
+    val selectedButton = remember { mutableIntStateOf(state.initSelectedIndex) }
     val bottomPadding = paddingValues.calculateBottomPadding() // TODO костыль
     Box(
         modifier = modifier
