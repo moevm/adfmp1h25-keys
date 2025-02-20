@@ -52,10 +52,10 @@ val Typography = Typography(
     // Для кнопок
     labelLarge = TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 64.sp,
-        lineHeight = 64.sp,
-        letterSpacing = 0.5.sp,
+        fontWeight = FontWeight.Normal,
+        fontSize = 28.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 1.sp,
     ),
 
     // Для информации на карточках
