@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.dagger.hilt)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -28,11 +30,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "1.8"
     }
     buildFeatures {
         compose = true
@@ -40,7 +42,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -50,9 +51,25 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.core.splashscreen)
-    implementation(libs.dagger)
-    implementation(libs.androidx.navigation.common)
-    implementation(libs.androidx.room.common)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
+
+    //Compose UI Framework
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    //Room DB
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    annotationProcessor(libs.androidx.room.room.compiler)
+    ksp(libs.androidx.room.room.compiler)
+
+    //Dagger-Hilt DI
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+    ksp(libs.androidx.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // tests
     testImplementation(libs.junit)
@@ -60,6 +77,4 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
 }
