@@ -59,14 +59,18 @@ class MainActivity : ComponentActivity() {
                             .background(MaterialTheme.colorScheme.background)
                     ) {
                         val context = LocalContext.current
-                        UiKitButton(
-                            modifier = Modifier.padding(innerPadding),
-                            button = ButtonState.Text(
-                                text = "Продолжить",
-                                color = 0xFFF6C84A
-                            ),
-                            onClick = { Toast.makeText(context, "Братуха привет", Toast.LENGTH_SHORT).show() }
+                        Box(
+                            modifier = Modifier.padding(innerPadding)
                         )
+                        {
+                            UiKitButton(
+                                modifier = Modifier,
+                                button = ButtonState.Text(
+                                    text = "Продолжить",
+                                ),
+                                onClick = { Toast.makeText(context, "Братуха привет", Toast.LENGTH_SHORT).show() }
+                            )
+                        }
                         NavigationBar(
                             modifier = Modifier
                                 .fillMaxWidth()

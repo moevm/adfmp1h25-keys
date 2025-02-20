@@ -30,20 +30,26 @@ fun  UiKitButton(
 ) {
     when(button) {
         is ButtonState.Icon -> ButtonHolder(
-            modifier = modifier.clickable {
-                onClick()
-            },
-            color = button.color,
+            modifier = modifier
+                .background(color = if (button is ButtonState.Icon.Default) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.errorContainer
+                })
+                .clickable {
+                    onClick()
+                },
         ) {
             IconContent(
                 icon = button.icon
             )
         }
         is ButtonState.Text -> ButtonHolder(
-            modifier = modifier.clickable {
-                onClick()
-            },
-            color = button.color,
+            modifier = modifier
+                .background(color = MaterialTheme.colorScheme.secondary)
+                .clickable {
+                    onClick()
+                },
         ) {
             TextContent(
                 text = button.text
@@ -55,15 +61,14 @@ fun  UiKitButton(
 @Composable
 private fun ButtonHolder(
     modifier: Modifier,
-    color: Long,
     content: @Composable (() -> Unit)
 ) {
     Box(
-        modifier = modifier
+        modifier = Modifier
             .clip(RoundedCornerShape(24.dp))
+            .then(modifier)
             .widthIn(min = 64.dp)
-            .requiredHeight(64.dp)
-            .background(color = Color(color)),
+            .requiredHeight(64.dp),
         contentAlignment = Alignment.Center,
     ) {
         content()
@@ -98,12 +103,23 @@ private fun TextContent(
 
 @Preview
 @Composable
-private fun UiKitButtonIconPreview() {
+private fun UiKitButtonDefaultIconPreview() {
     UiKitButton(
         modifier = Modifier,
-        button = ButtonState.Icon(
+        button = ButtonState.Icon.Default(
             icon = R.drawable.ic_key_white,
-            color = 0xFF376CE1
+        ),
+        onClick = { }
+    )
+}
+
+@Preview
+@Composable
+private fun UiKitButtonWarningIconPreview() {
+    UiKitButton(
+        modifier = Modifier,
+        button = ButtonState.Icon.Warning(
+            icon = R.drawable.ic_trash_black,
         ),
         onClick = { }
     )
@@ -116,7 +132,6 @@ private fun UiKitButtonTextPreview() {
         modifier = Modifier,
         button = ButtonState.Text(
             text = "Yellow",
-            color = 0xFFF6C84A
         ),
         onClick = { }
     )
