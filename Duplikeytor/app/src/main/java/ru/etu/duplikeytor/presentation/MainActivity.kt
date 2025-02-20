@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Alignment
@@ -16,6 +17,8 @@ import ru.etu.duplikeytor.R
 import ru.etu.duplikeytor.presentation.navigation.model.NavigationBarState
 import ru.etu.duplikeytor.presentation.navigation.model.NavigationButtonState
 import ru.etu.duplikeytor.presentation.navigation.view.NavigationBar
+import ru.etu.duplikeytor.presentation.uiKit.button.ButtonState
+import ru.etu.duplikeytor.presentation.uiKit.button.UiKitButton
 import ru.etu.duplikeytor.presentation.uiKit.theme.Theme
 
 class MainActivity : ComponentActivity() {
@@ -53,6 +56,13 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .background(MaterialTheme.colorScheme.background)
                     ) {
+                        UiKitButton(
+                            modifier = Modifier.padding(innerPadding),
+                            button = ButtonState.Text(
+                                text = "Продолжить",
+                                color = 0xFFF6C84A
+                            )
+                        )
                         NavigationBar(
                             modifier = Modifier
                                 .fillMaxWidth()
