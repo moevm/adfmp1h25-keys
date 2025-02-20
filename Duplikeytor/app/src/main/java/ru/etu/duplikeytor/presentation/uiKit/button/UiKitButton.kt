@@ -1,6 +1,7 @@
 package ru.etu.duplikeytor.presentation.uiKit.button
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
@@ -25,10 +26,13 @@ import ru.etu.duplikeytor.R
 fun  UiKitButton(
     modifier: Modifier,
     button: ButtonState,
+    onClick: () -> Unit
 ) {
     when(button) {
         is ButtonState.Icon -> ButtonHolder(
-            modifier = modifier,
+            modifier = modifier.clickable {
+                onClick()
+            },
             color = button.color,
         ) {
             IconContent(
@@ -36,7 +40,9 @@ fun  UiKitButton(
             )
         }
         is ButtonState.Text -> ButtonHolder(
-            modifier = modifier,
+            modifier = modifier.clickable {
+                onClick()
+            },
             color = button.color,
         ) {
             TextContent(
@@ -98,7 +104,8 @@ private fun UiKitButtonIconPreview() {
         button = ButtonState.Icon(
             icon = R.drawable.ic_key_white,
             color = 0xFF376CE1
-        )
+        ),
+        onClick = { }
     )
 }
 
@@ -110,6 +117,7 @@ private fun UiKitButtonTextPreview() {
         button = ButtonState.Text(
             text = "Yellow",
             color = 0xFFF6C84A
-        )
+        ),
+        onClick = { }
     )
 }

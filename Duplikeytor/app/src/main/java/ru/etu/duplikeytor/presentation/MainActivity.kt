@@ -1,6 +1,7 @@
 package ru.etu.duplikeytor.presentation
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -13,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import ru.etu.duplikeytor.R
 import ru.etu.duplikeytor.presentation.navigation.model.NavigationBarState
 import ru.etu.duplikeytor.presentation.navigation.model.NavigationButtonState
@@ -56,12 +58,14 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .background(MaterialTheme.colorScheme.background)
                     ) {
+                        val context = LocalContext.current
                         UiKitButton(
                             modifier = Modifier.padding(innerPadding),
                             button = ButtonState.Text(
                                 text = "Продолжить",
                                 color = 0xFFF6C84A
-                            )
+                            ),
+                            onClick = { Toast.makeText(context, "Братуха привет", Toast.LENGTH_SHORT).show() }
                         )
                         NavigationBar(
                             modifier = Modifier
