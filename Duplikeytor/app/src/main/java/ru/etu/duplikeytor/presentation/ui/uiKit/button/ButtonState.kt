@@ -1,4 +1,4 @@
-package ru.etu.duplikeytor.presentation.uiKit.button
+package ru.etu.duplikeytor.presentation.ui.uiKit.button
 
 sealed interface ButtonState {
 

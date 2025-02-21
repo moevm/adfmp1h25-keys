@@ -1,4 +1,4 @@
-package ru.etu.duplikeytor.presentation.uiKit.button
+package ru.etu.duplikeytor.presentation.ui.uiKit.button
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
