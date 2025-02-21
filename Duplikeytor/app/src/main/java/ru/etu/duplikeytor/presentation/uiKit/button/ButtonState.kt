@@ -7,6 +7,7 @@ sealed interface ButtonState {
 
         data class Default(override val icon: Int) : Icon
         data class Warning(override val icon: Int) : Icon
+        data class Navigation(override val icon: Int, val isSelected: Boolean = false) : Icon
     }
     data class Text(val text: String) : ButtonState
 }

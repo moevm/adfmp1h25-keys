@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import ru.etu.duplikeytor.R
 import ru.etu.duplikeytor.presentation.navigation.model.NavigationBarState
-import ru.etu.duplikeytor.presentation.navigation.model.NavigationButtonState
 import ru.etu.duplikeytor.presentation.navigation.view.NavigationBar
 import ru.etu.duplikeytor.presentation.uiKit.button.ButtonState
 import ru.etu.duplikeytor.presentation.uiKit.button.UiKitButton
@@ -30,17 +29,14 @@ class MainActivity : ComponentActivity() {
     // TODO use navBarBuilder
     private val navigationBarState = NavigationBarState(
         buttons = listOf(
-            NavigationButtonState(
-                iconRes = R.drawable.ic_key_white,
-                onClick = {},
+            ButtonState.Icon.Navigation(
+                icon = R.drawable.ic_key_white,
             ),
-            NavigationButtonState(
-                iconRes = R.drawable.ic_saved_white,
-                onClick = {},
+            ButtonState.Icon.Navigation(
+                icon = R.drawable.ic_saved_white,
             ),
-            NavigationButtonState(
-                iconRes = R.drawable.ic_about_white,
-                onClick = {},
+            ButtonState.Icon.Navigation(
+                icon = R.drawable.ic_about_white,
             )
         )
     )
