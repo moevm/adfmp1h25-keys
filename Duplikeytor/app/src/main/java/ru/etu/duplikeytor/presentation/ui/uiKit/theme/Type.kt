@@ -20,9 +20,9 @@ val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Medium,
-        fontSize = 64.sp,
-        lineHeight = 64.sp,
-        letterSpacing = 0.5.sp,
+        fontSize = 28.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 1.sp,
     ),
     bodyMedium = TextStyle(
         fontFamily = FontFamily.Default,
