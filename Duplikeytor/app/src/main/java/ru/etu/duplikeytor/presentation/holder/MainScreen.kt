@@ -1,4 +1,4 @@
-package ru.etu.duplikeytor.presentation
+package ru.etu.duplikeytor.presentation.holder
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Scaffold

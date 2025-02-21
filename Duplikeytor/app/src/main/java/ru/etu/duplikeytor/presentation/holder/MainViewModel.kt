@@ -1,4 +1,4 @@
-package ru.etu.duplikeytor.presentation
+package ru.etu.duplikeytor.presentation.holder
 
 import androidx.lifecycle.ViewModel
 import javax.inject.Inject

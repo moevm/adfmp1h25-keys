@@ -1,4 +1,4 @@
-package ru.etu.duplikeytor.presentation
+package ru.etu.duplikeytor.presentation.holder
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
