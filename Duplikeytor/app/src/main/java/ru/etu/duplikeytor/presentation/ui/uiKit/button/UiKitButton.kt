@@ -2,7 +2,6 @@ package ru.etu.duplikeytor.presentation.ui.uiKit.button
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
