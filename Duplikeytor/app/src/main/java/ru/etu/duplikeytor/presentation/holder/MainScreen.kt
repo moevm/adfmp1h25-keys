@@ -10,6 +10,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import ru.etu.duplikeytor.domain.navigation.NavigationHandler
 import ru.etu.duplikeytor.presentation.navigation.model.NavigationBarState
 import ru.etu.duplikeytor.presentation.navigation.model.ScreenType
 import ru.etu.duplikeytor.presentation.navigation.view.NavigationBar
@@ -21,6 +22,7 @@ import ru.etu.duplikeytor.presentation.ui.utils.toDp
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
+    val navigationHandler = remember { NavigationHandler(navController) }
     val navigationPaddingPx = remember { mutableIntStateOf(0) }
     Scaffold(
         bottomBar = {
@@ -29,19 +31,16 @@ fun MainScreen() {
                     navigationPaddingPx.intValue = layoutCoordinates.size.height
                 },
                 onClick = { targetRoute ->
-                    val currentRoute = navController.currentBackStackEntry?.destination?.route
-                    if (currentRoute != targetRoute.route) {
-                        navController.navigate(targetRoute.route)
-                    }
+                    navigationHandler.navigateToScreen(targetRoute)
                 },
                 state = NavigationBarState.build(),
             )
         }
-    ) { ip -> ip.toString()
+    ) { innerPadding -> innerPadding.toString() // пока что не используем
         NavHost(
             modifier = Modifier,
             navController = navController,
-            startDestination = ScreenType.CREATE.route,
+            startDestination = ScreenType.main.route,
         ) {
             composable(ScreenType.CREATE.route) {
                 CreateScreen(
