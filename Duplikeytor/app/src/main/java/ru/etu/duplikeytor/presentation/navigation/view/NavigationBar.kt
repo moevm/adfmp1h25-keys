@@ -21,7 +21,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.etu.duplikeytor.R
 import ru.etu.duplikeytor.presentation.navigation.model.NavigationBarState
-import ru.etu.duplikeytor.presentation.navigation.model.NavigationButtonState
+import ru.etu.duplikeytor.presentation.uiKit.button.ButtonState
+import ru.etu.duplikeytor.presentation.uiKit.button.UiKitButton
 
 @Composable
 internal fun NavigationBar(
@@ -50,11 +51,15 @@ internal fun NavigationBar(
                         index == selectedButton.intValue
                     }
                 }
-                NavigationButton(
+                UiKitButton(
                     modifier = Modifier,
-                    state = buttonState,
-                    onClick = { selectedButton.intValue = index },
-                    isSelected = isSelected,
+                    button = ButtonState.Icon.Navigation(
+                        icon = buttonState.icon,
+                        isSelected = isSelected.value,
+                    ),
+                    onClick = {
+                        selectedButton.intValue = index
+                    },
                 )
             }
         }
@@ -68,17 +73,14 @@ private fun NavigationBarPreview() {
         modifier = Modifier,
         state = NavigationBarState(
             buttons = listOf(
-                NavigationButtonState(
-                    iconRes = R.drawable.ic_key_white,
-                    onClick = {},
+                ButtonState.Icon.Navigation(
+                    icon = R.drawable.ic_key_black,
                 ),
-                NavigationButtonState(
-                    iconRes = R.drawable.ic_saved_white,
-                    onClick = {},
+                ButtonState.Icon.Navigation(
+                    icon = R.drawable.ic_saved_black,
                 ),
-                NavigationButtonState(
-                    iconRes = R.drawable.ic_about_white,
-                    onClick = {},
+                ButtonState.Icon.Navigation(
+                    icon = R.drawable.ic_about_black,
                 )
             )
         ),

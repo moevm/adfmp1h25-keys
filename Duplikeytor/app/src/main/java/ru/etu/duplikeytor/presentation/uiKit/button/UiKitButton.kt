@@ -2,6 +2,7 @@ package ru.etu.duplikeytor.presentation.uiKit.button
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
@@ -16,10 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import ru.etu.duplikeytor.R
 
 @Composable
@@ -29,32 +28,74 @@ fun  UiKitButton(
     onClick: () -> Unit
 ) {
     when(button) {
-        is ButtonState.Icon -> ButtonHolder(
-            modifier = modifier
-                .background(color = if (button is ButtonState.Icon.Default) {
-                    MaterialTheme.colorScheme.primary
-                } else {
-                    MaterialTheme.colorScheme.errorContainer
-                })
-                .clickable {
-                    onClick()
-                },
-        ) {
-            IconContent(
-                icon = button.icon
+        is ButtonState.Icon -> {
+            UiKitIconButton(
+                modifier = modifier,
+                button = button,
+                onClick = onClick
             )
         }
-        is ButtonState.Text -> ButtonHolder(
-            modifier = modifier
-                .background(color = MaterialTheme.colorScheme.secondary)
-                .clickable {
-                    onClick()
-                },
-        ) {
-            TextContent(
-                text = button.text
+        is ButtonState.Text -> {
+            UiKitTextButton(
+                modifier = modifier,
+                button = button,
+                onClick = onClick
             )
         }
+    }
+}
+
+@Composable
+private fun UiKitIconButton(
+    modifier: Modifier,
+    button: ButtonState.Icon,
+    onClick: () -> Unit,
+) {
+    val (color, iconColor) = when (button) {
+        is ButtonState.Icon.Default -> {
+            MaterialTheme.colorScheme.primary to Color.Unspecified
+        }
+        is ButtonState.Icon.Warning -> {
+            MaterialTheme.colorScheme.errorContainer to Color.Unspecified
+        }
+        is ButtonState.Icon.Navigation -> {
+            if (button.isSelected) {
+                MaterialTheme.colorScheme.primary to MaterialTheme.colorScheme.onPrimary
+            } else {
+                Color.Transparent to MaterialTheme.colorScheme.onSurface
+            }
+        }
+    }
+    ButtonHolder(
+        modifier = modifier
+            .background(color = color)
+            .clickable {
+                onClick()
+            },
+    ) {
+        IconContent(
+            icon = button.icon,
+            iconColor = iconColor
+        )
+    }
+}
+
+@Composable
+private fun UiKitTextButton(
+    modifier: Modifier,
+    button: ButtonState.Text,
+    onClick: () -> Unit,
+) {
+    ButtonHolder(
+        modifier = modifier
+            .background(color = MaterialTheme.colorScheme.secondary)
+            .clickable {
+                onClick()
+            },
+    ) {
+        TextContent(
+            text = button.text
+        )
     }
 }
 
@@ -79,11 +120,12 @@ private fun ButtonHolder(
 private fun IconContent(
     modifier: Modifier = Modifier,
     icon: Int,
+    iconColor: Color = Color.Unspecified,
 ) {
     Icon(
         modifier = modifier.padding(12.dp),
         painter = painterResource(icon),
-        tint = Color.Unspecified,
+        tint = iconColor,
         contentDescription = null,
     )
 }
