@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,7 +25,7 @@ import ru.etu.duplikeytor.presentation.uiKit.theme.Theme
 
 class MainActivity : ComponentActivity() {
 
-    // TODO provide ViewModel
+    private val viewModel by viewModels<MainViewModel>()
 
     // TODO use navBarBuilder
     private val navigationBarState = NavigationBarState(
