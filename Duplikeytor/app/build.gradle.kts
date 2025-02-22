@@ -58,6 +58,10 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
+    // COIL
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
     //Room DB
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)

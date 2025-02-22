@@ -59,6 +59,7 @@ fun MainScreen() {
             composable(ScreenType.ABOUT.route) {
                 AboutScreen(
                     contentPadding = PaddingValues(
+                        top = innerPadding.calculateTopPadding(),
                         bottom = navigationPaddingPx.intValue.toDp(),
                     )
                 )
