@@ -1,7 +1,5 @@
 package ru.etu.duplikeytor.presentation.screens
 
-import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Canvas
@@ -30,8 +28,8 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 
@@ -50,7 +48,7 @@ fun AboutScreen(
         Developer(
             "Ajems",
             "https://github.com/Ajems",
-            "https://avatars.githubusercontent.com/u/69160992?v=4"
+            "https://avatars.githubusercontent.com/u/70469206?v=4"
         ),
         Developer(
             "1that",
@@ -63,6 +61,7 @@ fun AboutScreen(
             "https://avatars.githubusercontent.com/u/90792387?v=4"
         )
     )
+    val moevmUrl = "https://se.moevm.info/doku.php/start"
     Column(
         modifier
             .fillMaxSize()
@@ -80,14 +79,15 @@ fun AboutScreen(
             style = MaterialTheme.typography.bodyMedium,
         )
         val uriHandler = LocalUriHandler.current
-        developers.forEach { developer ->
-            DeveloperTile(
-                modifier = Modifier
-                    .clickable { uriHandler.openUri(developer.githubUrl) },
-                developerPhoto = developer.photoUrl,
-                developerName = developer.nickname,
-            )
-        }
+        DeveloperTileList(
+            developers = developers,
+            uriHandler = uriHandler,
+        )
+        DepartmentLink(
+            modifier = Modifier.weight(1f),
+            uriHandler = uriHandler,
+            moevmUrl = moevmUrl,
+        )
     }
 }
 
@@ -125,6 +125,44 @@ private fun DeveloperTile(
             text = developerName,
             textAlign = TextAlign.Start,
             style = MaterialTheme.typography.bodyLarge,
+        )
+    }
+}
+
+@Composable
+private fun DeveloperTileList(
+    developers: List<Developer>,
+    uriHandler: UriHandler,
+) {
+    developers.forEach { developer ->
+        DeveloperTile(
+            modifier = Modifier
+                .clickable { uriHandler.openUri(developer.githubUrl) },
+            developerPhoto = developer.photoUrl,
+            developerName = developer.nickname,
+        )
+    }
+}
+
+@Composable
+private fun DepartmentLink(
+    modifier: Modifier,
+    uriHandler: UriHandler,
+    moevmUrl: String,
+) {
+    Box(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Text(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 5.dp)
+                .clickable { uriHandler.openUri(moevmUrl) }
+                .alpha(0.5f),
+            text = "ETU MOEVM",
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onBackground
         )
     }
 }
