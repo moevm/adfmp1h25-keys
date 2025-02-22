@@ -13,7 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScaffoldDefaults.contentWindowInsets
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,42 +26,55 @@ import ru.etu.duplikeytor.presentation.ui.uiKit.button.UiKitButton
 @Composable
 internal fun NavigationBar(
     modifier: Modifier = Modifier,
-    onClick: (ScreenType) -> Unit,
     state: NavigationBarState,
+    currentScreen: () -> ScreenType,
+    onClick: (ScreenType) -> Unit,
 ) {
-    val selectedButton = remember { mutableIntStateOf(state.initSelectedIndex) }
     val bottomPadding = contentWindowInsets.asPaddingValues().calculateBottomPadding()
     Box(
         modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface),
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = bottomPadding)
-                .requiredHeight(80.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            state.buttons.forEachIndexed { index, (buttonState, route) ->
-                val isSelected = remember {
-                    derivedStateOf {
-                        index == selectedButton.intValue
-                    }
+        NavigationControl(
+            modifier = Modifier.padding(bottom = bottomPadding),
+            state = state,
+            currentScreen = currentScreen,
+            onClick = onClick,
+        )
+    }
+}
+
+@Composable
+private fun NavigationControl(
+    modifier: Modifier,
+    state: NavigationBarState,
+    currentScreen: () -> ScreenType,
+    onClick: (ScreenType) -> Unit,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .requiredHeight(80.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        state.buttons.forEach { (buttonState, screen) ->
+            val isSelected = remember {
+                derivedStateOf {
+                    screen == currentScreen()
                 }
-                UiKitButton(
-                    modifier = Modifier,
-                    button = ButtonState.Icon.Navigation(
-                        icon = buttonState.icon,
-                        isSelected = isSelected.value,
-                    ),
-                    onClick = {
-                        onClick(route)
-                        selectedButton.intValue = index
-                    },
-                )
             }
+            UiKitButton(
+                modifier = Modifier,
+                button = ButtonState.Icon.Navigation(
+                    icon = buttonState.icon,
+                    isSelected = isSelected.value,
+                ),
+                onClick = {
+                    onClick(screen)
+                },
+            )
         }
     }
 }
@@ -73,5 +85,6 @@ private fun NavigationBarPreview() {
     NavigationBar(
         onClick = {},
         state = NavigationBarState.build(),
+        currentScreen = { ScreenType.main },
     )
 }
