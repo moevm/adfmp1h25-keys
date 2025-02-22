@@ -27,9 +27,9 @@ val Typography = Typography(
     bodyMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Medium,
-        fontSize = 48.sp,
-        lineHeight = 48.sp,
-        letterSpacing = 0.5.sp,
+        fontSize = 20.sp,
+        lineHeight = 20.sp,
+        letterSpacing = 1.sp,
     ),
 
     // Для формата ключа
@@ -62,8 +62,8 @@ val Typography = Typography(
     labelMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
-        fontSize = 32.sp,
-        lineHeight = 32.sp,
-        letterSpacing = 0.5.sp,
+        fontSize = 16.sp,
+        lineHeight = 16.sp,
+        letterSpacing = 1.sp,
     )
 )
