@@ -1,4 +1,4 @@
-package ru.etu.duplikeytor.presentation.screens
+package ru.etu.duplikeytor.presentation.about
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,36 +32,16 @@ import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-
-private data class Developer(
-    val nickname: String,
-    val githubUrl: String,
-    val photoUrl: String
-)
+import ru.etu.duplikeytor.presentation.about.model.AboutScreenState
+import ru.etu.duplikeytor.presentation.about.model.DepartmentState
+import ru.etu.duplikeytor.presentation.about.model.DeveloperState
 
 @Composable
-fun AboutScreen(
+internal fun AboutScreen(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues,
+    state: AboutScreenState,
 ) {
-    val developers = listOf(
-        Developer(
-            "Ajems",
-            "https://github.com/Ajems",
-            "https://avatars.githubusercontent.com/u/70469206?v=4"
-        ),
-        Developer(
-            "1that",
-            "https://github.com/1that",
-            "https://avatars.githubusercontent.com/u/90708652?v=4"
-        ),
-        Developer(
-            "D1mitrii",
-            "https://github.com/D1mitrii",
-            "https://avatars.githubusercontent.com/u/90792387?v=4"
-        )
-    )
-    val moevmUrl = "https://se.moevm.info/doku.php/start"
     Column(
         modifier
             .fillMaxSize()
@@ -80,13 +60,13 @@ fun AboutScreen(
         )
         val uriHandler = LocalUriHandler.current
         DeveloperTileList(
-            developers = developers,
+            developers = state.developers,
             uriHandler = uriHandler,
         )
         DepartmentLink(
             modifier = Modifier.weight(1f),
             uriHandler = uriHandler,
-            moevmUrl = moevmUrl,
+            state = state.department,
         )
     }
 }
@@ -131,7 +111,7 @@ private fun DeveloperTile(
 
 @Composable
 private fun DeveloperTileList(
-    developers: List<Developer>,
+    developers: List<DeveloperState>,
     uriHandler: UriHandler,
 ) {
     developers.forEach { developer ->
@@ -148,7 +128,7 @@ private fun DeveloperTileList(
 private fun DepartmentLink(
     modifier: Modifier,
     uriHandler: UriHandler,
-    moevmUrl: String,
+    state: DepartmentState,
 ) {
     Box(
         modifier = modifier.fillMaxWidth()
@@ -157,9 +137,9 @@ private fun DepartmentLink(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 5.dp)
-                .clickable { uriHandler.openUri(moevmUrl) }
+                .clickable { uriHandler.openUri(state.uri) }
                 .alpha(0.5f),
-            text = "ETU MOEVM",
+            text = state.name,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onBackground

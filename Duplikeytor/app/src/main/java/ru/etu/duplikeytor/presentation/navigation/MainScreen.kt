@@ -1,27 +1,33 @@
-package ru.etu.duplikeytor.presentation.holder
+package ru.etu.duplikeytor.presentation.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ru.etu.duplikeytor.domain.navigation.NavigationHandler
+import ru.etu.duplikeytor.presentation.about.AboutFragment
+import ru.etu.duplikeytor.presentation.archive.ArchiveFragment
+import ru.etu.duplikeytor.presentation.create.CreateFragment
 import ru.etu.duplikeytor.presentation.navigation.model.NavigationBarState
 import ru.etu.duplikeytor.presentation.navigation.model.ScreenType
-import ru.etu.duplikeytor.presentation.navigation.view.NavigationBar
-import ru.etu.duplikeytor.presentation.screens.AboutScreen
-import ru.etu.duplikeytor.presentation.screens.ArchiveScreen
-import ru.etu.duplikeytor.presentation.screens.CreateScreen
+import ru.etu.duplikeytor.presentation.navigation.navbar.NavigationBar
 import ru.etu.duplikeytor.presentation.ui.utils.toDp
 
 @Composable
 fun MainScreen(
     onScreenChanged: (ScreenType) -> Unit,
+    onLifecycleEvent: (Lifecycle. Event) -> Unit,
 ) {
     val navController = rememberNavController()
     val navigationHandler = remember {
@@ -30,6 +36,7 @@ fun MainScreen(
             onScreenChanged = onScreenChanged,
         )
     }
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     val navigationPaddingPx = remember { mutableIntStateOf(0) }
     Scaffold(
@@ -52,21 +59,24 @@ fun MainScreen(
             startDestination = ScreenType.main.route,
         ) {
             composable(ScreenType.CREATE.route) {
-                CreateScreen(
+                CreateFragment(
+                    viewModel = hiltViewModel(),
                     contentPadding = PaddingValues(
                         bottom = navigationPaddingPx.intValue.toDp(),
                     )
                 )
             }
             composable(ScreenType.ARCHIVE.route) {
-                ArchiveScreen(
+                ArchiveFragment(
+                    viewModel = hiltViewModel(),
                     contentPadding = PaddingValues(
                         bottom = navigationPaddingPx.intValue.toDp(),
                     )
                 )
             }
             composable(ScreenType.ABOUT.route) {
-                AboutScreen(
+                AboutFragment(
+                    viewModel = hiltViewModel(),
                     contentPadding = PaddingValues(
                         top = innerPadding.calculateTopPadding(),
                         bottom = navigationPaddingPx.intValue.toDp(),
@@ -74,5 +84,11 @@ fun MainScreen(
                 )
             }
         }
+    }
+
+    LaunchedEffect(Unit) {
+        lifecycleOwner.lifecycle.addObserver(LifecycleEventObserver { _, event ->
+            onLifecycleEvent(event)
+        })
     }
 }

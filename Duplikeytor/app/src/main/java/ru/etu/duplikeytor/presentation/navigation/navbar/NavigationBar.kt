@@ -1,4 +1,4 @@
-package ru.etu.duplikeytor.presentation.navigation.view
+package ru.etu.duplikeytor.presentation.navigation.navbar
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background

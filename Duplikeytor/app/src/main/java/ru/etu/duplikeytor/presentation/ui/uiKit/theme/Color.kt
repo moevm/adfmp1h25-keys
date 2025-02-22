@@ -11,5 +11,5 @@ val DarkGrey = Color(0xFF141414)
 val LightGrey = Color(0xFF1E1E1E)
 
 val FillWhite = Color(0xFFFFFFFF)
-val NighWhite = Color(0xFFFAFAFA)
+val NighWhite = Color(0xFFF0F0F0)
 val FadeWhite = Color(0xFFE6E6E6)
