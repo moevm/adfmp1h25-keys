@@ -1,4 +1,4 @@
-package ru.etu.duplikeytor.presentation.screens
+package ru.etu.duplikeytor.presentation.archive
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
