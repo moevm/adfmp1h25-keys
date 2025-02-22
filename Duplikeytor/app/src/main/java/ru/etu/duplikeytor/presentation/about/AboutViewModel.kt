@@ -37,6 +37,10 @@ internal class AboutViewModel @Inject constructor() : ViewModel() {
         )
     ))
 
+    private val emoji = listOf(
+        "(◕◡◕)", "(◑◡◑)", "(◔◡◔)", "(○◡○)", "(◔◡◔)", "(◑◡◑)", "(◕◡◕)", "(●◡●)",
+    )
+
     val state: StateFlow<AboutScreenState> = _state
 
     init {
@@ -48,17 +52,17 @@ internal class AboutViewModel @Inject constructor() : ViewModel() {
             var secondsLeft = 0
             while (true) {
                 changeDepartment(secondsLeft)
-                delay(1000L)
+                delay(500L)
                 secondsLeft++
+                if (secondsLeft == Int.MAX_VALUE) secondsLeft = 0
             }
         }
     }
 
-
     private fun changeDepartment(secondsLeft: Int) {
         _state.value = _state.value.copy(
             department = DepartmentState(
-                name = "ETU MOEVM ${secondsLeft}",
+                name = "ETU MOEVM\t" + emoji[secondsLeft % emoji.size],
                 uri = "https://se.moevm.info/doku.php/start",
             )
         )
