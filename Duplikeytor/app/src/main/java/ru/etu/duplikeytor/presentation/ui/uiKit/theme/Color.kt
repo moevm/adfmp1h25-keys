@@ -1,4 +1,4 @@
-package ru.etu.duplikeytor.presentation.uiKit.theme
+package ru.etu.duplikeytor.presentation.ui.uiKit.theme
 
 import androidx.compose.ui.graphics.Color
 

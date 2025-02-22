@@ -1,4 +1,4 @@
-package ru.etu.duplikeytor.presentation.uiKit.theme
+package ru.etu.duplikeytor.presentation.ui.uiKit.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
@@ -20,9 +20,9 @@ val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Medium,
-        fontSize = 64.sp,
-        lineHeight = 64.sp,
-        letterSpacing = 0.5.sp,
+        fontSize = 28.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 1.sp,
     ),
     bodyMedium = TextStyle(
         fontFamily = FontFamily.Default,
