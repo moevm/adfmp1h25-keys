@@ -5,28 +5,21 @@ import ru.etu.duplikeytor.presentation.ui.uiKit.button.ButtonState
 
 data class NavigationBarState(
     val buttons: List<NavigationState>,
-    val initSelectedIndex: Int = 0,
 ) {
     companion object {
         fun build() = NavigationBarState(
             listOf(
                 NavigationState(
-                    ButtonState.Icon.Navigation(
-                        icon = R.drawable.ic_key_black,
-                    ),
-                    ScreenType.CREATE,
+                    button = ButtonState.Icon.Navigation(R.drawable.ic_key_black),
+                    screen = ScreenType.CREATE,
                 ),
                 NavigationState(
-                    ButtonState.Icon.Navigation(
-                        icon = R.drawable.ic_saved_black,
-                    ),
-                    ScreenType.ARCHIVE,
+                    button = ButtonState.Icon.Navigation(R.drawable.ic_saved_black),
+                    screen = ScreenType.ARCHIVE,
                 ),
                 NavigationState(
-                    ButtonState.Icon.Navigation(
-                        icon = R.drawable.ic_about_black,
-                    ),
-                    ScreenType.ABOUT,
+                    button = ButtonState.Icon.Navigation(R.drawable.ic_about_black),
+                    screen = ScreenType.ABOUT,
                 )
             )
         )

@@ -1,11 +1,27 @@
 package ru.etu.duplikeytor.domain.navigation
 
-import androidx.navigation.NavController
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.navigation.NavHostController
 import ru.etu.duplikeytor.presentation.navigation.model.ScreenType
 
 class NavigationHandler(
-    private val navController: NavController,
+    private val navController: NavHostController,
+    private val onScreenChanged: (ScreenType) -> Unit,
 ) {
+    private val _currentScreen = mutableStateOf(ScreenType.CREATE)
+    val currentScreen: State<ScreenType> = _currentScreen
+    val controller = navController
+
+    init {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            ScreenType.entries.firstOrNull { it.route == destination.route }?.let { screen ->
+                _currentScreen.value = screen
+                onScreenChanged(screen)
+            }
+        }
+    }
+
     fun navigateToScreen(screen: ScreenType) {
         val currentDestination = navController.currentDestination?.route
         if (currentDestination == screen.route) return
@@ -17,5 +33,6 @@ class NavigationHandler(
             launchSingleTop = true
             restoreState = true
         }
+        onScreenChanged(screen)
     }
 }

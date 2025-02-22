@@ -16,7 +16,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Theme {
-                MainScreen()
+                MainScreen(
+                    onScreenChanged = viewModel::onScreenChanged,
+                )
             }
         }
     }

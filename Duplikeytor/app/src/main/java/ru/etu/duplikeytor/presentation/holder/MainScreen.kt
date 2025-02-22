@@ -20,9 +20,17 @@ import ru.etu.duplikeytor.presentation.screens.CreateScreen
 import ru.etu.duplikeytor.presentation.ui.utils.toDp
 
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    onScreenChanged: (ScreenType) -> Unit,
+) {
     val navController = rememberNavController()
-    val navigationHandler = remember { NavigationHandler(navController) }
+    val navigationHandler = remember {
+        NavigationHandler(
+            navController = navController,
+            onScreenChanged = onScreenChanged,
+        )
+    }
+
     val navigationPaddingPx = remember { mutableIntStateOf(0) }
     Scaffold(
         bottomBar = {
@@ -30,16 +38,17 @@ fun MainScreen() {
                 modifier = Modifier.onGloballyPositioned { layoutCoordinates ->
                     navigationPaddingPx.intValue = layoutCoordinates.size.height
                 },
+                currentScreen = { navigationHandler.currentScreen.value },
+                state = NavigationBarState.build(),
                 onClick = { targetRoute ->
                     navigationHandler.navigateToScreen(targetRoute)
                 },
-                state = NavigationBarState.build(),
             )
         }
-    ) { innerPadding -> innerPadding.toString() // пока что не используем
+    ) { innerPadding -> innerPadding.toString()
         NavHost(
             modifier = Modifier,
-            navController = navController,
+            navController = navigationHandler.controller,
             startDestination = ScreenType.main.route,
         ) {
             composable(ScreenType.CREATE.route) {
