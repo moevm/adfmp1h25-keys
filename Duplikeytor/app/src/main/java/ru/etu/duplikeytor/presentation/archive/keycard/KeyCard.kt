@@ -2,11 +2,12 @@ package ru.etu.duplikeytor.presentation.archive.keycard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,29 +22,33 @@ import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 
 @Composable
 internal fun KeyCard(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     state: KeyCardState,
+    onClick: (KeyCardState) -> Unit,
 ) {
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(40.dp))
+            .clip(RoundedCornerShape(20.dp))
             .border(
                 width = 1.dp,
                 color = MaterialTheme.colorScheme.primary,
-                shape = RoundedCornerShape(40.dp),
+                shape = RoundedCornerShape(20.dp),
             )
             .background(
                 color = MaterialTheme.colorScheme.surface
             )
             .requiredHeight(height = 200.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable { onClick(state) },
     ){
         Column(
             modifier = Modifier
@@ -57,6 +62,7 @@ internal fun KeyCard(
                 contentDescription = null,
                 error = placeholder,
                 placeholder = placeholder,
+                contentScale = ContentScale.Crop,
             )
             Text(
                 modifier = Modifier.fillMaxWidth(),
@@ -65,10 +71,13 @@ internal fun KeyCard(
                 style = MaterialTheme.typography.labelMedium,
             )
             Text(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
                 text = state.createdAt,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.labelMedium,
+                overflow = TextOverflow.Ellipsis,
             )
         }
     }
@@ -104,6 +113,7 @@ private fun KeyCardPreview() {
             "Ключ от Нью-Йорка",
             "https://avatars.githubusercontent.com/u/90792387?v=4",
             "12.02.2025 - 13:00"
-        )
+        ),
+        onClick = {}
     )
 }

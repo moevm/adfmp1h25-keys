@@ -10,11 +10,11 @@ import javax.inject.Inject
 internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
 
     // переработать логику для разных шагов
-    override val statusBarState: StatusBarState = StatusBarState.Title(
+    override var statusBarState: StatusBarState = StatusBarState.Title(
         title = "Создать ключ",
         requiredDisplay = true,
     )
-    override val navigationBarState: NavigationBarState = NavigationBarState.build()
+    override var navigationBarState: NavigationBarState = NavigationBarState.build()
 
     override val screenType: ScreenType = ScreenType.CREATE
 }

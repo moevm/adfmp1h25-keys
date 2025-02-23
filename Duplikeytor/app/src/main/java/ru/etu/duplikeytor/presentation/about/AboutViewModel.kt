@@ -17,8 +17,8 @@ import javax.inject.Inject
 
 internal class AboutViewModel @Inject constructor() : ViewModel(), Screen {
 
-    override val statusBarState: StatusBarState = StatusBarState.Empty(false)
-    override val navigationBarState: NavigationBarState = NavigationBarState.build()
+    override var statusBarState: StatusBarState = StatusBarState.Empty(false)
+    override var navigationBarState: NavigationBarState = NavigationBarState.build()
     override val screenType: ScreenType = ScreenType.ABOUT
 
     private val _state = MutableStateFlow(AboutScreenState(
