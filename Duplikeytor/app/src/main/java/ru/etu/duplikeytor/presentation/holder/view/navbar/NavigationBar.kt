@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import ru.etu.duplikeytor.presentation.holder.model.navigation.NavigationBarState
+import ru.etu.duplikeytor.presentation.holder.model.navigation.NavigationEvent
 import ru.etu.duplikeytor.presentation.holder.model.navigation.ScreenType
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.ButtonState
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.UiKitButton
@@ -37,7 +38,7 @@ internal fun NavigationBar(
     modifier: Modifier = Modifier,
     state: NavigationBarState,
     currentScreen: () -> ScreenType,
-    onClick: (ScreenType) -> Unit,
+    onEvent: (NavigationEvent) -> Unit,
 ) {
     val bottomPadding = contentWindowInsets.asPaddingValues().calculateBottomPadding()
     val navigationBarHeight = remember { mutableIntStateOf(0) }
@@ -67,7 +68,7 @@ internal fun NavigationBar(
             modifier = Modifier.padding(bottom = bottomPadding),
             state = state,
             currentScreen = currentScreen,
-            onClick = onClick,
+            onEvent = onEvent,
         )
     }
 }
@@ -77,7 +78,7 @@ private fun NavigationControl(
     modifier: Modifier,
     state: NavigationBarState,
     currentScreen: () -> ScreenType,
-    onClick: (ScreenType) -> Unit,
+    onEvent: (NavigationEvent) -> Unit,
 ) {
     Row(
         modifier = modifier
@@ -99,7 +100,7 @@ private fun NavigationControl(
                     isSelected = isSelected.value,
                 ),
                 onClick = {
-                    onClick(screen)
+                    onEvent(NavigationEvent.Click(screen))
                 },
             )
         }
@@ -110,7 +111,7 @@ private fun NavigationControl(
 @Composable
 private fun NavigationBarPreview() {
     NavigationBar(
-        onClick = {},
+        onEvent = {},
         state = NavigationBarState.build(),
         currentScreen = { ScreenType.main },
     )

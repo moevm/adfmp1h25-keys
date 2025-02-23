@@ -18,7 +18,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.flow.StateFlow
-import ru.etu.duplikeytor.presentation.holder.navigation.NavigationHandler
 import ru.etu.duplikeytor.presentation.about.AboutFragment
 import ru.etu.duplikeytor.presentation.about.AboutViewModel
 import ru.etu.duplikeytor.presentation.archive.ArchiveFragment
@@ -26,8 +25,10 @@ import ru.etu.duplikeytor.presentation.archive.ArchiveViewModel
 import ru.etu.duplikeytor.presentation.create.CreateFragment
 import ru.etu.duplikeytor.presentation.create.CreateViewModel
 import ru.etu.duplikeytor.presentation.holder.model.navigation.NavigationBarState
+import ru.etu.duplikeytor.presentation.holder.model.navigation.NavigationEvent
 import ru.etu.duplikeytor.presentation.holder.model.navigation.ScreenType
 import ru.etu.duplikeytor.presentation.holder.model.status.StatusBarState
+import ru.etu.duplikeytor.presentation.holder.navigation.NavigationHandler
 import ru.etu.duplikeytor.presentation.holder.view.navbar.NavigationBar
 import ru.etu.duplikeytor.presentation.holder.view.statusbar.StatusBar
 import ru.etu.duplikeytor.presentation.shared.model.Screen
@@ -73,8 +74,11 @@ internal fun MainScreen(
                 },
                 currentScreen = { navigationHandler.currentScreen.value },
                 state = navigationBarState,
-                onClick = { targetRoute ->
-                    navigationHandler.navigateToScreen(targetRoute)
+                onEvent = { navEvent -> when(navEvent) {
+                        is NavigationEvent.Click -> {
+                            navigationHandler.navigateToScreen(navEvent.targetRoute)
+                        }
+                    }
                 },
             )
         }
