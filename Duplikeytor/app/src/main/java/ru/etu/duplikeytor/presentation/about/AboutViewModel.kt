@@ -9,9 +9,17 @@ import kotlinx.coroutines.launch
 import ru.etu.duplikeytor.presentation.about.model.AboutScreenState
 import ru.etu.duplikeytor.presentation.about.model.DepartmentState
 import ru.etu.duplikeytor.presentation.about.model.DeveloperState
+import ru.etu.duplikeytor.presentation.holder.model.navigation.NavigationBarState
+import ru.etu.duplikeytor.presentation.holder.model.navigation.ScreenType
+import ru.etu.duplikeytor.presentation.holder.model.status.StatusBarState
+import ru.etu.duplikeytor.presentation.shared.model.Screen
 import javax.inject.Inject
 
-internal class AboutViewModel @Inject constructor() : ViewModel() {
+internal class AboutViewModel @Inject constructor() : ViewModel(), Screen {
+
+    override val statusBarState: StatusBarState = StatusBarState.Empty(false)
+    override val navigationBarState: NavigationBarState = NavigationBarState.build()
+    override val screenType: ScreenType = ScreenType.ABOUT
 
     private val _state = MutableStateFlow(AboutScreenState(
         developers = listOf(

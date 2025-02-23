@@ -8,8 +8,10 @@ import androidx.compose.runtime.getValue
 @Composable
 internal fun AboutFragment(
     viewModel: AboutViewModel,
+    onCreate: () -> Unit = {},
     contentPadding: PaddingValues,
 ) {
+    onCreate()
 
     val state by viewModel.state.collectAsState()
 

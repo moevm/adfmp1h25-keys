@@ -6,8 +6,10 @@ import androidx.compose.runtime.Composable
 @Composable
 internal fun ArchiveFragment(
     viewModel: ArchiveViewModel,
+    onCreate: () -> Unit = {},
     contentPadding: PaddingValues,
 ) {
+    onCreate()
     ArchiveScreen(
         contentPadding = contentPadding,
     )

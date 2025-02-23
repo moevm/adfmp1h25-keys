@@ -52,7 +52,6 @@ internal fun AboutScreen(
     ) {
         Text(
             modifier = Modifier
-                .padding(top = 32.dp)
                 .align(Alignment.CenterHorizontally),
             text = "Над приложением работали:",
             textAlign = TextAlign.Center,
