@@ -1,4 +1,4 @@
-package ru.etu.duplikeytor.domain.navigation
+package ru.etu.duplikeytor.presentation.holder.navigation
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf

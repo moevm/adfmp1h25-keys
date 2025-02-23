@@ -18,7 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.flow.StateFlow
-import ru.etu.duplikeytor.domain.navigation.NavigationHandler
+import ru.etu.duplikeytor.presentation.holder.navigation.NavigationHandler
 import ru.etu.duplikeytor.presentation.about.AboutFragment
 import ru.etu.duplikeytor.presentation.about.AboutViewModel
 import ru.etu.duplikeytor.presentation.archive.ArchiveFragment
