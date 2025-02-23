@@ -109,6 +109,7 @@ internal fun MainScreen(
                 ArchiveFragment(
                     viewModel = archiveViewModel,
                     contentPadding = PaddingValues(
+                        top = innerPadding.calculateTopPadding(),
                         bottom = navigationPaddingPx.intValue.toDp(),
                     )
                 )

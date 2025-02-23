@@ -6,6 +6,6 @@ import ru.etu.duplikeytor.presentation.holder.model.status.StatusBarState
 
 interface Screen {
     val screenType: ScreenType
-    val statusBarState: StatusBarState
-    val navigationBarState: NavigationBarState
+    var statusBarState: StatusBarState
+    var navigationBarState: NavigationBarState
 }
