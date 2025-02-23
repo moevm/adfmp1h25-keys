@@ -12,3 +12,7 @@ fun Float.toDp(): Dp = LocalDensity.current.run { toDp() }
 @Composable
 @ReadOnlyComposable
 fun Int.toDp(): Dp = LocalDensity.current.run { toDp() }
+
+@Composable
+@ReadOnlyComposable
+fun Dp.toPx(): Int = with(LocalDensity.current) { toPx().toInt() }
