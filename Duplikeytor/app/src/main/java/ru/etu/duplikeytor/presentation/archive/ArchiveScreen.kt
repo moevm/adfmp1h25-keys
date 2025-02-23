@@ -27,7 +27,7 @@ fun ArchiveScreen(
             modifier = Modifier
                 .align(Alignment.Center)
                 .padding(horizontal = 32.dp),
-            text = "Архиф ключей\nWork In Progress",
+            text = "Work In Progress",
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyLarge,
         )

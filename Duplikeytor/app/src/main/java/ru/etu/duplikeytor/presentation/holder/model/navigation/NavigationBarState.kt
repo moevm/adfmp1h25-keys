@@ -1,10 +1,11 @@
-package ru.etu.duplikeytor.presentation.navigation.model
+package ru.etu.duplikeytor.presentation.holder.model.navigation
 
 import ru.etu.duplikeytor.R
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.ButtonState
 
 data class NavigationBarState(
     val buttons: List<NavigationState>,
+    val requiredDisplay: Boolean = true,
 ) {
     companion object {
         fun build() = NavigationBarState(

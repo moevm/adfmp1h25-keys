@@ -3,7 +3,7 @@ package ru.etu.duplikeytor.domain.navigation
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.NavHostController
-import ru.etu.duplikeytor.presentation.navigation.model.ScreenType
+import ru.etu.duplikeytor.presentation.holder.model.navigation.ScreenType
 
 class NavigationHandler(
     private val navController: NavHostController,

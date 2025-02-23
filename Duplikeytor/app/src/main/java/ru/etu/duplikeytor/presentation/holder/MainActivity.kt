@@ -1,4 +1,4 @@
-package ru.etu.duplikeytor.presentation.navigation
+package ru.etu.duplikeytor.presentation.holder
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -21,6 +21,9 @@ class MainActivity : ComponentActivity() {
                 MainScreen(
                     onScreenChanged = viewModel::onScreenChanged,
                     onLifecycleEvent = viewModel::onLifecycleEvent,
+                    registerScreen = viewModel::registerScreen,
+                    statusBarStateFlow = viewModel.statusBarState,
+                    navigationBarStateFlow = viewModel.navigationBarState,
                 )
             }
         }
