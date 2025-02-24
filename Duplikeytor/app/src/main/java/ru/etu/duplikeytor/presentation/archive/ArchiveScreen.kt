@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.etu.duplikeytor.presentation.archive.keycard.KeyCard
-import ru.etu.duplikeytor.presentation.archive.keycard.KeyCardState
+import ru.etu.duplikeytor.presentation.archive.keycard.KeyState
 import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveState
 
 @Composable
@@ -21,7 +21,7 @@ internal fun ArchiveScreen(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues,
     state: KeyArchiveState.KeysList,
-    onClick: (KeyCardState) -> Unit,
+    onClick: (KeyState) -> Unit,
 ) {
     Box(
         modifier = modifier
