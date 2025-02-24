@@ -1,6 +1,7 @@
 package ru.etu.duplikeytor.presentation.create.view.scale
 
 import androidx.compose.animation.core.EaseInOut
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
@@ -85,7 +86,7 @@ private fun KeyScale(
         val scale = remember { mutableStateOf(1f) }
         val animateScale = animateFloatAsState(
             targetValue = scale.value,
-            animationSpec = tween(durationMillis = 80,  easing = EaseInOut),
+            animationSpec = tween(durationMillis = 80,  easing = LinearEasing),
         )
         Box(
             modifier = Modifier.weight(1f),
