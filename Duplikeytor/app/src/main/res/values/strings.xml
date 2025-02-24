@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Duplikeytor</string>
+    <string name="description_scale_key" translatable="false">
+        Приложите ключ к экрану и сопоставьте с силуэтом.\n
+        Коронка ключа должна полностью лежать внутри
+    </string>
 </resources>
