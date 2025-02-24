@@ -101,6 +101,7 @@ internal fun MainScreen(
                 CreateFragment(
                     viewModel = createViewModel,
                     contentPadding = PaddingValues(
+                        top = innerPadding.calculateTopPadding(),
                         bottom = navigationPaddingPx.intValue.toDp(),
                     )
                 )
