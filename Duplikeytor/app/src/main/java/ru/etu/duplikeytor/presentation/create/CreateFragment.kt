@@ -33,8 +33,11 @@ internal fun CreateFragment(
             ScaleScreen(
                 modifier = Modifier.padding(contentPadding),
                 state = state as CreateScreenState.Scale,
-                onEvent = {} // TODO next issue
+                onEvent = { scale ->
+                    viewModel.onKeyScaled(scale.scale)
+                }
             )
         }
+        is CreateScreenState.Change -> TODO()
     }
 }

@@ -47,7 +47,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import ru.etu.duplikeytor.presentation.create.model.CreateEvent
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
-import ru.etu.duplikeytor.presentation.create.model.chose.KeyChooseState
+import ru.etu.duplikeytor.presentation.create.model.chose.KeyChosenState
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.ButtonState
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.UiKitButton
 import ru.etu.duplikeytor.presentation.ui.utils.toDp
@@ -91,7 +91,7 @@ internal fun ChooseScreen(
 private fun Chooser(
     modifier: Modifier,
     state: CreateScreenState.Choose,
-    onChangeKey: (KeyChooseState) -> Unit,
+    onChangeKey: (KeyChosenState) -> Unit,
 ) {
     val currentKey = remember { mutableStateOf(state.keys.first()) }
     val isUserInteracting = remember { mutableStateOf(false) }

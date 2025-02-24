@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.dp
 import ru.etu.duplikeytor.R
 import ru.etu.duplikeytor.presentation.create.model.CreateEvent
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
-import ru.etu.duplikeytor.presentation.create.model.chose.KeyChooseState
 import ru.etu.duplikeytor.presentation.create.view.util.Key
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.ButtonState
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.UiKitButton
@@ -59,7 +58,6 @@ internal fun ScaleScreen(
 
         KeyScale(
             modifier = Modifier.fillMaxWidth().weight(1f),
-            state = state.key
         )
 
         Spacer(Modifier.height(10.dp))
@@ -77,7 +75,6 @@ internal fun ScaleScreen(
 @Composable
 private fun KeyScale(
     modifier: Modifier,
-    state: KeyChooseState
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     Column(

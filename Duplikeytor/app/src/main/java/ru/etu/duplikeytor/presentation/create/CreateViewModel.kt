@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
-import ru.etu.duplikeytor.presentation.create.model.chose.KeyChooseState
+import ru.etu.duplikeytor.presentation.create.model.chose.KeyChosenState
 import ru.etu.duplikeytor.presentation.holder.model.navigation.NavigationBarState
 import ru.etu.duplikeytor.presentation.holder.model.navigation.ScreenType
 import ru.etu.duplikeytor.presentation.holder.model.status.StatusBarState
@@ -24,41 +24,55 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
 
     override val screenType: ScreenType = ScreenType.CREATE
 
-    private val _state: MutableStateFlow<CreateScreenState> =
-        MutableStateFlow(CreateScreenState.Choose(
-            keys = listOf(
-                KeyChooseState(
-                    imageUri = "https://avatars.githubusercontent.com/u/70469206?v=4",
-                    title = "Kwikset"
-                ),
-                KeyChooseState(
-                    imageUri = "https://avatars.githubusercontent.com/u/90708652?v=4",
-                    title = "SCHLAGE"
-                ),
-                KeyChooseState(
-                    imageUri = "https://avatars.githubusercontent.com/u/90792387?v=4",
-                    title = "Дима"
-                ),
-                KeyChooseState(
-                    imageUri = "https://avatars.githubusercontent.com/u/70469206?v=4",
-                    title = "Kwikset."
-                ),
-                KeyChooseState(
-                    imageUri = "https://avatars.githubusercontent.com/u/90708652?v=4",
-                    title = "SCHLAGE."
-                ),
-                KeyChooseState(
-                    imageUri = "https://avatars.githubusercontent.com/u/90792387?v=4",
-                    title = "Дима."
-                ),
-            ),
-        ))
+    private val keys
+        get () = getKeyTypes()
 
+    private var keyChosen: KeyChosenState? = null
+    private var keyScale: Float? = null
+
+
+    private val _state: MutableStateFlow<CreateScreenState> =
+        MutableStateFlow(CreateScreenState.Choose(keys = keys))
     val state: StateFlow<CreateScreenState> = _state
 
-    internal fun onKeyChoose(key: KeyChooseState) {
+    internal fun onKeyChoose(key: KeyChosenState) {
+        keyChosen = key
         viewModelScope.launch {
             _state.emit(CreateScreenState.Scale(key = key))
         }
     }
+
+    internal fun onKeyScaled(scale: Float) {
+        keyScale = scale
+        viewModelScope.launch {
+            _state.emit(CreateScreenState.Change())
+        }
+    }
+
+    private fun getKeyTypes() = listOf(
+        KeyChosenState(
+            imageUri = "https://avatars.githubusercontent.com/u/70469206?v=4",
+            title = "Kwikset"
+        ),
+        KeyChosenState(
+            imageUri = "https://avatars.githubusercontent.com/u/90708652?v=4",
+            title = "SCHLAGE"
+        ),
+        KeyChosenState(
+            imageUri = "https://avatars.githubusercontent.com/u/90792387?v=4",
+            title = "Дима"
+        ),
+        KeyChosenState(
+            imageUri = "https://avatars.githubusercontent.com/u/70469206?v=4",
+            title = "Kwikset."
+        ),
+        KeyChosenState(
+            imageUri = "https://avatars.githubusercontent.com/u/90708652?v=4",
+            title = "SCHLAGE."
+        ),
+        KeyChosenState(
+            imageUri = "https://avatars.githubusercontent.com/u/90792387?v=4",
+            title = "Дима."
+        ),
+    )
 }
