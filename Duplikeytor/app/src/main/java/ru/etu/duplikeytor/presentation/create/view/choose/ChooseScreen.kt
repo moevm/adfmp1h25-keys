@@ -47,7 +47,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import ru.etu.duplikeytor.presentation.create.model.CreateEvent
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
-import ru.etu.duplikeytor.presentation.create.model.chose.KeyChoseState
+import ru.etu.duplikeytor.presentation.create.model.chose.KeyChosenState
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.ButtonState
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.UiKitButton
 import ru.etu.duplikeytor.presentation.ui.utils.toDp
@@ -56,7 +56,7 @@ import kotlin.math.absoluteValue
 private const val CARD_WIDTH = 200
 
 @Composable
-internal fun ChoseScreen(
+internal fun ChooseScreen(
     modifier: Modifier = Modifier,
     state: CreateScreenState.Choose,
     onEvent: (CreateEvent.KeyChoose) -> Unit
@@ -66,7 +66,6 @@ internal fun ChoseScreen(
         modifier = modifier
             .fillMaxSize()
             .padding(bottom = 10.dp),
-
         verticalArrangement = Arrangement.Bottom,
     ) {
         Chooser(
@@ -92,7 +91,7 @@ internal fun ChoseScreen(
 private fun Chooser(
     modifier: Modifier,
     state: CreateScreenState.Choose,
-    onChangeKey: (KeyChoseState) -> Unit,
+    onChangeKey: (KeyChosenState) -> Unit,
 ) {
     val currentKey = remember { mutableStateOf(state.keys.first()) }
     val isUserInteracting = remember { mutableStateOf(false) }
