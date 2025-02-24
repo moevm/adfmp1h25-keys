@@ -32,8 +32,8 @@ import coil3.compose.AsyncImage
 @Composable
 internal fun KeyCard(
     modifier: Modifier = Modifier,
-    state: KeyCardState,
-    onClick: (KeyCardState) -> Unit,
+    state: KeyState,
+    onClick: (KeyState) -> Unit,
 ) {
     Box(
         modifier = modifier
@@ -109,10 +109,11 @@ private fun placeholderPainter(color: Color): Painter {
 private fun KeyCardPreview() {
     KeyCard(
         Modifier,
-        KeyCardState(
+        KeyState(
             "Ключ от Нью-Йорка",
             "https://avatars.githubusercontent.com/u/90792387?v=4",
-            "12.02.2025 - 13:00"
+            "12.02.2025 - 13:00",
+            "1-2-3-4-5"
         ),
         onClick = {}
     )
