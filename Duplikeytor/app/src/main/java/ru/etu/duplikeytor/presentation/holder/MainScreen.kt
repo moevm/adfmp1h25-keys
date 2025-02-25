@@ -1,5 +1,12 @@
 package ru.etu.duplikeytor.presentation.holder
 
+import android.util.Log
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.EaseInOut
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -97,7 +104,21 @@ internal fun MainScreen(
             navController = navigationHandler.controller,
             startDestination = ScreenType.main.route,
         ) {
-            composable(ScreenType.CREATE.route) {
+            composable(
+                route = ScreenType.CREATE.route,
+                enterTransition = {
+                    slideIntoContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
+                        animationSpec = tween(200, easing = LinearEasing)
+                    )
+                },
+                exitTransition = {
+                    slideOutOfContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+                        animationSpec = tween(200, easing = LinearEasing)
+                    )
+                },
+            ) {
                 CreateFragment(
                     viewModel = createViewModel,
                     contentPadding = PaddingValues(
@@ -106,7 +127,29 @@ internal fun MainScreen(
                     )
                 )
             }
-            composable(ScreenType.ARCHIVE.route) {
+            composable(
+                route = ScreenType.ARCHIVE.route,
+                enterTransition = {
+                    slideIntoContainer(
+                        towards = if (navigationHandler.previousScreen.value == ScreenType.CREATE) {
+                            AnimatedContentTransitionScope.SlideDirection.Companion.Left
+                        } else {
+                            AnimatedContentTransitionScope.SlideDirection.Companion.Right
+                        },
+                        animationSpec = tween(200, easing = LinearEasing)
+                    )
+                },
+                exitTransition = {
+                    slideOutOfContainer(
+                        towards = if (navigationHandler.currentScreen.value == ScreenType.CREATE) {
+                            AnimatedContentTransitionScope.SlideDirection.Companion.Right
+                        } else {
+                            AnimatedContentTransitionScope.SlideDirection.Companion.Left
+                        },
+                        animationSpec = tween(200, easing = LinearEasing)
+                    )
+                },
+            ) {
                 ArchiveFragment(
                     viewModel = archiveViewModel,
                     contentPadding = PaddingValues(
@@ -115,7 +158,21 @@ internal fun MainScreen(
                     )
                 )
             }
-            composable(ScreenType.ABOUT.route) {
+            composable(
+                route = ScreenType.ABOUT.route,
+                enterTransition = {
+                    slideIntoContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+                        animationSpec = tween(200, easing = LinearEasing)
+                    )
+                },
+                exitTransition = {
+                    slideOutOfContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
+                        animationSpec = tween(200, easing = LinearEasing)
+                    )
+                },
+            ) {
                 AboutFragment(
                     viewModel = aboutViewModel,
                     contentPadding = PaddingValues(
