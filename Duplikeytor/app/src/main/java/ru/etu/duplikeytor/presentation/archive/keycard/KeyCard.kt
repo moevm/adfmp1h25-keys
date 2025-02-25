@@ -39,7 +39,7 @@ internal fun KeyCard(
         modifier = modifier
             .clip(RoundedCornerShape(20.dp))
             .border(
-                width = 1.dp,
+                width = 4.dp,
                 color = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(20.dp),
             )

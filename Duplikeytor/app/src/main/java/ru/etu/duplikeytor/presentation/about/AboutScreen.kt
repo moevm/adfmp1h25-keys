@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -130,18 +131,20 @@ private fun DepartmentLink(
     state: DepartmentState,
 ) {
     Box(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.wrapContentWidth()
     ) {
         Text(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 5.dp)
                 .clickable { uriHandler.openUri(state.uri) }
+                .fillMaxWidth()
                 .alpha(0.5f),
             text = state.name,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onBackground
+            color = MaterialTheme.colorScheme.onBackground,
+            maxLines = 1,
         )
     }
 }

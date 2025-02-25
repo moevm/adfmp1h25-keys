@@ -1,10 +1,12 @@
 package ru.etu.duplikeytor.presentation.create
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import ru.etu.duplikeytor.R
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
 import ru.etu.duplikeytor.presentation.create.model.chose.KeyChosenState
 import ru.etu.duplikeytor.presentation.holder.model.navigation.NavigationBarState
@@ -43,7 +45,7 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
         viewModelScope.launch {
             statusBarState.emit(
                 StatusBarState.Title(
-                    title = key.title,
+                    title = "Масштабирование " + (keyChosen?.title ?: ""),
                     requiredDisplay = true,
                 )
             )
@@ -54,6 +56,12 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
     internal fun onKeyScaled(scale: Float) {
         keyScale = scale
         viewModelScope.launch {
+            statusBarState.emit(
+                StatusBarState.Title(
+                    title = "Создание " + (keyChosen?.title ?: ""),
+                    requiredDisplay = true,
+                )
+            )
             _state.emit(CreateScreenState.Change())
         }
     }
