@@ -1,7 +1,11 @@
 package ru.etu.duplikeytor.presentation.create
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,6 +42,13 @@ internal fun CreateFragment(
                 }
             )
         }
-        is CreateScreenState.Change -> TODO()
+        is CreateScreenState.Change -> {
+            Box(
+                Modifier
+                    .padding(contentPadding)
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background),
+            )
+        }
     }
 }

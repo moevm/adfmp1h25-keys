@@ -1,10 +1,12 @@
 package ru.etu.duplikeytor.presentation.create
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import ru.etu.duplikeytor.R
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
 import ru.etu.duplikeytor.presentation.create.model.chose.KeyChosenState
 import ru.etu.duplikeytor.presentation.holder.model.navigation.NavigationBarState
@@ -15,12 +17,15 @@ import javax.inject.Inject
 
 internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
 
-    // переработать логику для разных шагов
-    override var statusBarState: StatusBarState = StatusBarState.Title(
-        title = "Создать ключ",
-        requiredDisplay = true,
+    override var statusBarState = MutableStateFlow<StatusBarState>(
+        StatusBarState.Title(
+            title = "Создать ключ",
+            requiredDisplay = true,
+        )
     )
-    override var navigationBarState: NavigationBarState = NavigationBarState.build()
+    override var navigationBarState = MutableStateFlow(
+        NavigationBarState.build()
+    )
 
     override val screenType: ScreenType = ScreenType.CREATE
 
@@ -38,6 +43,12 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
     internal fun onKeyChoose(key: KeyChosenState) {
         keyChosen = key
         viewModelScope.launch {
+            statusBarState.emit(
+                StatusBarState.Title(
+                    title = "Масштабирование " + (keyChosen?.title ?: ""),
+                    requiredDisplay = true,
+                )
+            )
             _state.emit(CreateScreenState.Scale(key = key))
         }
     }
@@ -45,6 +56,12 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
     internal fun onKeyScaled(scale: Float) {
         keyScale = scale
         viewModelScope.launch {
+            statusBarState.emit(
+                StatusBarState.Title(
+                    title = "Создание " + (keyChosen?.title ?: ""),
+                    requiredDisplay = true,
+                )
+            )
             _state.emit(CreateScreenState.Change())
         }
     }
