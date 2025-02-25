@@ -4,5 +4,6 @@ internal data class KeyState(
     val name: String,
     val imageUri: String?,
     val createdAt: String,
+    val type: String,
     val pins: String,
 )

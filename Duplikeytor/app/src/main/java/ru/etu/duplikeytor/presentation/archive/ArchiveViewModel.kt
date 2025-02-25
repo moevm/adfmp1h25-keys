@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.etu.duplikeytor.presentation.archive.keycard.KeyState
 import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveState
@@ -20,20 +19,23 @@ internal class ArchiveViewModel @Inject constructor() : ViewModel(), Screen {
         keys = listOf(
             KeyState(
                 name = "Key 1",
-                imageUri = "https://ybis.ru/wp-content/uploads/2023/09/solntse-kartinka-1.webp",
+                imageUri = "https://avatars.githubusercontent.com/u/90708652?v=4",
                 createdAt = "10.10.2021 - 13:37",
+                type = "Kwikset",
                 pins = "1-2-3-4-5",
             ),
             KeyState(
                 name = "Key 2",
-                imageUri = "https://ybis.ru/wp-content/uploads/2023/09/solntse-kartinka-1.webp",
+                imageUri = "https://avatars.githubusercontent.com/u/90708652?v=4",
                 createdAt = "10.11.2021 - 13:37",
+                type = "Kwikset",
                 pins = "1-2-3-4-5",
             ),
             KeyState(
                 name = "Key 3",
-                imageUri = "https://ybis.ru/wp-content/uploads/2023/09/solntse-kartinka-1.webp",
+                imageUri = "https://avatars.githubusercontent.com/u/90708652?v=4",
                 createdAt = "10.12.2021 - 13:37",
+                type = "Kwikset",
                 pins = "1-2-3-4-5",
             ),
         ),
@@ -68,7 +70,7 @@ internal class ArchiveViewModel @Inject constructor() : ViewModel(), Screen {
 
     internal fun onKeySelected(key: KeyState) {
         _state.value = KeyArchiveState.Key(
-            state = key,
+            keyState = key,
             title = key.name,
         )
     }

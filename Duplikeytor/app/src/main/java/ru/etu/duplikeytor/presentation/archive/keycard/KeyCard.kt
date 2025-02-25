@@ -113,6 +113,7 @@ private fun KeyCardPreview() {
             "Ключ от Нью-Йорка",
             "https://avatars.githubusercontent.com/u/90792387?v=4",
             "12.02.2025 - 13:00",
+            "Kwikset",
             "1-2-3-4-5"
         ),
         onClick = {}
