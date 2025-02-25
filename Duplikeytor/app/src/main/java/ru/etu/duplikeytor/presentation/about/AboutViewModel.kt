@@ -17,8 +17,12 @@ import javax.inject.Inject
 
 internal class AboutViewModel @Inject constructor() : ViewModel(), Screen {
 
-    override var statusBarState: StatusBarState = StatusBarState.Empty(false)
-    override var navigationBarState: NavigationBarState = NavigationBarState.build()
+    override var statusBarState = MutableStateFlow<StatusBarState>(
+        StatusBarState.Empty(false)
+    )
+    override var navigationBarState = MutableStateFlow(
+        NavigationBarState.build()
+    )
     override val screenType: ScreenType = ScreenType.ABOUT
 
     private val _state = MutableStateFlow(AboutScreenState(
@@ -71,7 +75,7 @@ internal class AboutViewModel @Inject constructor() : ViewModel(), Screen {
         _state.value = _state.value.copy(
             department = DepartmentState(
                 name = "ETU MOEVM\t" + emoji[secondsLeft % emoji.size],
-                uri = "https://se.moevm.info/doku.php/start",
+                uri = _state.value .department.uri,
             )
         )
     }

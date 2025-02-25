@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.etu.duplikeytor.presentation.archive.keycard.KeyState
 import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveState
@@ -40,11 +39,15 @@ internal class ArchiveViewModel @Inject constructor() : ViewModel(), Screen {
         title = "Мои ключи",
     )
 
-    override var statusBarState: StatusBarState = StatusBarState.Title(
-        title = "",
-        requiredDisplay = true,
+    override var statusBarState = MutableStateFlow<StatusBarState>(
+        StatusBarState.Title(
+            title = "",
+            requiredDisplay = true,
+        )
     )
-    override var navigationBarState: NavigationBarState = NavigationBarState.build()
+    override var navigationBarState = MutableStateFlow(
+        NavigationBarState.build()
+    )
     override val screenType: ScreenType = ScreenType.ARCHIVE
 
     private val _state = MutableStateFlow<KeyArchiveState>(keyArchiveState)
@@ -52,15 +55,19 @@ internal class ArchiveViewModel @Inject constructor() : ViewModel(), Screen {
     val state: StateFlow<KeyArchiveState> = _state
 
     init {
-        // TODO фиксануть баг с названием ключа
         viewModelScope.launch {
-            state.collect {
-                statusBarState = StatusBarState.Title(
-                    title = when(it) {
-                        is KeyArchiveState.KeysList -> it.title
-                        is KeyArchiveState.Key -> it.title
-                    },
-                    requiredDisplay = true,
+            _state.collect {
+                statusBarState.emit(
+                    StatusBarState.Title(
+                        title = when(it) {
+                            is KeyArchiveState.KeysList -> it.title
+                            is KeyArchiveState.Key -> it.title
+                        },
+                        requiredDisplay = when(it) {
+                            is KeyArchiveState.KeysList -> true
+                            is KeyArchiveState.Key -> true
+                        },
+                    )
                 )
             }
         }

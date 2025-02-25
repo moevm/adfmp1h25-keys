@@ -15,12 +15,15 @@ import javax.inject.Inject
 
 internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
 
-    // переработать логику для разных шагов
-    override var statusBarState: StatusBarState = StatusBarState.Title(
-        title = "Создать ключ",
-        requiredDisplay = true,
+    override var statusBarState = MutableStateFlow<StatusBarState>(
+        StatusBarState.Title(
+            title = "Создать ключ",
+            requiredDisplay = true,
+        )
     )
-    override var navigationBarState: NavigationBarState = NavigationBarState.build()
+    override var navigationBarState = MutableStateFlow(
+        NavigationBarState.build()
+    )
 
     override val screenType: ScreenType = ScreenType.CREATE
 
@@ -38,6 +41,12 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
     internal fun onKeyChoose(key: KeyChosenState) {
         keyChosen = key
         viewModelScope.launch {
+            statusBarState.emit(
+                StatusBarState.Title(
+                    title = key.title,
+                    requiredDisplay = true,
+                )
+            )
             _state.emit(CreateScreenState.Scale(key = key))
         }
     }
