@@ -10,12 +10,16 @@ class NavigationHandler(
     private val onScreenChanged: (ScreenType) -> Unit,
 ) {
     private val _currentScreen = mutableStateOf(ScreenType.CREATE)
+    private val _previousScreen = mutableStateOf(ScreenType.CREATE)
     val currentScreen: State<ScreenType> = _currentScreen
+    val previousScreen: State<ScreenType> = _previousScreen
+
     val controller = navController
 
     init {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             ScreenType.entries.firstOrNull { it.route == destination.route }?.let { screen ->
+                _previousScreen.value = _currentScreen.value
                 _currentScreen.value = screen
                 onScreenChanged(screen)
             }

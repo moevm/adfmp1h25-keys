@@ -17,32 +17,17 @@ import javax.inject.Inject
 
 internal class AboutViewModel @Inject constructor() : ViewModel(), Screen {
 
-    override var statusBarState: StatusBarState = StatusBarState.Empty(false)
-    override var navigationBarState: NavigationBarState = NavigationBarState.build()
+    override var statusBarState = MutableStateFlow<StatusBarState>(
+        StatusBarState.Empty(false)
+    )
+    override var navigationBarState = MutableStateFlow(
+        NavigationBarState.build()
+    )
     override val screenType: ScreenType = ScreenType.ABOUT
 
     private val _state = MutableStateFlow(AboutScreenState(
-        developers = listOf(
-            DeveloperState(
-                "Ajems",
-                "https://github.com/Ajems",
-                "https://avatars.githubusercontent.com/u/70469206?v=4"
-            ),
-            DeveloperState(
-                "1that",
-                "https://github.com/1that",
-                "https://avatars.githubusercontent.com/u/90708652?v=4"
-            ),
-            DeveloperState(
-                "D1mitrii",
-                "https://github.com/D1mitrii",
-                "https://avatars.githubusercontent.com/u/90792387?v=4"
-            )
-        ),
-        department = DepartmentState(
-            name = "ETU MOEVM",
-            uri = "https://se.moevm.info/doku.php/start",
-        )
+        developers = getDevelopers(),
+        department = getDepartment(),
     ))
 
     private val emoji = listOf(
@@ -71,8 +56,31 @@ internal class AboutViewModel @Inject constructor() : ViewModel(), Screen {
         _state.value = _state.value.copy(
             department = DepartmentState(
                 name = "ETU MOEVM\t" + emoji[secondsLeft % emoji.size],
-                uri = "https://se.moevm.info/doku.php/start",
+                uri = _state.value .department.uri,
             )
         )
     }
+
+    private fun getDevelopers() = listOf(
+        DeveloperState(
+            "Ajems",
+            "https://github.com/Ajems",
+            "https://avatars.githubusercontent.com/u/70469206?v=4"
+        ),
+        DeveloperState(
+            "1that",
+            "https://github.com/1that",
+            "https://avatars.githubusercontent.com/u/90708652?v=4"
+        ),
+        DeveloperState(
+            "D1mitrii",
+            "https://github.com/D1mitrii",
+            "https://avatars.githubusercontent.com/u/90792387?v=4"
+        )
+    )
+
+    private fun getDepartment() = DepartmentState(
+        name = "ETU MOEVM",
+        uri = "https://se.moevm.info/doku.php/start",
+    )
 }

@@ -15,42 +15,66 @@ import javax.inject.Inject
 
 class MainViewModel @Inject constructor() : ViewModel() {
 
+    private val _statusBarState = MutableStateFlow<StatusBarState>(
+        StatusBarState.Empty(false)
+    )
+    private val _navigationBarState = MutableStateFlow(
+        NavigationBarState(listOf())
+    )
+    private val _currentScreenType = MutableStateFlow(ScreenType.CREATE)
+    private val _currentScreenImpl = MutableStateFlow<Screen?>(null)
+
+    val statusBarState: StateFlow<StatusBarState> = _statusBarState
+    val navigationBarState: StateFlow<NavigationBarState> = _navigationBarState
+
+    private val childScreenImpl = mutableMapOf<ScreenType, Screen>()
+
+    fun registerScreen(screen: Screen) {
+        childScreenImpl[screen.screenType] = screen
+    }
+
     init {
         observeStatusBar()
+        observeNavigationBar()
     }
 
     private fun observeStatusBar() {
         viewModelScope.launch {
-            _currentScreen
-            childScreen
-             // on add or change currentScreen -> change statusbar if need
+            _currentScreenImpl.collect { screen ->
+                screen?.statusBarState?.collect { statusBar ->
+                    _statusBarState.emit(statusBar)
+                }
+            }
         }
     }
 
-    // нигде не используется, но может понадобиться в будущем
-    private val _currentScreen = MutableStateFlow(ScreenType.CREATE)
+    private fun observeNavigationBar() {
+        viewModelScope.launch {
+            _currentScreenImpl.collect { screen ->
+                screen?.navigationBarState?.collect { navigationBar ->
+                    _navigationBarState.emit(navigationBar)
+                }
+            }
+        }
+    }
 
-    fun onScreenChanged(screen: ScreenType) {
-        _currentScreen.value = screen
-        val currentStatusBar = childScreen.find {
-            it.screenType == screen
-        }?.statusBarState
+    fun onScreenChanged(screenType: ScreenType) {
+        _currentScreenType.value = screenType
+        _currentScreenImpl.value = childScreenImpl[screenType]
 
-        val currentNavigationBar = childScreen.find {
-            it.screenType == screen
-        }?.navigationBarState
+        val currentStatusBar = _currentScreenImpl.value?.statusBarState
+        val currentNavigationBar = _currentScreenImpl.value?.navigationBarState
 
         viewModelScope.launch {
-            currentStatusBar?.let { statusBar ->
+            currentStatusBar?.collect { statusBar ->
                 _statusBarState.emit(statusBar)
             }
-            currentNavigationBar?.let { navigationBar ->
+            currentNavigationBar?.collect { navigationBar ->
                 _navigationBarState.emit(navigationBar)
             }
         }
     }
 
-    // понадобится позже, пока заглушка
     fun onLifecycleEvent(event:  Lifecycle. Event) {
         when(event) {
             Lifecycle.Event.ON_START -> Log.d("Test", "MainVM ON_START")
@@ -58,20 +82,4 @@ class MainViewModel @Inject constructor() : ViewModel() {
             else -> Log.d("Test", "MainVM ${event}")
         }
     }
-    private val _statusBarState = MutableStateFlow<StatusBarState>(
-        StatusBarState.Empty(false)
-    )
-    private val _navigationBarState = MutableStateFlow<NavigationBarState>(
-        NavigationBarState(listOf())
-    )
-
-    val statusBarState: StateFlow<StatusBarState> = _statusBarState
-    val navigationBarState: StateFlow<NavigationBarState> = _navigationBarState
-
-    private val childScreen = mutableListOf<Screen>()
-
-    fun registerScreen(screen: Screen) {
-        childScreen.add(screen)
-    }
-
 }

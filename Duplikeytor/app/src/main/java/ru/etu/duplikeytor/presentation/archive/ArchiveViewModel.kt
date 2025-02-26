@@ -15,39 +15,21 @@ import ru.etu.duplikeytor.presentation.shared.model.Screen
 import javax.inject.Inject
 
 internal class ArchiveViewModel @Inject constructor() : ViewModel(), Screen {
-    // Мусорные данные
+
     private val keyArchiveState = KeyArchiveState.KeysList(
-        keys = listOf(
-            KeyState(
-                name = "Key 1",
-                imageUri = "https://avatars.githubusercontent.com/u/90708652?v=4",
-                createdAt = "10.10.2021 - 13:37",
-                type = KeyType.KWIKSET,
-                pins = "1-2-3-4-5",
-            ),
-            KeyState(
-                name = "Key 2",
-                imageUri = "https://avatars.githubusercontent.com/u/90708652?v=4",
-                createdAt = "10.11.2021 - 13:37",
-                type = KeyType.KWIKSET,
-                pins = "1-2-3-4-5",
-            ),
-            KeyState(
-                name = "Key 3",
-                imageUri = "https://avatars.githubusercontent.com/u/90708652?v=4",
-                createdAt = "10.12.2021 - 13:37",
-                type = KeyType.KWIKSET,
-                pins = "1-2-3-4-5",
-            ),
-        ),
+        keys = getKeysFromArchive(),
         title = "Мои ключи",
     )
 
-    override var statusBarState: StatusBarState = StatusBarState.Title(
-        title = "",
-        requiredDisplay = true,
+    override var statusBarState = MutableStateFlow<StatusBarState>(
+        StatusBarState.Title(
+            title = "",
+            requiredDisplay = true,
+        )
     )
-    override var navigationBarState: NavigationBarState = NavigationBarState.build()
+    override var navigationBarState = MutableStateFlow(
+        NavigationBarState.build()
+    )
     override val screenType: ScreenType = ScreenType.ARCHIVE
 
     private val _state = MutableStateFlow<KeyArchiveState>(keyArchiveState)
@@ -55,15 +37,19 @@ internal class ArchiveViewModel @Inject constructor() : ViewModel(), Screen {
     val state: StateFlow<KeyArchiveState> = _state
 
     init {
-        // TODO фиксануть баг с названием ключа
         viewModelScope.launch {
-            state.collect {
-                statusBarState = StatusBarState.Title(
-                    title = when(it) {
-                        is KeyArchiveState.KeysList -> it.title
-                        is KeyArchiveState.Key -> it.title
-                    },
-                    requiredDisplay = true,
+            _state.collect {
+                statusBarState.emit(
+                    StatusBarState.Title(
+                        title = when(it) {
+                            is KeyArchiveState.KeysList -> it.title
+                            is KeyArchiveState.Key -> it.title
+                        },
+                        requiredDisplay = when(it) {
+                            is KeyArchiveState.KeysList -> true
+                            is KeyArchiveState.Key -> true
+                        },
+                    )
                 )
             }
         }
@@ -76,10 +62,24 @@ internal class ArchiveViewModel @Inject constructor() : ViewModel(), Screen {
         )
     }
 
-    internal fun onKeyListSelected(keys: List<KeyState>, title: String) {
-        _state.value = KeyArchiveState.KeysList(
-            keys = keys,
-            title = title,
-        )
-    }
+    private fun getKeysFromArchive() = listOf( // TODO получаем из БД
+        KeyState(
+            name = "Key 1",
+            imageUri = "https://ybis.ru/wp-content/uploads/2023/09/solntse-kartinka-1.webp",
+            createdAt = "10.10.2021 - 13:37",
+            pins = "1-2-3-4-5",
+        ),
+        KeyState(
+            name = "Key 2",
+            imageUri = "https://ybis.ru/wp-content/uploads/2023/09/solntse-kartinka-1.webp",
+            createdAt = "10.11.2021 - 13:37",
+            pins = "1-2-3-4-5",
+        ),
+        KeyState(
+            name = "Key 3",
+            imageUri = "https://ybis.ru/wp-content/uploads/2023/09/solntse-kartinka-1.webp",
+            createdAt = "10.12.2021 - 13:37",
+            pins = "1-2-3-4-5",
+        ),
+    )
 }
