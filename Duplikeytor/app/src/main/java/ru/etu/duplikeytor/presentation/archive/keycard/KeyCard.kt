@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import ru.etu.duplikeytor.presentation.archive.model.KeyType
 
 @Composable
 internal fun KeyCard(
@@ -110,11 +111,11 @@ private fun KeyCardPreview() {
     KeyCard(
         Modifier,
         KeyState(
-            "Ключ от Нью-Йорка",
-            "https://avatars.githubusercontent.com/u/90792387?v=4",
-            "12.02.2025 - 13:00",
-            "Kwikset",
-            "1-2-3-4-5"
+            name = "Ключ от Нью-Йорка",
+            imageUri = "https://avatars.githubusercontent.com/u/90792387?v=4",
+            createdAt = "12.02.2025 - 13:00",
+            type = KeyType.KWIKSET,
+            pins = "1-2-3-4-5"
         ),
         onClick = {}
     )
