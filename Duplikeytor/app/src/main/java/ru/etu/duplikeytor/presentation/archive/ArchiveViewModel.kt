@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.etu.duplikeytor.presentation.archive.keycard.KeyState
 import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveState
+import ru.etu.duplikeytor.presentation.archive.model.KeyType
 import ru.etu.duplikeytor.presentation.holder.model.navigation.NavigationBarState
 import ru.etu.duplikeytor.presentation.holder.model.navigation.ScreenType
 import ru.etu.duplikeytor.presentation.holder.model.status.StatusBarState
@@ -56,7 +57,7 @@ internal class ArchiveViewModel @Inject constructor() : ViewModel(), Screen {
 
     internal fun onKeySelected(key: KeyState) {
         _state.value = KeyArchiveState.Key(
-            state = key,
+            key = key,
             title = key.name,
         )
     }
