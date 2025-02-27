@@ -83,14 +83,14 @@ internal class ArchiveViewModel @Inject constructor() : ViewModel(), Screen {
             imageUri = "https://ybis.ru/wp-content/uploads/2023/09/solntse-kartinka-1.webp",
             createdAt = "10.11.2021 - 13:37",
             type = KeyType.KWIKSET,
-            pins = "1-2-3-4-5",
+            pins = "2-3-4-5-1",
         ),
         KeyState(
             name = "Key 3",
             imageUri = "https://ybis.ru/wp-content/uploads/2023/09/solntse-kartinka-1.webp",
             createdAt = "10.12.2021 - 13:37",
             type = KeyType.KWIKSET,
-            pins = "1-2-3-4-5",
+            pins = "3-4-5-1-2",
         ),
     )
 }
