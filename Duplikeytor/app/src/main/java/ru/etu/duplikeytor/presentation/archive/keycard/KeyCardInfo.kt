@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import ru.etu.duplikeytor.R
 import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveEvent
@@ -27,6 +26,8 @@ import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveState
 import ru.etu.duplikeytor.presentation.archive.model.KeyType
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.ButtonState
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.UiKitButton
+
+private const val imageRatio = 3f / 2f
 
 @Composable
 internal fun KeyInfoScreen(
@@ -82,7 +83,7 @@ private fun KeyInformation(
             )
         }
         AsyncImage(
-            modifier = modifier.aspectRatio(1.5f),
+            modifier = modifier.aspectRatio(imageRatio),
             model = state.imageUri,
             contentDescription = null,
         )
