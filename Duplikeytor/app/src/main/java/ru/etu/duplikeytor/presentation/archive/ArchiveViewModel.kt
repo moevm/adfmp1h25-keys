@@ -38,17 +38,25 @@ internal class ArchiveViewModel @Inject constructor() : ViewModel(), Screen {
 
     init {
         viewModelScope.launch {
-            _state.collect {
+            _state.collect { state ->
                 statusBarState.emit(
                     StatusBarState.Title(
-                        title = when(it) {
-                            is KeyArchiveState.KeysList -> it.title
-                            is KeyArchiveState.Key -> it.title
+                        title = when(state) {
+                            is KeyArchiveState.KeysList -> state.title
+                            is KeyArchiveState.Key -> state.title
                         },
-                        requiredDisplay = when(it) {
+                        requiredDisplay = when(state) {
                             is KeyArchiveState.KeysList -> true
                             is KeyArchiveState.Key -> true
                         },
+                        onBackClick = when (state) {
+                            is KeyArchiveState.Key -> {{
+                                viewModelScope.launch {
+                                    _state.value = keyArchiveState
+                                }
+                            }}
+                            is KeyArchiveState.KeysList -> null
+                        }
                     )
                 )
             }
