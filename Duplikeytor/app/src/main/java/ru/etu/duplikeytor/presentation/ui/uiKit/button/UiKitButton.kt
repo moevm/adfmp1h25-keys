@@ -57,6 +57,9 @@ private fun UiKitIconButton(
         is ButtonState.Icon.Warning -> {
             MaterialTheme.colorScheme.errorContainer to Color.Unspecified
         }
+        is ButtonState.Icon.Action -> {
+            MaterialTheme.colorScheme.secondary to MaterialTheme.colorScheme.onSecondary
+        }
         is ButtonState.Icon.Navigation -> {
             if (button.isSelected) {
                 MaterialTheme.colorScheme.primary to MaterialTheme.colorScheme.onPrimary
@@ -65,12 +68,11 @@ private fun UiKitIconButton(
             }
         }
     }
+
     ButtonHolder(
-        modifier = modifier
-            .background(color = color)
-            .clickable {
-                onClick()
-            },
+        modifier = modifier,
+        color = color,
+        onClick = onClick,
     ) {
         IconContent(
             icon = button.icon,
@@ -86,13 +88,12 @@ private fun UiKitTextButton(
     onClick: () -> Unit,
 ) {
     ButtonHolder(
-        modifier = modifier
-            .background(color = MaterialTheme.colorScheme.secondary)
-            .clickable {
-                onClick()
-            },
-    ) {
+        modifier = modifier,
+        color =  MaterialTheme.colorScheme.secondary,
+        onClick = onClick,
+    ) { contentModifier ->
         TextContent(
+            modifier = contentModifier,
             text = button.text
         )
     }
@@ -101,17 +102,20 @@ private fun UiKitTextButton(
 @Composable
 private fun ButtonHolder(
     modifier: Modifier,
-    content: @Composable (() -> Unit)
+    color: Color,
+    onClick: () -> Unit,
+    content: @Composable ((Modifier) -> Unit)
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(24.dp))
-            .then(modifier)
+            .background(color)
             .widthIn(min = 64.dp)
-            .requiredHeight(64.dp),
+            .requiredHeight(64.dp)
+            .clickable { onClick() },
         contentAlignment = Alignment.Center,
     ) {
-        content()
+        content(Modifier.align(Alignment.Center))
     }
 }
 
@@ -137,7 +141,7 @@ private fun TextContent(
     Text(
         modifier = modifier.padding(horizontal = 22.dp),
         text = text,
-        color = Color.Black,
+        color = MaterialTheme.colorScheme.onSecondary,
         style = MaterialTheme.typography.labelLarge,
     )
 }

@@ -42,20 +42,22 @@ internal fun ScaleScreen(
     state: CreateScreenState.Scale,
     onEvent: (CreateEvent) -> Unit
 ) {
+    Text(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+            .padding(top = 10.dp),
+        text = stringResource(R.string.description_scale_key),
+        color = MaterialTheme.colorScheme.onBackground,
+        style = MaterialTheme.typography.bodyMedium,
+        textAlign = TextAlign.Center,
+    )
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(vertical = 10.dp),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
-        Text(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
-            text = stringResource(R.string.description_scale_key),
-            color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.bodyMedium,
-            textAlign = TextAlign.Center,
-        )
-
         KeyScale(
             modifier = Modifier.fillMaxWidth().weight(1f),
             state = state,
@@ -85,18 +87,15 @@ private fun KeyScale(
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val minSizeValue = minOf(screenWidth, screenHeight)/2
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
+    Box(modifier = modifier) {
+
         val scale = remember { mutableStateOf(state.initialScale) }
         val animateScale = animateFloatAsState(
             targetValue = scale.value,
             animationSpec = tween(durationMillis = 80,  easing = LinearEasing),
         )
         Box(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.align(Alignment.Center),
             contentAlignment = Alignment.Center,
         ) {
             when(state.key.type) {
@@ -114,7 +113,7 @@ private fun KeyScale(
             }
         }
         Scaler(
-            modifier = Modifier,
+            modifier = Modifier.align(Alignment.BottomCenter),
             initScale = scale.value,
             onChangeScale = { newScale ->
                 scale.value = newScale

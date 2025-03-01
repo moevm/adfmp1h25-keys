@@ -32,7 +32,7 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
         get () = getKeyTypes()
 
     private var keyChosen: KeyChosenState? = null
-    private var keyScale: Float? = null
+    private var keyScale: Float = 1f
 
 
     private val _state: MutableStateFlow<CreateScreenState> =
@@ -64,9 +64,16 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
                     onBackClick = { viewModelScope.launch { returnToPreviousState() } }
                 )
             }
-            is CreateScreenState.Change -> {
+            is CreateScreenState.Create -> {
                 StatusBarState.Title(
                     title = "Создание " + (keyChosen?.title ?: ""),
+                    requiredDisplay = true,
+                    onBackClick = { viewModelScope.launch { returnToPreviousState() } }
+                )
+            }
+            is CreateScreenState.Save -> {
+                StatusBarState.Title(
+                    title = "Назовите ключ",
                     requiredDisplay = true,
                     onBackClick = { viewModelScope.launch { returnToPreviousState() } }
                 )
@@ -77,13 +84,16 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
         val previousState: CreateScreenState = when (state.value) {
             is CreateScreenState.Choose -> { return }
             is CreateScreenState.Scale -> { CreateScreenState.Choose(keys = keys) }
-            is CreateScreenState.Change -> {
+            is CreateScreenState.Create -> {
                 keyChosen?.let { key ->
                     CreateScreenState.Scale(
                         key = key,
-                        initialScale = keyScale ?: 1f
+                        initialScale = keyScale
                     )
                 } ?: CreateScreenState.Choose(keys = keys)
+            }
+            is CreateScreenState.Save -> {
+                CreateScreenState.Choose(keys = keys) // TODO
             }
         }
         _state.emit(previousState)
@@ -95,7 +105,7 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
             _state.emit(
                 CreateScreenState.Scale(
                     key = key,
-                    initialScale = keyScale ?: 1f
+                    initialScale = keyScale
                 )
             )
         }
@@ -106,7 +116,39 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
     }
 
     internal fun onKeyScaled() {
-        viewModelScope.launch { _state.emit(CreateScreenState.Change()) }
+        val key: KeyChosenState = keyChosen ?: return
+        viewModelScope.launch {
+            _state.emit(
+                CreateScreenState.Create(
+                    key = key,
+                    scale = keyScale
+                )
+            )
+        }
+    }
+
+    internal fun onKeyCreated() {
+        val key: KeyChosenState = keyChosen ?: return
+        val keyConfig = null // TODO
+        viewModelScope.launch {
+            _state.emit(
+                CreateScreenState.Save(
+                    key = key,
+                    scale = keyScale,
+                    keyConfig = keyConfig,
+                )
+            )
+        }
+    }
+
+    internal fun changeInterfaceVisibility(isVisible: Boolean) {
+        viewModelScope.launch {
+            statusBarState.emit(when(val currentStatusBar = statusBarState.value) {
+                is StatusBarState.Title -> currentStatusBar.copy(requiredDisplay = isVisible)
+                is StatusBarState.Empty -> currentStatusBar.copy(requiredDisplay = isVisible)
+            })
+            navigationBarState.emit(navigationBarState.value.copy(requiredDisplay = isVisible))
+        }
     }
 
     private fun getKeyTypes() = listOf(
