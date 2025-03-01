@@ -23,7 +23,7 @@ import coil3.compose.AsyncImage
 import ru.etu.duplikeytor.R
 import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveEvent
 import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveState
-import ru.etu.duplikeytor.presentation.archive.model.KeyType
+import ru.etu.duplikeytor.presentation.shared.model.KeyType
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.ButtonState
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.UiKitButton
 
