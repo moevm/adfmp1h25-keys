@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import ru.etu.duplikeytor.presentation.create.model.CreateEvent
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
 import ru.etu.duplikeytor.presentation.create.view.choose.ChooseScreen
+import ru.etu.duplikeytor.presentation.create.view.create.CreateScreen
 import ru.etu.duplikeytor.presentation.create.view.scale.ScaleScreen
 
 @Composable
@@ -47,7 +48,22 @@ internal fun CreateFragment(
                 }
             )
         }
-        is CreateScreenState.Change -> {
+        is CreateScreenState.Create -> {
+            CreateScreen(
+                modifier = Modifier.padding(contentPadding),
+                state = (state as CreateScreenState.Create),
+                onEvent = { event ->
+                    when(event) {
+                        is CreateEvent.KeyCreated -> viewModel.onKeyCreated()
+                        is CreateEvent.InterfaceVisibleChange -> {
+                            viewModel.changeInterfaceVisibility(event.isVisible)
+                        }
+                        else -> Unit
+                    }
+                },
+            )
+        }
+        is CreateScreenState.Save -> {
             Box(
                 Modifier
                     .padding(contentPadding)
