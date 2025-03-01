@@ -50,11 +50,7 @@ internal class ArchiveViewModel @Inject constructor() : ViewModel(), Screen {
                             is KeyArchiveState.Key -> true
                         },
                         onBackClick = when (state) {
-                            is KeyArchiveState.Key -> {{
-                                viewModelScope.launch {
-                                    _state.value = keyArchiveState
-                                }
-                            }}
+                            is KeyArchiveState.Key -> {{ _state.value = keyArchiveState }}
                             is KeyArchiveState.KeysList -> null
                         }
                     )
