@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateOffsetAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -79,7 +80,10 @@ internal fun StatusBar(
                         modifier = Modifier
                             .padding(horizontal = 15.dp)
                             .size(25.dp)
-                            .clickable {
+                            .clickable(
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() }
+                            ) {
                                 state.onBackClick?.let { it() }
                             },
                         painter = painterResource(R.drawable.ic_back_black),

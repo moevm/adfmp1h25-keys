@@ -47,7 +47,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import ru.etu.duplikeytor.presentation.create.model.CreateEvent
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
-import ru.etu.duplikeytor.presentation.create.model.chose.KeyChosenState
+import ru.etu.duplikeytor.presentation.create.model.choose.KeyChosenState
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.ButtonState
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.UiKitButton
 import ru.etu.duplikeytor.presentation.ui.utils.toDp

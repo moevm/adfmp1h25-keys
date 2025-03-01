@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import ru.etu.duplikeytor.presentation.create.model.CreateEvent
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
 import ru.etu.duplikeytor.presentation.create.view.choose.ChooseScreen
 import ru.etu.duplikeytor.presentation.create.view.scale.ScaleScreen
@@ -36,9 +37,13 @@ internal fun CreateFragment(
         is CreateScreenState.Scale -> {
             ScaleScreen(
                 modifier = Modifier.padding(contentPadding),
-                state = state as CreateScreenState.Scale,
-                onEvent = { scale ->
-                    viewModel.onKeyScaled(scale.scale)
+                state = (state as CreateScreenState.Scale),
+                onEvent = { event ->
+                    when(event) {
+                        is CreateEvent.KeyScale -> viewModel.onKeyScale(event.scale)
+                        is CreateEvent.KeyScaled -> viewModel.onKeyScaled()
+                        else -> Unit
+                    }
                 }
             )
         }
