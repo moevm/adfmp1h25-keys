@@ -1,6 +1,5 @@
 package ru.etu.duplikeytor.presentation.create.view.scale
 
-import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -13,7 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
@@ -32,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import ru.etu.duplikeytor.R
 import ru.etu.duplikeytor.presentation.create.model.CreateEvent
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
+import ru.etu.duplikeytor.presentation.create.model.choose.KeyType
 import ru.etu.duplikeytor.presentation.create.view.util.Key
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.ButtonState
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.UiKitButton
@@ -40,9 +40,8 @@ import ru.etu.duplikeytor.presentation.ui.uiKit.button.UiKitButton
 internal fun ScaleScreen(
     modifier: Modifier = Modifier,
     state: CreateScreenState.Scale,
-    onEvent: (CreateEvent.KeyScaled) -> Unit
+    onEvent: (CreateEvent) -> Unit
 ) {
-    val currentScale = remember { mutableStateOf(0f) }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -59,6 +58,10 @@ internal fun ScaleScreen(
 
         KeyScale(
             modifier = Modifier.fillMaxWidth().weight(1f),
+            state = state,
+            onKeyScale = { scale ->
+                onEvent(CreateEvent.KeyScale(scale))
+            }
         )
 
         Spacer(Modifier.height(10.dp))
@@ -67,7 +70,7 @@ internal fun ScaleScreen(
             modifier = Modifier.align(Alignment.CenterHorizontally),
             button = ButtonState.Text("Продолжить"),
             onClick = {
-                onEvent(CreateEvent.KeyScaled(currentScale.value))
+                onEvent(CreateEvent.KeyScaled)
             }
         )
     }
@@ -76,14 +79,18 @@ internal fun ScaleScreen(
 @Composable
 private fun KeyScale(
     modifier: Modifier,
+    state: CreateScreenState.Scale,
+    onKeyScale: (Float) -> Unit,
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val minSizeValue = minOf(screenWidth, screenHeight)/2
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val scale = remember { mutableStateOf(1f) }
+        val scale = remember { mutableStateOf(state.initialScale) }
         val animateScale = animateFloatAsState(
             targetValue = scale.value,
             animationSpec = tween(durationMillis = 80,  easing = LinearEasing),
@@ -92,20 +99,27 @@ private fun KeyScale(
             modifier = Modifier.weight(1f),
             contentAlignment = Alignment.Center,
         ) {
-            Key(
-                modifier = Modifier
-                    .height(screenWidth/2)
-                    .width(screenWidth/6)
-                    .graphicsLayer {
-                        scaleX = animateScale.value
-                        scaleY = animateScale.value
-                    },
-                borderColor = MaterialTheme.colorScheme.onBackground,
-            )
+            when(state.key.type) {
+                KeyType.KWIKSET -> {
+                    Key(
+                        modifier = Modifier
+                            .size(width = minSizeValue/3, height = minSizeValue)
+                            .graphicsLayer {
+                                scaleX = animateScale.value
+                                scaleY = animateScale.value
+                            },
+                        borderColor = MaterialTheme.colorScheme.onBackground,
+                    )
+                }
+            }
         }
         Scaler(
             modifier = Modifier,
-            onChangeScale = { newScale -> scale.value = newScale }
+            initScale = scale.value,
+            onChangeScale = { newScale ->
+                scale.value = newScale
+                onKeyScale(newScale)
+            }
         )
     }
 }
@@ -143,7 +157,7 @@ fun Scaler(
             value = scale,
             onValueChange = { newScale ->
                 scale = newScale
-                onChangeScale(scale)
+                onChangeScale(newScale)
             },
             valueRange = minScale..maxScale,
         )

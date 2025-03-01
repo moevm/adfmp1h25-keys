@@ -4,12 +4,18 @@ import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.animateOffsetAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScaffoldDefaults.contentWindowInsets
 import androidx.compose.material3.Text
@@ -20,10 +26,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import ru.etu.duplikeytor.R
 import ru.etu.duplikeytor.presentation.holder.model.status.StatusBarState
 import kotlin.math.roundToInt
 
@@ -62,12 +70,38 @@ internal fun StatusBar(
                 .fillMaxWidth()
                 .requiredHeight(40.dp),
         ) {
-            Content(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.Center),
-                state = state,
-            )
+            Row(
+                modifier = modifier,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                if (state.onBackClick != null) {
+                    Icon(
+                        modifier = Modifier
+                            .padding(horizontal = 15.dp)
+                            .size(25.dp)
+                            .clickable(
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() }
+                            ) {
+                                state.onBackClick?.let { it() }
+                            },
+                        painter = painterResource(R.drawable.ic_back_black),
+                        tint = MaterialTheme.colorScheme.onSurface,
+                        contentDescription = null,
+                    )
+                }
+                Content(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .then(
+                            if (state.onBackClick != null) {
+                                Modifier.padding(end = 55.dp)
+                            } else Modifier
+                        ),
+                    state = state,
+                )
+            }
         }
     }
 }
