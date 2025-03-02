@@ -28,7 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import ru.etu.duplikeytor.presentation.archive.model.KeyType
+import ru.etu.duplikeytor.presentation.shared.model.KeyType
 
 @Composable
 internal fun KeyCard(

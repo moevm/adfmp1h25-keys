@@ -1,6 +1,6 @@
 package ru.etu.duplikeytor.presentation.archive.keycard
 
-import ru.etu.duplikeytor.presentation.archive.model.KeyType
+import ru.etu.duplikeytor.presentation.shared.model.KeyType
 
 internal data class KeyState(
     val name: String,

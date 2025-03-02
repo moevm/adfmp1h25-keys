@@ -1,6 +1,6 @@
 package ru.etu.duplikeytor.presentation.create.model
 
-import ru.etu.duplikeytor.presentation.create.model.choose.KeyChosenState
+import KeyChosenState
 
 internal sealed interface CreateEvent {
     data class Next(val createStep: CreateStep) : CreateEvent
@@ -9,4 +9,6 @@ internal sealed interface CreateEvent {
     data object KeyScaled : CreateEvent
     data object KeyCreated : CreateEvent
     data object InterfaceVisibleChange : CreateEvent
+    data class KeySave(val keyName: String) : CreateEvent
+    data object Share : CreateEvent
 }

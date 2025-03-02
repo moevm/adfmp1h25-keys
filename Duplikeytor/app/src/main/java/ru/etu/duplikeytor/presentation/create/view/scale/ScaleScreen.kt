@@ -31,8 +31,8 @@ import androidx.compose.ui.unit.dp
 import ru.etu.duplikeytor.R
 import ru.etu.duplikeytor.presentation.create.model.CreateEvent
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
-import ru.etu.duplikeytor.presentation.create.model.choose.KeyType
 import ru.etu.duplikeytor.presentation.create.view.util.Key
+import ru.etu.duplikeytor.presentation.shared.model.KeyType
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.ButtonState
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.UiKitButton
 
@@ -100,6 +100,17 @@ private fun KeyScale(
         ) {
             when(state.key.type) {
                 KeyType.KWIKSET -> {
+                    Key(
+                        modifier = Modifier
+                            .size(width = minSizeValue/3, height = minSizeValue)
+                            .graphicsLayer {
+                                scaleX = animateScale.value
+                                scaleY = animateScale.value
+                            },
+                        borderColor = MaterialTheme.colorScheme.onBackground,
+                    )
+                }
+                KeyType.SCHLAGE -> {
                     Key(
                         modifier = Modifier
                             .size(width = minSizeValue/3, height = minSizeValue)

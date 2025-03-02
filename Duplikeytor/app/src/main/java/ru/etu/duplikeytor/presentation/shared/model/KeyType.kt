@@ -1,4 +1,4 @@
-package ru.etu.duplikeytor.presentation.archive.model
+package ru.etu.duplikeytor.presentation.shared.model
 
 internal enum class KeyType {
     KWIKSET,
