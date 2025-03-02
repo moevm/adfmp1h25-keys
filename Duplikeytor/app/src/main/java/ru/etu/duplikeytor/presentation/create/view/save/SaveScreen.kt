@@ -123,7 +123,7 @@ private fun KeyInformation(
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyMedium,
         )
-        Box(
+        TextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp)
@@ -134,23 +134,17 @@ private fun KeyInformation(
                     shape = RoundedCornerShape(20.dp)
                 )
                 .clip(RoundedCornerShape(20.dp)),
-        ) {
-            TextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surface),
-                value = keyTitle.value,
-                onValueChange = { keyTitle.value = it },
-                label = { Text("Название ключа") },
-            )
-        }
+            value = keyTitle.value,
+            onValueChange = { keyTitle.value = it },
+            label = { Text("Название ключа") },
+        )
     }
 }
 
 @Composable
 private fun ButtonRow(
     modifier: Modifier = Modifier,
-    onEvent: (CreateEvent.KeySave) -> Unit,
+    onEvent: (CreateEvent) -> Unit,
     state: KeyChosenState,
 ) {
     Row(
@@ -168,14 +162,14 @@ private fun ButtonRow(
         UiKitButton(
             modifier = Modifier,
             button = ButtonState.Text("Сохранить"),
-            onClick = {  },
+            onClick = { onEvent(CreateEvent.KeySave(state.title)) },
         )
         UiKitButton(
             modifier = Modifier,
             button = ButtonState.Icon.Default(
                 icon = R.drawable.ic_share_white,
             ),
-            onClick = { onEvent(CreateEvent.KeySave(state.title)) },
+            onClick = { CreateEvent.Share },
         )
     }
 }
