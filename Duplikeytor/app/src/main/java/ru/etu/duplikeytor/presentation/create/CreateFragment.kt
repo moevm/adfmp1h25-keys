@@ -1,11 +1,7 @@
 package ru.etu.duplikeytor.presentation.create
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -14,6 +10,7 @@ import ru.etu.duplikeytor.presentation.create.model.CreateEvent
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
 import ru.etu.duplikeytor.presentation.create.view.choose.ChooseScreen
 import ru.etu.duplikeytor.presentation.create.view.create.CreateScreen
+import ru.etu.duplikeytor.presentation.create.view.save.SaveScreen
 import ru.etu.duplikeytor.presentation.create.view.scale.ScaleScreen
 
 @Composable
@@ -64,11 +61,9 @@ internal fun CreateFragment(
             )
         }
         is CreateScreenState.Save -> {
-            Box(
-                Modifier
-                    .padding(contentPadding)
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background),
+            SaveScreen(
+                modifier = Modifier.padding(contentPadding),
+                state = (state as CreateScreenState.Save),
             )
         }
     }

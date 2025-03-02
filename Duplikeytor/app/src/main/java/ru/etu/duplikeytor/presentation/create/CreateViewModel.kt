@@ -1,16 +1,16 @@
 package ru.etu.duplikeytor.presentation.create
 
+import KeyChosenState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
-import ru.etu.duplikeytor.presentation.create.model.choose.KeyChosenState
-import ru.etu.duplikeytor.presentation.create.model.choose.KeyType
 import ru.etu.duplikeytor.presentation.holder.model.navigation.NavigationBarState
 import ru.etu.duplikeytor.presentation.holder.model.navigation.ScreenType
 import ru.etu.duplikeytor.presentation.holder.model.status.StatusBarState
+import ru.etu.duplikeytor.presentation.shared.model.KeyType
 import ru.etu.duplikeytor.presentation.shared.model.Screen
 import javax.inject.Inject
 
@@ -93,7 +93,12 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
                 } ?: CreateScreenState.Choose(keys = keys)
             }
             is CreateScreenState.Save -> {
-                CreateScreenState.Choose(keys = keys) // TODO
+                keyChosen?.let { key ->
+                    CreateScreenState.Create(
+                        key = key,
+                        scale = keyScale
+                    )
+                } ?: CreateScreenState.Choose(keys = keys)
             }
         }
         _state.emit(previousState)

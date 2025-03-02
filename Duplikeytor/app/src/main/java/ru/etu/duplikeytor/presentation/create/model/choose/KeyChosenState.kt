@@ -1,4 +1,4 @@
-package ru.etu.duplikeytor.presentation.create.model.choose
+import ru.etu.duplikeytor.presentation.shared.model.KeyType
 
 internal data class KeyChosenState(
     val imageUri: String,
