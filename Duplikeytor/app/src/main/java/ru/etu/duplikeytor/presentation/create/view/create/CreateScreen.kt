@@ -38,11 +38,11 @@ import ru.etu.duplikeytor.presentation.ui.uiKit.button.UiKitButton
 internal fun CreateScreen(
     modifier: Modifier,
     state: CreateScreenState.Create,
+    interfaceVisibleState: Boolean,
     onEvent: (CreateEvent) -> Unit,
 ) {
-    val isInterfaceVisible = remember { mutableStateOf(true) }
     val animateAlpha = animateFloatAsState(
-        targetValue = if(isInterfaceVisible.value) 1f else 0f,
+        targetValue = if(interfaceVisibleState) 1f else 0f,
         animationSpec = tween(
             durationMillis = 300,
             easing = EaseInOut,
@@ -56,15 +56,14 @@ internal fun CreateScreen(
                 .padding(20.dp)
                 .align(Alignment.TopEnd),
             button = ButtonState.Icon.Action(
-                if (isInterfaceVisible.value) {
+                if (interfaceVisibleState) {
                     R.drawable.ic_eye_closed_black
                 } else {
                     R.drawable.ic_eye_opened_black
                 }
             ),
             onClick = {
-                isInterfaceVisible.value = !isInterfaceVisible.value
-                onEvent(CreateEvent.InterfaceVisibleChange(isInterfaceVisible.value))
+                onEvent(CreateEvent.InterfaceVisibleChange)
             },
         )
         Column(

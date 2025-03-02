@@ -16,11 +16,6 @@ import javax.inject.Inject
 
 internal class ArchiveViewModel @Inject constructor() : ViewModel(), Screen {
 
-    private val keyArchiveState = KeyArchiveState.KeysList(
-        keys = getKeysFromArchive(),
-        title = "Мои ключи",
-    )
-
     override var statusBarState = MutableStateFlow<StatusBarState>(
         StatusBarState.Title(
             title = "",
@@ -31,7 +26,13 @@ internal class ArchiveViewModel @Inject constructor() : ViewModel(), Screen {
         NavigationBarState.build()
     )
     override val screenType: ScreenType = ScreenType.ARCHIVE
+    override fun onBackClick(): Boolean = returnToPreviousState()
 
+    private val keysList = getKeysFromArchive()
+    private val keyArchiveState = KeyArchiveState.KeysList(
+        keys = keysList,
+        title = "Мои ключи",
+    )
     private val _state = MutableStateFlow<KeyArchiveState>(keyArchiveState)
 
     val state: StateFlow<KeyArchiveState> = _state
@@ -65,6 +66,23 @@ internal class ArchiveViewModel @Inject constructor() : ViewModel(), Screen {
             title = key.name,
         )
     }
+
+    private fun returnToPreviousState(): Boolean {
+        return when(state.value) {
+            is KeyArchiveState.KeysList -> false
+            is KeyArchiveState.Key -> true.also {
+                changeState(
+                    KeyArchiveState.KeysList(
+                        keys = keysList,
+                        title = "Мои ключи",
+                    )
+                )
+            }
+        }
+    }
+
+    private fun changeState(state: KeyArchiveState) =
+        viewModelScope.launch { _state.emit(state) }
 
     private fun getKeysFromArchive() = listOf( // TODO получаем из БД
         KeyState(

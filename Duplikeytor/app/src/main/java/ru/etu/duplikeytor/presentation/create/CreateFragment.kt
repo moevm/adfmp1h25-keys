@@ -1,5 +1,6 @@
 package ru.etu.duplikeytor.presentation.create
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,11 +20,21 @@ import ru.etu.duplikeytor.presentation.create.view.scale.ScaleScreen
 @Composable
 internal fun CreateFragment(
     viewModel: CreateViewModel,
-    onCreate: () -> Unit = {},
     contentPadding: PaddingValues,
+    onBackClick: () -> Boolean,
+    onBackFailure: () -> Unit,
+    onCreate: () -> Unit = {},
 ) {
     onCreate()
+
     val state by viewModel.state.collectAsState()
+    val interfaceVisibilityState by viewModel.interfaceVisibleState.collectAsState()
+
+    BackHandler {
+        if (!onBackClick()) {
+            onBackFailure()
+        }
+    }
 
     when(state) {
         is CreateScreenState.Choose -> {
@@ -52,11 +63,12 @@ internal fun CreateFragment(
             CreateScreen(
                 modifier = Modifier.padding(contentPadding),
                 state = (state as CreateScreenState.Create),
+                interfaceVisibleState = interfaceVisibilityState,
                 onEvent = { event ->
                     when(event) {
                         is CreateEvent.KeyCreated -> viewModel.onKeyCreated()
                         is CreateEvent.InterfaceVisibleChange -> {
-                            viewModel.changeInterfaceVisibility(event.isVisible)
+                            viewModel.changeInterfaceVisibility()
                         }
                         else -> Unit
                     }

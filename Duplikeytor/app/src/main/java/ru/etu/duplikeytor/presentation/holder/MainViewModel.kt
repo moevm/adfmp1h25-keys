@@ -58,6 +58,8 @@ class MainViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun onBackClick() = _currentScreenImpl.value?.onBackClick() ?: false
+
     fun onScreenChanged(screenType: ScreenType) {
         _currentScreenType.value = screenType
         _currentScreenImpl.value = childScreenImpl[screenType]

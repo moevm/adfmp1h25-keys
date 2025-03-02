@@ -1,5 +1,6 @@
 package ru.etu.duplikeytor.presentation.archive
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -10,12 +11,20 @@ import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveState
 @Composable
 internal fun ArchiveFragment(
     viewModel: ArchiveViewModel,
-    onCreate: () -> Unit = {},
     contentPadding: PaddingValues,
+    onBackClick: () -> Boolean,
+    onBackFailure: () -> Unit,
+    onCreate: () -> Unit = {},
 ) {
     onCreate()
 
     val state by viewModel.state.collectAsState()
+
+    BackHandler {
+        if (!onBackClick()) {
+            onBackFailure()
+        }
+    }
 
     when(state) {
         is KeyArchiveState.KeysList -> {

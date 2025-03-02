@@ -24,6 +24,7 @@ internal class AboutViewModel @Inject constructor() : ViewModel(), Screen {
         NavigationBarState.build()
     )
     override val screenType: ScreenType = ScreenType.ABOUT
+    override fun onBackClick(): Boolean = false
 
     private val _state = MutableStateFlow(AboutScreenState(
         developers = getDevelopers(),

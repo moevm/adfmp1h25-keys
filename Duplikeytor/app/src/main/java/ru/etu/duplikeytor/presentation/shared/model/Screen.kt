@@ -9,4 +9,5 @@ interface Screen {
     val screenType: ScreenType
     var statusBarState: MutableStateFlow<StatusBarState>
     var navigationBarState: MutableStateFlow<NavigationBarState>
+    fun onBackClick(): Boolean
 }
