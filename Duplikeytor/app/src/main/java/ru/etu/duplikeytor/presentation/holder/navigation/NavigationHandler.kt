@@ -9,8 +9,8 @@ class NavigationHandler(
     private val navController: NavHostController,
     private val onScreenChanged: (ScreenType) -> Unit,
 ) {
-    private val _currentScreen = mutableStateOf(ScreenType.CREATE)
-    private val _previousScreen = mutableStateOf(ScreenType.CREATE)
+    private val _currentScreen = mutableStateOf(ScreenType.main)
+    private val _previousScreen = mutableStateOf(ScreenType.main)
     val currentScreen: State<ScreenType> = _currentScreen
     val previousScreen: State<ScreenType> = _previousScreen
 
@@ -38,5 +38,18 @@ class NavigationHandler(
             restoreState = true
         }
         onScreenChanged(screen)
+    }
+
+    fun navigateBack(exit: () -> Unit) {
+        val current = currentScreen.value
+        if (current != ScreenType.main) {
+            navController.navigate(ScreenType.main.route) {
+                popUpTo(ScreenType.main.route) {
+                    inclusive = true
+                }
+            }
+        } else {
+            exit()
+        }
     }
 }

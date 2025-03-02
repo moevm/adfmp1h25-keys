@@ -27,13 +27,21 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
     )
 
     override val screenType: ScreenType = ScreenType.CREATE
+    override fun onBackClick(): Boolean =
+        if (!_interfaceVisibleState.value) {
+            changeInterfaceVisibility()
+            true
+        } else {
+            returnToPreviousState()
+        }
 
-    private val keys
-        get () = getKeyTypes()
+    private val keys = getKeyTypes()
 
     private var keyChosen: KeyChosenState? = null
     private var keyScale: Float = 1f
 
+    private val _interfaceVisibleState = MutableStateFlow(true)
+    val interfaceVisibleState = _interfaceVisibleState
 
     private val _state: MutableStateFlow<CreateScreenState> =
         MutableStateFlow(CreateScreenState.Choose(keys = keys))
@@ -80,9 +88,9 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
             }
         }
 
-    private suspend fun returnToPreviousState() {
+    private fun returnToPreviousState(): Boolean {
         val previousState: CreateScreenState = when (state.value) {
-            is CreateScreenState.Choose -> { return }
+            is CreateScreenState.Choose -> { return false }
             is CreateScreenState.Scale -> { CreateScreenState.Choose(keys = keys) }
             is CreateScreenState.Create -> {
                 keyChosen?.let { key ->
@@ -101,19 +109,22 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
                 } ?: CreateScreenState.Choose(keys = keys)
             }
         }
-        _state.emit(previousState)
+
+        changeState(previousState)
+        return true
     }
+
+    private fun changeState(targetState: CreateScreenState) =
+        viewModelScope.launch { _state.emit(targetState) }
 
     internal fun onKeyChoose(key: KeyChosenState) {
         keyChosen = key
-        viewModelScope.launch {
-            _state.emit(
-                CreateScreenState.Scale(
-                    key = key,
-                    initialScale = keyScale
-                )
+        changeState(
+            CreateScreenState.Scale(
+                key = key,
+                initialScale = keyScale
             )
-        }
+        )
     }
 
     internal fun onKeyScale(scale: Float) {
@@ -122,37 +133,36 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
 
     internal fun onKeyScaled() {
         val key: KeyChosenState = keyChosen ?: return
-        viewModelScope.launch {
-            _state.emit(
-                CreateScreenState.Create(
-                    key = key,
-                    scale = keyScale
-                )
+        changeState(
+            CreateScreenState.Create(
+                key = key,
+                scale = keyScale
             )
-        }
+        )
     }
 
     internal fun onKeyCreated() {
         val key: KeyChosenState = keyChosen ?: return
         val keyConfig = null // TODO
-        viewModelScope.launch {
-            _state.emit(
-                CreateScreenState.Save(
-                    key = key,
-                    scale = keyScale,
-                    keyConfig = keyConfig,
-                )
+        changeState(
+            CreateScreenState.Save(
+                key = key,
+                scale = keyScale,
+                keyConfig = keyConfig,
             )
-        }
+        )
     }
 
-    internal fun changeInterfaceVisibility(isVisible: Boolean) {
+    fun changeInterfaceVisibility() {
+        _interfaceVisibleState.value = !_interfaceVisibleState.value
         viewModelScope.launch {
             statusBarState.emit(when(val currentStatusBar = statusBarState.value) {
-                is StatusBarState.Title -> currentStatusBar.copy(requiredDisplay = isVisible)
-                is StatusBarState.Empty -> currentStatusBar.copy(requiredDisplay = isVisible)
+                is StatusBarState.Title ->
+                    currentStatusBar.copy(requiredDisplay = _interfaceVisibleState.value)
+                is StatusBarState.Empty ->
+                    currentStatusBar.copy(requiredDisplay = _interfaceVisibleState.value)
             })
-            navigationBarState.emit(navigationBarState.value.copy(requiredDisplay = isVisible))
+            navigationBarState.emit(navigationBarState.value.copy(requiredDisplay = _interfaceVisibleState.value))
         }
     }
 

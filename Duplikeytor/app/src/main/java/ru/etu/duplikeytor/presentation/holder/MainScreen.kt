@@ -1,10 +1,7 @@
 package ru.etu.duplikeytor.presentation.holder
 
-import android.util.Log
+import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.EaseIn
-import androidx.compose.animation.core.EaseInOut
-import androidx.compose.animation.core.EaseOut
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.PaddingValues
@@ -48,6 +45,7 @@ internal fun MainScreen(
     registerScreen: (Screen) -> Unit,
     statusBarStateFlow: StateFlow<StatusBarState>,
     navigationBarStateFlow: StateFlow<NavigationBarState>,
+    onBackClick: () -> Boolean,
 ) {
     val navController = rememberNavController()
     val navigationHandler = remember {
@@ -57,6 +55,7 @@ internal fun MainScreen(
         )
     }
     onScreenChanged(ScreenType.main)
+    val activity = LocalActivity.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
     val navigationPaddingPx = remember { mutableIntStateOf(0) }
@@ -90,15 +89,9 @@ internal fun MainScreen(
             )
         }
     ) { innerPadding -> innerPadding.toString()
-        val createViewModel: CreateViewModel = hiltViewModel<CreateViewModel>().also {
-            registerScreen(it)
-        }
-        val archiveViewModel: ArchiveViewModel = hiltViewModel<ArchiveViewModel>().also {
-            registerScreen(it)
-        }
-        val aboutViewModel: AboutViewModel = hiltViewModel<AboutViewModel>().also {
-            registerScreen(it)
-        }
+        val createViewModel = hiltViewModel<CreateViewModel>().also { registerScreen(it) }
+        val archiveViewModel = hiltViewModel<ArchiveViewModel>().also { registerScreen(it) }
+        val aboutViewModel = hiltViewModel<AboutViewModel>().also { registerScreen(it) }
         NavHost(
             modifier = Modifier,
             navController = navigationHandler.controller,
@@ -124,7 +117,9 @@ internal fun MainScreen(
                     contentPadding = PaddingValues(
                         top = innerPadding.calculateTopPadding(),
                         bottom = navigationPaddingPx.intValue.toDp(),
-                    )
+                    ),
+                    onBackClick = onBackClick,
+                    onBackFailure = { navigationHandler.navigateBack { activity?.finish() } }
                 )
             }
             composable(
@@ -155,7 +150,9 @@ internal fun MainScreen(
                     contentPadding = PaddingValues(
                         top = innerPadding.calculateTopPadding(),
                         bottom = navigationPaddingPx.intValue.toDp(),
-                    )
+                    ),
+                    onBackClick = onBackClick,
+                    onBackFailure = { navigationHandler.navigateBack { activity?.finish() } }
                 )
             }
             composable(
@@ -178,7 +175,8 @@ internal fun MainScreen(
                     contentPadding = PaddingValues(
                         top = innerPadding.calculateTopPadding(),
                         bottom = navigationPaddingPx.intValue.toDp(),
-                    )
+                    ),
+                    onBackClick = { navigationHandler.navigateBack { activity?.finish() } },
                 )
             }
         }
