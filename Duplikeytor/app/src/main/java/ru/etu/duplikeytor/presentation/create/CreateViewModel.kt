@@ -93,7 +93,12 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
                 } ?: CreateScreenState.Choose(keys = keys)
             }
             is CreateScreenState.Save -> {
-                CreateScreenState.Choose(keys = keys) // TODO
+                keyChosen?.let { key ->
+                    CreateScreenState.Create(
+                        key = key,
+                        scale = keyScale
+                    )
+                } ?: CreateScreenState.Choose(keys = keys)
             }
         }
         _state.emit(previousState)
