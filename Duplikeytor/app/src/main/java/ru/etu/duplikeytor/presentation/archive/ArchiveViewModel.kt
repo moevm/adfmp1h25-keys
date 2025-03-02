@@ -86,24 +86,24 @@ internal class ArchiveViewModel @Inject constructor() : ViewModel(), Screen {
 
     private fun getKeysFromArchive() = listOf( // TODO получаем из БД
         KeyState(
-            name = "Key 1",
-            imageUri = "https://ybis.ru/wp-content/uploads/2023/09/solntse-kartinka-1.webp",
-            createdAt = "10.10.2021 - 13:37",
+            name = "Сарай",
+            imageUri = "https://images.kwikset.com/is/image/Kwikset/05991-mk-any_c3?wid=600&qlt=90&resMode=sharp",
+            createdAt = "10.10.2024 - 13:37",
             type = KeyType.KWIKSET,
             pins = "1-2-3-4-5",
         ),
         KeyState(
-            name = "Key 2",
-            imageUri = "https://ybis.ru/wp-content/uploads/2023/09/solntse-kartinka-1.webp",
-            createdAt = "10.11.2021 - 13:37",
+            name = "Баня",
+            imageUri = "https://images.kwikset.com/is/image/Kwikset/05991-mk-any_c3?wid=600&qlt=90&resMode=sharp",
+            createdAt = "10.11.2024 - 13:37",
             type = KeyType.KWIKSET,
             pins = "2-3-4-5-1",
         ),
         KeyState(
-            name = "Key 3",
-            imageUri = "https://ybis.ru/wp-content/uploads/2023/09/solntse-kartinka-1.webp",
-            createdAt = "10.12.2021 - 13:37",
-            type = KeyType.KWIKSET,
+            name = "Гараж",
+            imageUri = "https://cdn.mscdirect.com/global/images/ProductImages/1716860-21.jpg",
+            createdAt = "10.12.2024 - 13:37",
+            type = KeyType.SCHLAGE,
             pins = "3-4-5-1-2",
         ),
     )

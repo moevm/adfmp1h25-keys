@@ -1,8 +1,6 @@
 package ru.etu.duplikeytor.presentation.create
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -78,6 +76,13 @@ internal fun CreateFragment(
             SaveScreen(
                 modifier = Modifier.padding(contentPadding),
                 state = (state as CreateScreenState.Save),
+                onEvent = { event ->
+                    when(event) {
+                        is CreateEvent.KeySave -> viewModel.onSaveKey()
+                        is CreateEvent.Share -> {}
+                        else -> Unit
+                    }
+                }
             )
         }
     }

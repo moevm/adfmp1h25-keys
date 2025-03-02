@@ -39,6 +39,7 @@ import ru.etu.duplikeytor.presentation.ui.uiKit.button.UiKitButton
 internal fun SaveScreen(
     modifier: Modifier = Modifier,
     state: CreateScreenState.Save,
+    onEvent: (CreateEvent) -> Unit,
 ) {
     val textState = remember { mutableStateOf(state.key.title) }
 
@@ -59,7 +60,7 @@ internal fun SaveScreen(
             keyTitle = textState,
         )
         ButtonRow(
-            onEvent = { },
+            onEvent = onEvent,
             state = state.key,
         )
     }

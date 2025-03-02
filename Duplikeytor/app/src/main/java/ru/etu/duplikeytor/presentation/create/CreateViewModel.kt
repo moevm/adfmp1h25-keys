@@ -90,8 +90,14 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
 
     private fun returnToPreviousState(): Boolean {
         val previousState: CreateScreenState = when (state.value) {
-            is CreateScreenState.Choose -> { return false }
-            is CreateScreenState.Scale -> { CreateScreenState.Choose(keys = keys) }
+            is CreateScreenState.Choose -> {
+                resetKeyInfo()
+                return false
+            }
+            is CreateScreenState.Scale -> {
+                resetKeyInfo()
+                CreateScreenState.Choose(keys = keys)
+            }
             is CreateScreenState.Create -> {
                 keyChosen?.let { key ->
                     CreateScreenState.Scale(
@@ -153,6 +159,18 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
         )
     }
 
+    internal fun onSaveKey() {
+        // TODO save key (keyConfig, and title) in DB
+        resetKeyInfo()
+        changeState(CreateScreenState.Choose(keys = keys))
+    }
+
+    private fun resetKeyInfo() {
+        keyChosen = null
+        keyScale = 1f
+        // TODO keyConfig = null
+    }
+
     fun changeInterfaceVisibility() {
         _interfaceVisibleState.value = !_interfaceVisibleState.value
         viewModelScope.launch {
@@ -168,34 +186,14 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
 
     private fun getKeyTypes() = listOf(
         KeyChosenState(
-            imageUri = "https://avatars.githubusercontent.com/u/70469206?v=4",
+            imageUri = "https://images.kwikset.com/is/image/Kwikset/05991-mk-any_c3?wid=600&qlt=90&resMode=sharp",
             title = "Kwikset",
             type = KeyType.KWIKSET,
         ),
         KeyChosenState(
-            imageUri = "https://avatars.githubusercontent.com/u/90708652?v=4",
+            imageUri = "https://cdn.mscdirect.com/global/images/ProductImages/1716860-21.jpg",
             title = "SCHLAGE",
-            type = KeyType.KWIKSET,
-        ),
-        KeyChosenState(
-            imageUri = "https://avatars.githubusercontent.com/u/90792387?v=4",
-            title = "Дима",
-            type = KeyType.KWIKSET,
-        ),
-        KeyChosenState(
-            imageUri = "https://avatars.githubusercontent.com/u/70469206?v=4",
-            title = "Kwikset.",
-            type = KeyType.KWIKSET,
-        ),
-        KeyChosenState(
-            imageUri = "https://avatars.githubusercontent.com/u/90708652?v=4",
-            title = "SCHLAGE.",
-            type = KeyType.KWIKSET,
-        ),
-        KeyChosenState(
-            imageUri = "https://avatars.githubusercontent.com/u/90792387?v=4",
-            title = "Дима.",
-            type = KeyType.KWIKSET,
+            type = KeyType.SCHLAGE,
         ),
     )
 }
