@@ -1,8 +1,11 @@
 package ru.etu.duplikeytor.presentation.create.view.create
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -77,19 +80,25 @@ internal fun CreateScreen(
             Row(
                 modifier = Modifier.fillMaxWidth().weight(1f),
             ) {
-                Selector(
+                AnimatedVisibility(
                     modifier = Modifier
                         .width(100.dp)
-                        .align(Alignment.Bottom)
-                        .alpha(animateAlpha.value),
-                    title = "Пин",
-                    initValue = 1,
-                    minValue = 1,
-                    maxValue = 5,
-                    onChange = { number ->
-                        currentPinNumber.value = number
-                    }
-                )
+                        .align(Alignment.Bottom),
+                    visible = interfaceVisibleState,
+                    enter = fadeIn(),
+                    exit = fadeOut(),
+                ) {
+                    Selector(
+                        modifier = Modifier,
+                        title = "Пин",
+                        initValue = 1,
+                        minValue = 1,
+                        maxValue = 5,
+                        onChange = { number ->
+                            currentPinNumber.value = number
+                        }
+                    )
+                }
                 KeyCreate(
                     modifier = Modifier
                         .fillMaxHeight()
@@ -97,30 +106,37 @@ internal fun CreateScreen(
                         .align(Alignment.CenterVertically),
                     state = state,
                 )
-                Selector(
+                AnimatedVisibility(
                     modifier = Modifier
                         .width(100.dp)
-                        .align(Alignment.Bottom)
-                        .alpha(animateAlpha.value),
-                    title = "Глубина",
-                    initValue = 0,
-                    minValue = 0,
-                    maxValue = 4,
-                    onChange = { number ->
-                        currentPinDeep.value = number
-                    }
-                )
+                        .align(Alignment.Bottom),
+                    visible = interfaceVisibleState,
+                    enter = fadeIn(),
+                    exit = fadeOut(),
+                ) {
+                    Selector(
+                        modifier = Modifier,
+                        title = "Глубина",
+                        initValue = 0,
+                        minValue = 0,
+                        maxValue = 4,
+                        onChange = { number ->
+                            currentPinDeep.value = number
+                        }
+                    )
+                }
             }
 
             Spacer(Modifier.height(10.dp))
-
             UiKitButton(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .alpha(animateAlpha.value),
                 button = ButtonState.Text("Продолжить"),
                 onClick = {
-                    onEvent(CreateEvent.KeyCreated)
+                    if (interfaceVisibleState) {
+                        onEvent(CreateEvent.KeyCreated)
+                    }
                 }
             )
         }
