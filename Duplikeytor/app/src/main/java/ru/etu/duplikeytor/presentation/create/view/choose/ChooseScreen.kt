@@ -46,6 +46,7 @@ import coil3.compose.AsyncImage
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import KeyChosenState
+import androidx.compose.ui.graphics.painter.ColorPainter
 import ru.etu.duplikeytor.presentation.create.model.CreateEvent
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.ButtonState
@@ -100,6 +101,7 @@ private fun Chooser(
     val screenWidthDp = LocalConfiguration.current.screenWidthDp.dp
     val centerOffset = with(LocalDensity.current) { (CARD_WIDTH.dp / 2).toPx() }
     val snapFlingBehavior = rememberSnapFlingBehavior(listState)
+    val placeholderColor = MaterialTheme.colorScheme.surface
 
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -146,6 +148,8 @@ private fun Chooser(
                             },
                         model = key.imageUri,
                         contentScale = ContentScale.Crop,
+                        placeholder = remember { ColorPainter(placeholderColor) },
+                        error = remember { ColorPainter(placeholderColor) },
                         contentDescription = null,
                     )
                 }

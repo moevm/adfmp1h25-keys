@@ -5,6 +5,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
@@ -47,23 +49,22 @@ internal fun KeyCard(
             .background(
                 color = MaterialTheme.colorScheme.surface
             )
-            .requiredHeight(height = 200.dp)
             .fillMaxWidth()
             .clickable { onClick(state) },
     ){
         Column(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val placeholder = placeholderPainter(MaterialTheme.colorScheme.background)
             AsyncImage(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.fillMaxWidth().aspectRatio(1f),
                 model = state.imageUri,
                 contentDescription = null,
                 error = placeholder,
                 placeholder = placeholder,
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.FillBounds,
             )
             Text(
                 modifier = Modifier.fillMaxWidth(),
