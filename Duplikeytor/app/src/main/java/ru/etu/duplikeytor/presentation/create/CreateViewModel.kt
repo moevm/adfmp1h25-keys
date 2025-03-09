@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
+import ru.etu.duplikeytor.presentation.create.model.config.KeyConfig
 import ru.etu.duplikeytor.presentation.holder.model.navigation.NavigationBarState
 import ru.etu.duplikeytor.presentation.holder.model.navigation.ScreenType
 import ru.etu.duplikeytor.presentation.holder.model.status.StatusBarState
@@ -39,6 +40,7 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
 
     private var keyChosen: KeyChosenState? = null
     private var keyScale: Float = 1f
+    private var keyConfig: KeyConfig? = null
 
     private val _interfaceVisibleState = MutableStateFlow(true)
     val interfaceVisibleState = _interfaceVisibleState
@@ -107,12 +109,16 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
                 } ?: CreateScreenState.Choose(keys = keys)
             }
             is CreateScreenState.Save -> {
-                keyChosen?.let { key ->
+                val (key, config) = keyChosen to keyConfig
+                if (key != null && config != null) {
                     CreateScreenState.Create(
                         key = key,
-                        scale = keyScale
+                        scale = keyScale,
+                        keyConfig = config,
                     )
-                } ?: CreateScreenState.Choose(keys = keys)
+                } else {
+                    CreateScreenState.Choose(keys = keys)
+                }
             }
         }
 
@@ -125,6 +131,14 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
 
     internal fun onKeyChoose(key: KeyChosenState) {
         keyChosen = key
+        keyConfig = when(key.type) {
+            KeyType.KWIKSET -> {
+                KeyConfig.Kwikset.init
+            }
+            else -> {
+                null // TODO
+            }
+        }
         changeState(
             CreateScreenState.Scale(
                 key = key,
@@ -139,17 +153,35 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
 
     internal fun onKeyScaled() {
         val key: KeyChosenState = keyChosen ?: return
+        val config: KeyConfig = keyConfig ?: return
         changeState(
             CreateScreenState.Create(
                 key = key,
-                scale = keyScale
+                scale = keyScale,
+                keyConfig = config,
             )
         )
     }
 
+    internal fun changeConfig(pinNumber: Int, deep: Int) {
+        keyConfig = when (keyConfig) {
+            is KeyConfig.Kwikset -> {
+                (keyConfig as KeyConfig.Kwikset).copy(
+                    pins = (keyConfig as KeyConfig.Kwikset).pins.mapIndexed { index, value ->
+                        if (index == pinNumber - 1) deep else value
+                    }
+                )
+            }
+            else -> {
+                // TODO schalge, null
+                keyConfig
+            }
+        }
+    }
+
     internal fun onKeyCreated() {
         val key: KeyChosenState = keyChosen ?: return
-        val keyConfig = null // TODO
+        val keyConfig = keyConfig ?: return
         changeState(
             CreateScreenState.Save(
                 key = key,
@@ -168,7 +200,7 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
     private fun resetKeyInfo() {
         keyChosen = null
         keyScale = 1f
-        // TODO keyConfig = null
+        keyConfig = null
     }
 
     fun changeInterfaceVisibility() {
