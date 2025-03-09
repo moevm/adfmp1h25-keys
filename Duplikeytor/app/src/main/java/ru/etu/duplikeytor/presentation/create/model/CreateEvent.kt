@@ -10,6 +10,7 @@ internal sealed interface CreateEvent {
     data class KeyCreateChanged(val pin: Int, val deep: Int) : CreateEvent
     data object KeyCreated : CreateEvent
     data object InterfaceVisibleChange : CreateEvent
-    data class KeySave(val keyName: String) : CreateEvent
+    data class KeyTitleChange(val title: String) : CreateEvent
+    data object KeySave : CreateEvent
     data object Share : CreateEvent
 }

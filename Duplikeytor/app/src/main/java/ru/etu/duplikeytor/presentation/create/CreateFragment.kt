@@ -84,6 +84,7 @@ internal fun CreateFragment(
                 onEvent = { event ->
                     when(event) {
                         is CreateEvent.KeySave -> viewModel.onSaveKey()
+                        is CreateEvent.KeyTitleChange -> viewModel.keyTitleChange(event.title)
                         is CreateEvent.Share -> {}
                         else -> Unit
                     }

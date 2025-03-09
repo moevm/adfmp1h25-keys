@@ -59,10 +59,12 @@ internal fun SaveScreen(
         KeyInformation(
             state = state,
             keyTitle = textState,
+            onTitleChange = { title ->
+                onEvent(CreateEvent.KeyTitleChange(title))
+            }
         )
         ButtonRow(
             onEvent = onEvent,
-            state = state.key,
         )
     }
 }
@@ -107,6 +109,7 @@ private fun KeyInformation(
     modifier: Modifier = Modifier,
     state: CreateScreenState.Save,
     keyTitle: MutableState<String>,
+    onTitleChange: (String) -> Unit,
 ) {
     Column (
         modifier = modifier,
@@ -137,7 +140,10 @@ private fun KeyInformation(
                 )
                 .clip(RoundedCornerShape(20.dp)),
             value = keyTitle.value,
-            onValueChange = { keyTitle.value = it },
+            onValueChange = {
+                onTitleChange(it)
+                keyTitle.value = it
+            },
             label = { Text("Название ключа") },
             maxLines = 1,
             singleLine = true,
@@ -161,7 +167,6 @@ private fun KeyConfig.toTitle() =
 private fun ButtonRow(
     modifier: Modifier = Modifier,
     onEvent: (CreateEvent) -> Unit,
-    state: KeyChosenState,
 ) {
     Row(
         modifier = modifier
@@ -178,7 +183,7 @@ private fun ButtonRow(
         UiKitButton(
             modifier = Modifier,
             button = ButtonState.Text("Сохранить"),
-            onClick = { onEvent(CreateEvent.KeySave(state.title)) },
+            onClick = { onEvent(CreateEvent.KeySave) },
         )
         UiKitButton(
             modifier = Modifier,
