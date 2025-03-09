@@ -1,6 +1,7 @@
 package ru.etu.duplikeytor.presentation.create.model
 
 import KeyChosenState
+import ru.etu.duplikeytor.presentation.create.model.config.KeyConfig
 
 internal sealed interface CreateScreenState {
     val createStep: CreateStep
@@ -20,12 +21,13 @@ internal sealed interface CreateScreenState {
         override val createStep: CreateStep = CreateStep.CREATE,
         val key: KeyChosenState,
         val scale: Float,
+        val keyConfig: KeyConfig,
     ) : CreateScreenState
 
     data class Save(
         override val createStep: CreateStep = CreateStep.SAVE,
         val key: KeyChosenState,
         val scale: Float,
-        val keyConfig: Any?, // TODO
+        val keyConfig: KeyConfig,
     ) : CreateScreenState
 }

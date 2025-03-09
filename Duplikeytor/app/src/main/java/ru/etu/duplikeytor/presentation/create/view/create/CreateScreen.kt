@@ -21,9 +21,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import ru.etu.duplikeytor.R
 import ru.etu.duplikeytor.presentation.create.model.CreateEvent
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
+import ru.etu.duplikeytor.presentation.create.model.config.KeyConfig
 import ru.etu.duplikeytor.presentation.create.view.util.Key
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.ButtonState
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.UiKitButton
@@ -51,6 +53,7 @@ internal fun CreateScreen(
             easing = EaseInOut,
         )
     )
+
     Box(
         modifier = modifier,
     ) {
@@ -75,11 +78,21 @@ internal fun CreateScreen(
                 .padding(vertical = 10.dp),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
-            val currentPinNumber = remember { mutableStateOf(1) }
-            val currentPinDeep = remember { mutableStateOf(0) }
             Row(
                 modifier = Modifier.fillMaxWidth().weight(1f),
             ) {
+                val currentState = rememberSaveable { mutableStateOf(
+                    when(state.keyConfig) {
+                        is KeyConfig.Kwikset -> {
+                            state.keyConfig.pins as MutableList
+                        }
+                        else -> {
+                            mutableListOf(0, 0, 0, 0, 0) // TODO
+                        }
+                    }
+                ) }
+                val currentPinNumber = rememberSaveable { mutableIntStateOf(1) }
+                val currentPinDeep = rememberSaveable { mutableIntStateOf(0) }
                 AnimatedVisibility(
                     modifier = Modifier
                         .width(100.dp)
@@ -91,11 +104,11 @@ internal fun CreateScreen(
                     Selector(
                         modifier = Modifier,
                         title = "Пин",
-                        initValue = 1,
+                        value = currentPinNumber.intValue,
                         minValue = 1,
                         maxValue = 5,
                         onChange = { number ->
-                            currentPinNumber.value = number
+                            currentPinNumber.intValue = number
                         }
                     )
                 }
@@ -117,12 +130,26 @@ internal fun CreateScreen(
                     Selector(
                         modifier = Modifier,
                         title = "Глубина",
-                        initValue = 0,
+                        value = currentPinDeep.intValue,
                         minValue = 0,
                         maxValue = 4,
                         onChange = { number ->
-                            currentPinDeep.value = number
+                            currentPinDeep.intValue = number
                         }
+                    )
+                }
+
+                LaunchedEffect(currentPinNumber.intValue) {
+                    currentPinDeep.intValue = currentState.value[currentPinNumber.intValue - 1]
+                }
+
+                LaunchedEffect(currentPinDeep.intValue) {
+                    currentState.value[currentPinNumber.intValue - 1] = currentPinDeep.intValue
+                    onEvent(
+                        CreateEvent.KeyCreateChanged(
+                            pin = currentPinNumber.intValue,
+                            deep = currentPinDeep.intValue,
+                        )
                     )
                 }
             }
@@ -147,12 +174,11 @@ internal fun CreateScreen(
 private fun Selector(
     modifier: Modifier,
     title: String,
-    initValue: Int,
+    value: Int,
     minValue: Int,
     maxValue: Int,
     onChange: (Int) -> Unit,
 ) {
-    val currentValue = remember { mutableIntStateOf(initValue) }
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Bottom,
@@ -167,24 +193,22 @@ private fun Selector(
             modifier = Modifier,
             button = ButtonState.Icon.Default(R.drawable.ic_plus_white),
             onClick = {
-                if (currentValue.intValue+1 in minValue..maxValue) {
-                    currentValue.intValue += 1
-                    onChange(currentValue.intValue)
+                if (value + 1 in minValue..maxValue) {
+                    onChange(value + 1)
                 }
             }
         )
         Text(
             modifier = Modifier.padding(vertical = 15.dp),
-            text = currentValue.intValue.toString(),
+            text = value.toString(),
             style = MaterialTheme.typography.bodyLarge,
         )
         UiKitButton(
             modifier = Modifier,
             button = ButtonState.Icon.Default(R.drawable.ic_minus_white),
             onClick = {
-                if (currentValue.intValue-1 in minValue..maxValue) {
-                    currentValue.intValue -= 1
-                    onChange(currentValue.intValue)
+                if (value - 1 in minValue..maxValue) {
+                    onChange(value - 1)
                 }
             }
         )

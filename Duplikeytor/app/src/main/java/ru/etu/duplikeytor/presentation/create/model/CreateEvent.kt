@@ -7,6 +7,7 @@ internal sealed interface CreateEvent {
     data class KeyChoose(val chosenKey: KeyChosenState) : CreateEvent
     data class KeyScale(val scale: Float) : CreateEvent
     data object KeyScaled : CreateEvent
+    data class KeyCreateChanged(val pin: Int, val deep: Int) : CreateEvent
     data object KeyCreated : CreateEvent
     data object InterfaceVisibleChange : CreateEvent
     data class KeySave(val keyName: String) : CreateEvent

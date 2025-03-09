@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import ru.etu.duplikeytor.R
 import ru.etu.duplikeytor.presentation.create.model.CreateEvent
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
+import ru.etu.duplikeytor.presentation.create.model.config.KeyConfig
 import ru.etu.duplikeytor.presentation.create.view.util.Key
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.ButtonState
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.UiKitButton
@@ -56,7 +57,7 @@ internal fun SaveScreen(
                 .aspectRatio(0.8f),
         )
         KeyInformation(
-            state = state.key,
+            state = state,
             keyTitle = textState,
         )
         ButtonRow(
@@ -104,7 +105,7 @@ private fun KeyPicture(
 @Composable
 private fun KeyInformation(
     modifier: Modifier = Modifier,
-    state: KeyChosenState,
+    state: CreateScreenState.Save,
     keyTitle: MutableState<String>,
 ) {
     Column (
@@ -113,14 +114,14 @@ private fun KeyInformation(
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = state.type.toString(),
+            text = state.key.type.toString(),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyMedium,
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "1-2-3-4-5",
+            text = state.keyConfig.toTitle(),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyMedium,
         )
@@ -147,6 +148,14 @@ private fun KeyInformation(
         )
     }
 }
+
+private fun KeyConfig.toTitle() =
+    when(this) {
+        is KeyConfig.Kwikset -> {
+            this.pins.joinToString(separator = "–")
+        }
+        else -> "Unsupported type" // TODO
+    }
 
 @Composable
 private fun ButtonRow(

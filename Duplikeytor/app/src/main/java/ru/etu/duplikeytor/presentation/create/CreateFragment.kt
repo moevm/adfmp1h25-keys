@@ -63,9 +63,14 @@ internal fun CreateFragment(
                 interfaceVisibleState = interfaceVisibilityState,
                 onEvent = { event ->
                     when(event) {
-                        is CreateEvent.KeyCreated -> viewModel.onKeyCreated()
+                        is CreateEvent.KeyCreated -> {
+                            viewModel.onKeyCreated()
+                        }
                         is CreateEvent.InterfaceVisibleChange -> {
                             viewModel.changeInterfaceVisibility()
+                        }
+                        is CreateEvent.KeyCreateChanged -> {
+                            viewModel.changeConfig(event.pin, event.deep)
                         }
                         else -> Unit
                     }
