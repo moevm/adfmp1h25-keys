@@ -3,9 +3,12 @@ package ru.etu.duplikeytor.presentation.create
 import KeyChosenState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import ru.etu.duplikeytor.domain.models.Key
+import ru.etu.duplikeytor.domain.repository.KeyRepository
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
 import ru.etu.duplikeytor.presentation.create.model.config.KeyConfig
 import ru.etu.duplikeytor.presentation.holder.model.navigation.NavigationBarState
@@ -15,7 +18,10 @@ import ru.etu.duplikeytor.presentation.shared.model.KeyType
 import ru.etu.duplikeytor.presentation.shared.model.Screen
 import javax.inject.Inject
 
-internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
+@HiltViewModel
+internal class CreateViewModel @Inject constructor(
+    private val keyRepository: KeyRepository,
+) : ViewModel(), Screen {
 
     override var statusBarState = MutableStateFlow<StatusBarState>(
         StatusBarState.Title(
@@ -41,6 +47,7 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
     private var keyChosen: KeyChosenState? = null
     private var keyScale: Float = 1f
     private var keyConfig: KeyConfig? = null
+    private var keyTitle = ""
 
     private val _interfaceVisibleState = MutableStateFlow(true)
     val interfaceVisibleState = _interfaceVisibleState
@@ -192,15 +199,34 @@ internal class CreateViewModel @Inject constructor() : ViewModel(), Screen {
     }
 
     internal fun onSaveKey() {
-        // TODO save key (keyConfig, and title) in DB
+        saveKeyIntoRepository(keyTitle, keyChosen, keyConfig)
         resetKeyInfo()
         changeState(CreateScreenState.Choose(keys = keys))
+    }
+
+    private fun saveKeyIntoRepository(keyName: String, keyChose: KeyChosenState?, keyConfig: KeyConfig?) {
+        keyChose?:return
+        keyConfig?:return
+        val key = Key(
+            name = keyName,
+            pins = keyConfig.pins,
+            type = keyChose.type.toString(),
+        )
+        viewModelScope.launch {
+            keyRepository.insertKey(key)
+        }
+    }
+
+
+    internal fun keyTitleChange(title: String) {
+        keyTitle = title
     }
 
     private fun resetKeyInfo() {
         keyChosen = null
         keyScale = 1f
         keyConfig = null
+        keyTitle = ""
     }
 
     fun changeInterfaceVisibility() {
