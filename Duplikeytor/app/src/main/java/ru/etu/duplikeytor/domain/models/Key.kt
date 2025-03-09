@@ -12,17 +12,17 @@ import java.util.Date
 data class Key(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name="key_id")
-    var id: Long,
+    var id: Long = 0,
 
     var name: String,
 
     @ColumnInfo(name="photo_uri")
-    var photoUri: String?,
+    var photoUri: String? = null,
 
     var type: String,
 
     var pins: List<Int>,
 
     @ColumnInfo(name="created_at")
-    var createdAt: String,
+    var createdAt: Long = System.currentTimeMillis(),
 )
