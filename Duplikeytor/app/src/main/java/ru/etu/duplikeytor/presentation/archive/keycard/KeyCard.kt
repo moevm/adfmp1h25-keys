@@ -112,6 +112,7 @@ private fun KeyCardPreview() {
     KeyCard(
         Modifier,
         KeyState(
+            id = 0,
             name = "Ключ от Нью-Йорка",
             imageUri = "https://avatars.githubusercontent.com/u/90792387?v=4",
             createdAt = "12.02.2025 - 13:00",
