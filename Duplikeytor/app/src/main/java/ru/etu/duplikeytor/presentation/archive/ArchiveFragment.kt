@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import ru.etu.duplikeytor.presentation.archive.keycard.KeyInfoScreen
+import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveEvent
 import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveState
 
 @Composable
@@ -38,6 +39,13 @@ internal fun ArchiveFragment(
             KeyInfoScreen(
                 contentPadding = contentPadding,
                 state = state as KeyArchiveState.Key,
+                onEvent = { event ->
+                    when(event) {
+                        is KeyArchiveEvent.Delete -> viewModel.onKeyDelete(event.key.id)
+                        is KeyArchiveEvent.Edit -> TODO()
+                        is KeyArchiveEvent.Repost -> TODO()
+                    }
+                }
             )
         }
     }

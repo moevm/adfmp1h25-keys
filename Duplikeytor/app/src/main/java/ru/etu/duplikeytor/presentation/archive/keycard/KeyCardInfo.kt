@@ -34,6 +34,7 @@ internal fun KeyInfoScreen(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues,
     state: KeyArchiveState.Key,
+    onEvent: (KeyArchiveEvent) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -145,6 +146,7 @@ private fun KeyCardInfoPreview() {
         contentPadding = PaddingValues(top = 60.dp, bottom = 60.dp),
         state = KeyArchiveState.Key(
             key = KeyState(
+                id = 0,
                 name = "Key name",
                 imageUri = "https://avatars.githubusercontent.com/u/90708652?v=4",
                 createdAt = "10.10.2021 - 13:37",
@@ -153,5 +155,6 @@ private fun KeyCardInfoPreview() {
             ),
             title = "Key title",
         ),
+        onEvent = {},
     )
 }
