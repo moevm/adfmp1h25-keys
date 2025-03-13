@@ -1,6 +1,7 @@
 package ru.etu.duplikeytor.presentation.create
 
 import KeyChosenState
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -202,6 +203,46 @@ internal class CreateViewModel @Inject constructor(
         saveKeyIntoRepository(keyTitle, keyChosen, keyConfig)
         resetKeyInfo()
         changeState(CreateScreenState.Choose(keys = keys))
+    }
+
+    internal fun onKeyEditIntent(id: Long) {
+        viewModelScope.launch {
+            val key = keyRepository.getKey(id)
+            Log.d("CreateViewModel", "onKeyEditIntent: $key")
+            val keyEditConfig = when(KeyType.valueOf(key.type)) {
+                KeyType.KWIKSET -> {
+                    KeyConfig.Kwikset(
+                        pins = key.pins
+                    )
+                }
+                KeyType.SCHLAGE -> {
+                    KeyConfig.Schlage(
+                        pins = key.pins
+                    )
+                }
+            }
+
+            keyChosen = KeyChosenState(
+                imageUri = key.type,
+                title = key.name,
+                type = KeyType.valueOf(key.type),
+            )
+            keyScale = 1f //TODO get from db
+            keyConfig = keyEditConfig
+            keyTitle = key.name
+
+            changeState(
+                CreateScreenState.Save(
+                    key = KeyChosenState(
+                        imageUri = key.type,
+                        title = key.name,
+                        type = KeyType.valueOf(key.type),
+                    ),
+                    scale = 1f,
+                    keyConfig = keyEditConfig,
+                )
+            )
+        }
     }
 
     private fun saveKeyIntoRepository(keyName: String, keyChose: KeyChosenState?, keyConfig: KeyConfig?) {
