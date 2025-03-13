@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ru.etu.duplikeytor.R
@@ -168,6 +169,7 @@ private fun ButtonRow(
     modifier: Modifier = Modifier,
     onEvent: (CreateEvent) -> Unit,
 ) {
+    val context = LocalContext.current
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -190,7 +192,7 @@ private fun ButtonRow(
             button = ButtonState.Icon.Default(
                 icon = R.drawable.ic_share_white,
             ),
-            onClick = { CreateEvent.Share },
+            onClick = { onEvent(CreateEvent.Share(context)) },
         )
     }
 }

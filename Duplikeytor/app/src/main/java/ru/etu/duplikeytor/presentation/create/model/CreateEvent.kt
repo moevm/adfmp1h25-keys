@@ -1,6 +1,7 @@
 package ru.etu.duplikeytor.presentation.create.model
 
 import KeyChosenState
+import android.content.Context
 
 internal sealed interface CreateEvent {
     data class Next(val createStep: CreateStep) : CreateEvent
@@ -12,5 +13,5 @@ internal sealed interface CreateEvent {
     data object InterfaceVisibleChange : CreateEvent
     data class KeyTitleChange(val title: String) : CreateEvent
     data object KeySave : CreateEvent
-    data object Share : CreateEvent
+    data class Share(val context: Context) : CreateEvent
 }

@@ -10,6 +10,7 @@ import dagger.hilt.components.SingletonComponent
 import ru.etu.duplikeytor.data.AppDatabase
 import ru.etu.duplikeytor.domain.dao.KeyDao
 import ru.etu.duplikeytor.domain.repository.KeyRepository
+import ru.etu.duplikeytor.domain.usecases.ShareUsecase
 import javax.inject.Singleton
 
 @Module
@@ -34,5 +35,11 @@ object AppModule {
     @Singleton
     fun provideKeyRepository(userDao: KeyDao): KeyRepository {
         return KeyRepository(userDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideShareUsecase(): ShareUsecase {
+        return ShareUsecase()
     }
 }
