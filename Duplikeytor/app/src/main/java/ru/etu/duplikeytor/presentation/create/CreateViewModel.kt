@@ -49,6 +49,7 @@ internal class CreateViewModel @Inject constructor(
     private var keyScale: Float = 1f
     private var keyConfig: KeyConfig? = null
     private var keyTitle = ""
+    private var keyId: Long = 0
 
     private val _interfaceVisibleState = MutableStateFlow(true)
     val interfaceVisibleState = _interfaceVisibleState
@@ -200,7 +201,7 @@ internal class CreateViewModel @Inject constructor(
     }
 
     internal fun onSaveKey() {
-        saveKeyIntoRepository(keyTitle, keyChosen, keyConfig)
+        saveKeyIntoRepository(keyTitle, keyChosen, keyConfig, keyId)
         resetKeyInfo()
         changeState(CreateScreenState.Choose(keys = keys))
     }
@@ -230,6 +231,7 @@ internal class CreateViewModel @Inject constructor(
             keyScale = 1f //TODO get from db
             keyConfig = keyEditConfig
             keyTitle = key.name
+            keyId = key.id
 
             changeState(
                 CreateScreenState.Save(
@@ -245,16 +247,24 @@ internal class CreateViewModel @Inject constructor(
         }
     }
 
-    private fun saveKeyIntoRepository(keyName: String, keyChose: KeyChosenState?, keyConfig: KeyConfig?) {
+    private fun saveKeyIntoRepository(
+        keyName: String,
+        keyChose: KeyChosenState?,
+        keyConfig: KeyConfig?,
+        keyId: Long
+    ) {
         keyChose?:return
         keyConfig?:return
+
         val key = Key(
+            id = keyId,
             name = keyName,
             pins = keyConfig.pins,
             type = keyChose.type.toString(),
         )
+
         viewModelScope.launch {
-            keyRepository.insertKey(key)
+            keyRepository.updateKey(key)
         }
     }
 
@@ -268,6 +278,7 @@ internal class CreateViewModel @Inject constructor(
         keyScale = 1f
         keyConfig = null
         keyTitle = ""
+        keyId = 0
     }
 
     fun changeInterfaceVisibility() {
