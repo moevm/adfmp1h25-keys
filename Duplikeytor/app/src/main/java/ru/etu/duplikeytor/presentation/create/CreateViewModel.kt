@@ -209,7 +209,6 @@ internal class CreateViewModel @Inject constructor(
     internal fun onKeyEditIntent(id: Long) {
         viewModelScope.launch {
             val key = keyRepository.getKey(id)
-            Log.d("CreateViewModel", "onKeyEditIntent: $key")
             val keyEditConfig = when(KeyType.valueOf(key.type)) {
                 KeyType.KWIKSET -> {
                     KeyConfig.Kwikset(
@@ -253,8 +252,8 @@ internal class CreateViewModel @Inject constructor(
         keyConfig: KeyConfig?,
         keyId: Long
     ) {
-        keyChose?:return
-        keyConfig?:return
+        keyChose ?: return
+        keyConfig ?: return
 
         val key = Key(
             id = keyId,

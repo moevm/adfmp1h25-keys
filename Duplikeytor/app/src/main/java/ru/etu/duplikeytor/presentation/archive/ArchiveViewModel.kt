@@ -46,8 +46,8 @@ internal class ArchiveViewModel @Inject constructor(
     val state: StateFlow<KeyArchiveState> = _state
 
     init {
+        getKeysFromArchive() // TODO: получать ключи из репозитория
         viewModelScope.launch {
-            getKeysFromArchive() // TODO: получать ключи из репозитория
             _state.collect { state ->
                 statusBarState.emit(
                     StatusBarState.Title(
@@ -103,7 +103,8 @@ internal class ArchiveViewModel @Inject constructor(
 
     private fun getKeysFromArchive() {
         viewModelScope.launch {
-            val keyStates = keyRepository.getKeys().map { key -> KeyState(
+            val keyStates = keyRepository.getKeys().map { key ->
+                KeyState(
                     id = key.id,
                     name = key.name,
                     imageUri = key.photoUri,
