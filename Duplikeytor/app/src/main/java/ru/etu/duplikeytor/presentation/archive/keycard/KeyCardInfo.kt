@@ -47,7 +47,7 @@ internal fun KeyInfoScreen(
             state = state.key,
         )
         ButtonRow(
-            onEvent = {},
+            onEvent = onEvent,
             state = state.key,
         )
     }

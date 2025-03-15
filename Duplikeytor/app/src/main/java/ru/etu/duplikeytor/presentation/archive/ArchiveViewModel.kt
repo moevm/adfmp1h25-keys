@@ -1,7 +1,5 @@
 package ru.etu.duplikeytor.presentation.archive
 
-import android.util.Log
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -48,6 +46,7 @@ internal class ArchiveViewModel @Inject constructor(
     val state: StateFlow<KeyArchiveState> = _state
 
     init {
+        getKeysFromArchive() // TODO: получать ключи из репозитория
         viewModelScope.launch {
             _state.collect { state ->
                 statusBarState.emit(
@@ -104,8 +103,8 @@ internal class ArchiveViewModel @Inject constructor(
 
     private fun getKeysFromArchive() {
         viewModelScope.launch {
-            // TODO: change state values
-            val keyStates = keyRepository.getKeys().map { key -> KeyState(
+            val keyStates = keyRepository.getKeys().map { key ->
+                KeyState(
                     id = key.id,
                     name = key.name,
                     imageUri = key.photoUri,
@@ -114,6 +113,14 @@ internal class ArchiveViewModel @Inject constructor(
                     pins = key.pins.toString(), // TODO: delete that cringe
                 )
             }
+            // TODO: убрать код скнизу тут кринж
+            _keysState.value = keyStates
+            changeState(
+                KeyArchiveState.KeysList(
+                    keys = _keysState.value,
+                    title = "Мои ключи",
+                )
+            )
         }
     }
 }

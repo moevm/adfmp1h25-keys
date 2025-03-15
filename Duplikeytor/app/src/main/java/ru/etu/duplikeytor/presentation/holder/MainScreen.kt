@@ -147,6 +147,10 @@ internal fun MainScreen(
             ) {
                 ArchiveFragment(
                     viewModel = archiveViewModel,
+                    onKeyEditIntent = { id ->
+                        navigationHandler.navigateToScreen(ScreenType.CREATE)
+                        createViewModel.onKeyEditIntent(id)
+                    },
                     contentPadding = PaddingValues(
                         top = innerPadding.calculateTopPadding(),
                         bottom = navigationPaddingPx.intValue.toDp(),
