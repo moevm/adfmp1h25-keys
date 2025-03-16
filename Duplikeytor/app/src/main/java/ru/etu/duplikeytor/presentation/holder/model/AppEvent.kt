@@ -13,15 +13,13 @@ internal sealed  interface AppEvent {
     sealed interface Create : AppEvent {
         override val eventScreenResolver: ScreenType
             get() = ScreenType.CREATE
-
-        data class KeyEdit(val id: Long): Create
     }
 
     sealed interface Archive : AppEvent {
         override val eventScreenResolver: ScreenType
             get() = ScreenType.ARCHIVE
 
-        data class KeyAdded(val id: Long) : Archive
+        data class KeySaved(val id: Long) : Archive
     }
 
     sealed interface About : AppEvent

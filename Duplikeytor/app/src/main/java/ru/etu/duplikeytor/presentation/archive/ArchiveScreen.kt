@@ -26,7 +26,7 @@ internal fun ArchiveScreen(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues,
     state: KeyArchiveState.KeysList,
-    onClick: (KeyState) -> Unit,
+    onClick: (Long) -> Unit,
 ) {
     Box(
         modifier = modifier

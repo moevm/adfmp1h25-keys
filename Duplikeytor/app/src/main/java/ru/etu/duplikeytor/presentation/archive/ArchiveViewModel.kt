@@ -1,7 +1,6 @@
 package ru.etu.duplikeytor.presentation.archive
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -45,8 +44,19 @@ internal class ArchiveViewModel @Inject constructor(
     override fun notifyResolveEvent(event: AppEvent) {
         if (event !is AppEvent.Archive) return
         when(event) {
-            is AppEvent.Archive.KeyAdded -> {
-                getKeysFromArchive()
+            is AppEvent.Archive.KeySaved -> {
+                when(_state.value) {
+                    is KeyArchiveState.KeysList -> {
+                        loadKeysFromArchive()
+                    }
+                    is KeyArchiveState.Key -> {
+                        if ((_state.value as KeyArchiveState.Key).key.id == event.id) {
+                            loadKeyFromArchive(event.id)
+                        } else {
+                            loadKeysFromArchive()
+                        }
+                    }
+                }
             }
         }
     }
@@ -63,7 +73,7 @@ internal class ArchiveViewModel @Inject constructor(
     val state: StateFlow<KeyArchiveState> = _state
 
     init {
-        getKeysFromArchive()
+        loadKeysFromArchive()
 
         viewModelScope.launch {
             _keysState
@@ -100,11 +110,8 @@ internal class ArchiveViewModel @Inject constructor(
         }
     }
 
-    internal fun onKeySelected(key: KeyState) {
-        _state.value = KeyArchiveState.Key(
-            key = key,
-            title = key.name,
-        )
+    internal fun onKeySelected(id: Long) {
+        loadKeyFromArchive(id)
     }
 
     internal fun onKeyDelete(id: Long) {
@@ -113,7 +120,7 @@ internal class ArchiveViewModel @Inject constructor(
             keyRepository.deleteKey(id)
             delay(10)
         }.invokeOnCompletion {
-            getKeysFromArchive()
+            loadKeysFromArchive()
         }
     }
 
@@ -139,7 +146,7 @@ internal class ArchiveViewModel @Inject constructor(
             is KeyArchiveState.Key -> {
                 changeState(
                     KeyArchiveState.KeysList(
-                        keys = _keysState.value.also { Log.e("returnToPreviousState", "keys ${it}") },
+                        keys = _keysState.value,
                         title = "Мои ключи",
                     )
                 )
@@ -151,19 +158,40 @@ internal class ArchiveViewModel @Inject constructor(
     private fun changeState(state: KeyArchiveState) =
         viewModelScope.launch { _state.emit(state) }
 
-    private fun getKeysFromArchive() {
+    private fun loadKeysFromArchive() {
         viewModelScope.launch {
             val keyStates = keyRepository.getKeys().map { key ->
-                KeyState(
-                    id = key.id,
-                    name = key.name,
-                    imageUri = key.photoUri,
-                    createdAt = Date(key.createdAt).toString(), // TODO: Pretty transform
-                    type = KeyType.KWIKSET, // TODO: from string to KeyType
-                    pins = key.pins.toString(), // TODO: delete that cringe
-                )
+                with(key) {
+                    KeyState(
+                        id = id,
+                        name = name,
+                        imageUri = photoUri,
+                        createdAt = Date(createdAt).toString(), // TODO: Pretty transform
+                        type = KeyType.KWIKSET, // TODO: from string to KeyType
+                        pins = pins.toString(), // TODO: delete that cringe
+                    )
+                }
             }
             _keysState.value = keyStates
+        }
+    }
+
+    private fun loadKeyFromArchive(id: Long) {
+        viewModelScope.launch {
+            val key = with(keyRepository.getKey(id)) {
+                KeyArchiveState.Key(
+                    key = KeyState(
+                        id = id,
+                        name = name,
+                        imageUri = photoUri,
+                        createdAt = Date(createdAt).toString(), // TODO: Pretty transform
+                        type = KeyType.KWIKSET, // TODO: from string "type" to KeyType
+                        pins = pins.toString(),
+                    ),
+                    title = name,
+                )
+            }
+            _state.emit(key)
         }
     }
 }

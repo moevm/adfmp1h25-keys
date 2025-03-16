@@ -48,11 +48,6 @@ internal class CreateViewModel @Inject constructor(
 
     override fun notifyResolveEvent(event: AppEvent) {
         if (event !is AppEvent.Create) return
-        when(event) {
-            is AppEvent.Create.KeyEdit -> {
-                // TODO
-            }
-        }
     }
 
     private val keys = getKeyTypes()
@@ -60,7 +55,7 @@ internal class CreateViewModel @Inject constructor(
     private var keyChosen: KeyChosenState? = null
     private var keyScale: Float = 1f
     private var keyConfig: KeyConfig? = null
-    private var keyTitle = ""
+    private var keyTitle: String? = null
     private var keyId: Long = 0
 
     private val _interfaceVisibleState = MutableStateFlow(true)
@@ -213,7 +208,13 @@ internal class CreateViewModel @Inject constructor(
     }
 
     internal fun onSaveKey(onSuccessSave: (Long) -> Unit) {
-        saveKeyIntoRepository(keyTitle, keyChosen, keyConfig, keyId, onSuccessSave)
+        saveKeyIntoRepository(
+            keyName = keyTitle ?: keyChosen?.type?.toString() ?: "No name",
+            keyChose = keyChosen,
+            keyConfig = keyConfig,
+            keyId = keyId,
+            onSuccessSave = onSuccessSave
+        )
         resetKeyInfo()
         changeState(CreateScreenState.Choose(keys = keys))
     }
@@ -296,7 +297,7 @@ internal class CreateViewModel @Inject constructor(
             runCatching {
                 keyRepository.updateKey(key)
             }.onSuccess {
-                onSuccessSave(it)
+                onSuccessSave(if (it == -1L) key.id else it)
             }
         }
     }

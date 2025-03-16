@@ -36,7 +36,7 @@ import ru.etu.duplikeytor.presentation.shared.model.KeyType
 internal fun KeyCard(
     modifier: Modifier = Modifier,
     state: KeyState,
-    onClick: (KeyState) -> Unit,
+    onClick: (Long) -> Unit,
 ) {
     Box(
         modifier = modifier
@@ -50,7 +50,7 @@ internal fun KeyCard(
                 color = MaterialTheme.colorScheme.surface
             )
             .fillMaxWidth()
-            .clickable { onClick(state) },
+            .clickable { onClick(state.id) },
     ){
         Column(
             modifier = Modifier

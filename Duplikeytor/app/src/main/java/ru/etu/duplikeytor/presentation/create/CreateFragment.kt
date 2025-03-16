@@ -87,7 +87,7 @@ internal fun CreateFragment(
                     when(event) {
                         is CreateEvent.KeySave -> {
                             viewModel.onSaveKey { id ->
-                                processAppEvent(AppEvent.Archive.KeyAdded(id))
+                                processAppEvent(AppEvent.Archive.KeySaved(id))
                             }
                         }
                         is CreateEvent.KeyTitleChange -> viewModel.keyTitleChange(event.title)
