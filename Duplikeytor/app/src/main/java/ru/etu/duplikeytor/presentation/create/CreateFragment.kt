@@ -91,7 +91,7 @@ internal fun CreateFragment(
                             }
                         }
                         is CreateEvent.KeyTitleChange -> viewModel.keyTitleChange(event.title)
-                        is CreateEvent.Share -> {}
+                        is CreateEvent.Share -> viewModel.onKeyShare(event.context)
                         else -> Unit
                     }
                 }

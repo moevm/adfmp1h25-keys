@@ -46,7 +46,7 @@ internal fun ArchiveFragment(
                     when(event) {
                         is KeyArchiveEvent.Delete -> viewModel.onKeyDelete(event.key.id)
                         is KeyArchiveEvent.Edit -> onKeyEditIntent(event.key.id)
-                        is KeyArchiveEvent.Repost -> TODO()
+                        is KeyArchiveEvent.Share -> viewModel.onKeyShare(event.context, event.state)
                     }
                 }
             )
