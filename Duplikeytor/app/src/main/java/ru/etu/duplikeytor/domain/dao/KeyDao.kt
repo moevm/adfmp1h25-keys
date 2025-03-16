@@ -14,7 +14,7 @@ interface KeyDao {
     suspend fun getById(id: Long): Key
 
     @Upsert
-    suspend fun insert(key: Key)
+    suspend fun insert(key: Key): Long
 
     @Query("DELETE FROM keys WHERE key_id = :id;")
     suspend fun delete(id: Long)
