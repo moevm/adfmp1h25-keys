@@ -52,9 +52,8 @@ internal class ArchiveViewModel @Inject constructor(
                     is KeyArchiveState.Key -> {
                         if ((_state.value as KeyArchiveState.Key).key.id == event.id) {
                             loadKeyFromArchive(event.id)
-                        } else {
-                            loadKeysFromArchive()
                         }
+                        loadKeysFromArchive()
                     }
                 }
             }
