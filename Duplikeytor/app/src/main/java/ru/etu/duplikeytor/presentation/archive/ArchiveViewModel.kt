@@ -19,7 +19,10 @@ import ru.etu.duplikeytor.presentation.holder.model.navigation.ScreenType
 import ru.etu.duplikeytor.presentation.holder.model.status.StatusBarState
 import ru.etu.duplikeytor.presentation.shared.model.KeyType
 import ru.etu.duplikeytor.presentation.shared.model.Screen
-import java.util.Date
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -59,6 +62,8 @@ internal class ArchiveViewModel @Inject constructor(
             }
         }
     }
+
+    private val formatter = DateTimeFormatter.ofPattern("dd.MM.yyy HH:mm")
 
     private val _keysState = MutableStateFlow<List<KeyState>>(emptyList())
 
@@ -165,9 +170,12 @@ internal class ArchiveViewModel @Inject constructor(
                         id = id,
                         name = name,
                         imageUri = photoUri,
-                        createdAt = Date(createdAt).toString(), // TODO: Pretty transform
-                        type = KeyType.KWIKSET, // TODO: from string to KeyType
-                        pins = pins.toString(), // TODO: delete that cringe
+                        createdAt = LocalDateTime.ofInstant(
+                            Instant.ofEpochMilli(createdAt),
+                            ZoneId.systemDefault()
+                        ).format(formatter),
+                        type = KeyType.valueOf(type),
+                        pins = pins.joinToString(separator = "-"),
                     )
                 }
             }
@@ -183,9 +191,12 @@ internal class ArchiveViewModel @Inject constructor(
                         id = id,
                         name = name,
                         imageUri = photoUri,
-                        createdAt = Date(createdAt).toString(), // TODO: Pretty transform
-                        type = KeyType.KWIKSET, // TODO: from string "type" to KeyType
-                        pins = pins.toString(),
+                        createdAt = LocalDateTime.ofInstant(
+                            Instant.ofEpochMilli(createdAt),
+                            ZoneId.systemDefault()
+                        ).format(formatter),
+                        type = KeyType.valueOf(type),
+                        pins = pins.joinToString(separator = "-"),
                     ),
                     title = name,
                 )
