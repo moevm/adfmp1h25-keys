@@ -212,12 +212,10 @@ internal class CreateViewModel @Inject constructor(
         )
     }
 
-    internal fun onSaveKey(onSuccessSave: (Long) -> Unit): Long {
-        val savedId = keyId // TODO remove keyId and return keyId from repo result saved key
+    internal fun onSaveKey(onSuccessSave: (Long) -> Unit) {
         saveKeyIntoRepository(keyTitle, keyChosen, keyConfig, keyId, onSuccessSave)
         resetKeyInfo()
         changeState(CreateScreenState.Choose(keys = keys))
-        return savedId
     }
 
     internal fun onKeyShare(context: Context) {
@@ -295,9 +293,11 @@ internal class CreateViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-            keyRepository.updateKey(key) // TODO return id
-        }.invokeOnCompletion {
-            onSuccessSave(0) // TODO
+            runCatching {
+                keyRepository.updateKey(key)
+            }.onSuccess {
+                onSuccessSave(it)
+            }
         }
     }
 

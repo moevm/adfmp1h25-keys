@@ -65,7 +65,6 @@ class MainViewModel @Inject constructor() : ViewModel() {
     private fun observeEvent() {
         viewModelScope.launch {
             _eventResolver.collect { event ->
-                Log.e("AppEvent", "observeEvent emit collect ${event}")
                 if (event == AppEvent.Main) return@collect
                 childScreen[event.eventScreenResolver]?.notifyResolveEvent(event)
             }
@@ -74,8 +73,7 @@ class MainViewModel @Inject constructor() : ViewModel() {
 
     internal fun processAppEvent(event: AppEvent) {
         viewModelScope.launch {
-//            _eventResolver.emit(event) // TODO uncomment after fix keyId repo
-            childScreen[event.eventScreenResolver]?.notifyResolveEvent(event) // remove after fix Id
+            _eventResolver.emit(event)
         }
     }
 

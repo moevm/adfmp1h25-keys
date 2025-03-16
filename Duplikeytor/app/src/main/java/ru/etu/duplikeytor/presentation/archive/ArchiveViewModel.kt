@@ -2,9 +2,11 @@ package ru.etu.duplikeytor.presentation.archive
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filter
@@ -108,8 +110,11 @@ internal class ArchiveViewModel @Inject constructor(
 
     internal fun onKeyDelete(id: Long) {
         returnToPreviousState()
-        viewModelScope.launch { keyRepository.deleteKey(id) }
-        getKeysFromArchive()
+        viewModelScope.launch {
+            keyRepository.deleteKey(id)
+        }.invokeOnCompletion {
+            getKeysFromArchive()
+        }
     }
 
     internal fun onKeyShare(context: Context, key: KeyState) {
@@ -134,7 +139,7 @@ internal class ArchiveViewModel @Inject constructor(
             is KeyArchiveState.Key -> {
                 changeState(
                     KeyArchiveState.KeysList(
-                        keys = _keysState.value,
+                        keys = _keysState.value.also { Log.e("returnToPreviousState", "keys ${it}") },
                         title = "Мои ключи",
                     )
                 )
