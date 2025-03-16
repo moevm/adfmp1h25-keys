@@ -135,7 +135,7 @@ private fun ButtonRow(
             button = ButtonState.Icon.Default(
                 icon = R.drawable.ic_share_white,
             ),
-            onClick = { onEvent(KeyArchiveEvent.Repost(context, state)) },
+            onClick = { onEvent(KeyArchiveEvent.Share(context, state)) },
         )
     }
 }

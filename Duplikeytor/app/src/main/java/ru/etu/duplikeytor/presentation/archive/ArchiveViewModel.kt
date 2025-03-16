@@ -88,7 +88,7 @@ internal class ArchiveViewModel @Inject constructor(
         getKeysFromArchive()
     }
 
-    internal fun onKeyRepost(context: Context, key: KeyState) {
+    internal fun onKeyShare(context: Context, key: KeyState) {
         val keyType = key.type.toString()
         val keyName = key.name
         val pinsInfo = key.pins
