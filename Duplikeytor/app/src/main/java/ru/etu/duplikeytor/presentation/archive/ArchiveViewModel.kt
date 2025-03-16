@@ -1,7 +1,6 @@
 package ru.etu.duplikeytor.presentation.archive
 
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -112,6 +111,7 @@ internal class ArchiveViewModel @Inject constructor(
         returnToPreviousState()
         viewModelScope.launch {
             keyRepository.deleteKey(id)
+            delay(10)
         }.invokeOnCompletion {
             getKeysFromArchive()
         }
