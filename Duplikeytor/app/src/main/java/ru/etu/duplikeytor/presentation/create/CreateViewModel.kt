@@ -265,7 +265,7 @@ internal class CreateViewModel @Inject constructor(
         }
     }
 
-    private fun saveKeyIntoRepository(keyName: String, keyChose: KeyChosenState?, keyConfig: KeyConfig?) {
+    private fun saveKeyIntoRepository(keyName: String, keyChose: KeyChosenState?, keyConfig: KeyConfig?, keyId: Long) {
         keyChose?:return
         keyConfig?:return
         val key = Key(
