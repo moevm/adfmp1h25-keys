@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import ru.etu.duplikeytor.presentation.about.model.AboutScreenState
 import ru.etu.duplikeytor.presentation.about.model.DepartmentState
 import ru.etu.duplikeytor.presentation.about.model.DeveloperState
+import ru.etu.duplikeytor.presentation.holder.model.AppEvent
 import ru.etu.duplikeytor.presentation.holder.model.navigation.NavigationBarState
 import ru.etu.duplikeytor.presentation.holder.model.navigation.ScreenType
 import ru.etu.duplikeytor.presentation.holder.model.status.StatusBarState
@@ -24,7 +25,10 @@ internal class AboutViewModel @Inject constructor() : ViewModel(), Screen {
         NavigationBarState.build()
     )
     override val screenType: ScreenType = ScreenType.ABOUT
+
     override fun onBackClick(): Boolean = false
+
+    override fun notifyResolveEvent(event: AppEvent) {}
 
     private val _state = MutableStateFlow(AboutScreenState(
         developers = getDevelopers(),

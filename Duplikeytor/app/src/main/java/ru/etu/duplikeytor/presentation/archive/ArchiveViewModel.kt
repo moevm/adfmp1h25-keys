@@ -5,10 +5,12 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import ru.etu.duplikeytor.domain.repository.KeyRepository
 import ru.etu.duplikeytor.presentation.archive.keycard.KeyState
 import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveState
+import ru.etu.duplikeytor.presentation.holder.model.AppEvent
 import ru.etu.duplikeytor.presentation.holder.model.navigation.NavigationBarState
 import ru.etu.duplikeytor.presentation.holder.model.navigation.ScreenType
 import ru.etu.duplikeytor.presentation.holder.model.status.StatusBarState
@@ -32,7 +34,17 @@ internal class ArchiveViewModel @Inject constructor(
         NavigationBarState.build()
     )
     override val screenType: ScreenType = ScreenType.ARCHIVE
+
     override fun onBackClick(): Boolean = returnToPreviousState()
+
+    override fun notifyResolveEvent(event: AppEvent) {
+        if (event !is AppEvent.Archive) return
+        when(event) {
+            is AppEvent.Archive.KeyAdded -> {
+                getKeysFromArchive()
+            }
+        }
+    }
 
     private val _keysState = MutableStateFlow<List<KeyState>>(emptyList())
 
@@ -46,7 +58,21 @@ internal class ArchiveViewModel @Inject constructor(
     val state: StateFlow<KeyArchiveState> = _state
 
     init {
-        getKeysFromArchive() // TODO: получать ключи из репозитория
+        getKeysFromArchive()
+
+        viewModelScope.launch {
+            _keysState
+                .filter { _state.value is KeyArchiveState.KeysList }
+                .collect { keys ->
+                    _state.emit(
+                        KeyArchiveState.KeysList(
+                            keys = keys,
+                            title = "Мои ключи",
+                        )
+                    )
+                }
+        }
+
         viewModelScope.launch {
             _state.collect { state ->
                 statusBarState.emit(
@@ -60,7 +86,7 @@ internal class ArchiveViewModel @Inject constructor(
                             is KeyArchiveState.Key -> true
                         },
                         onBackClick = when (state) {
-                            is KeyArchiveState.Key -> {{ _state.value = keyArchiveState }}
+                            is KeyArchiveState.Key -> {{ returnToPreviousState() }}
                             is KeyArchiveState.KeysList -> null
                         }
                     )
@@ -77,23 +103,22 @@ internal class ArchiveViewModel @Inject constructor(
     }
 
     internal fun onKeyDelete(id: Long) {
-        // TODO: change screen & refresh state
-        viewModelScope.launch {
-            keyRepository.deleteKey(id)
-        }
+        returnToPreviousState()
+        viewModelScope.launch { keyRepository.deleteKey(id) }
         getKeysFromArchive()
     }
 
     private fun returnToPreviousState(): Boolean {
         return when(state.value) {
             is KeyArchiveState.KeysList -> false
-            is KeyArchiveState.Key -> true.also {
+            is KeyArchiveState.Key -> {
                 changeState(
                     KeyArchiveState.KeysList(
                         keys = _keysState.value,
                         title = "Мои ключи",
                     )
                 )
+                true
             }
         }
     }
@@ -113,14 +138,7 @@ internal class ArchiveViewModel @Inject constructor(
                     pins = key.pins.toString(), // TODO: delete that cringe
                 )
             }
-            // TODO: убрать код скнизу тут кринж
             _keysState.value = keyStates
-            changeState(
-                KeyArchiveState.KeysList(
-                    keys = _keysState.value,
-                    title = "Мои ключи",
-                )
-            )
         }
     }
 }

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import ru.etu.duplikeytor.presentation.holder.model.AppEvent
 import ru.etu.duplikeytor.presentation.holder.model.navigation.NavigationBarState
 import ru.etu.duplikeytor.presentation.holder.model.navigation.ScreenType
 import ru.etu.duplikeytor.presentation.holder.model.status.StatusBarState
@@ -22,25 +23,28 @@ class MainViewModel @Inject constructor() : ViewModel() {
         NavigationBarState(listOf())
     )
     private val _currentScreenType = MutableStateFlow(ScreenType.CREATE)
-    private val _currentScreenImpl = MutableStateFlow<Screen?>(null)
+    private val _currentScreen = MutableStateFlow<Screen?>(null)
+
+    private val _eventResolver = MutableStateFlow<AppEvent>(AppEvent.Main)
 
     val statusBarState: StateFlow<StatusBarState> = _statusBarState
     val navigationBarState: StateFlow<NavigationBarState> = _navigationBarState
 
-    private val childScreenImpl = mutableMapOf<ScreenType, Screen>()
+    private val childScreen = mutableMapOf<ScreenType, Screen>()
 
-    fun registerScreen(screen: Screen) {
-        childScreenImpl[screen.screenType] = screen
+    internal fun registerScreen(screen: Screen) {
+        childScreen[screen.screenType] = screen
     }
 
     init {
         observeStatusBar()
         observeNavigationBar()
+        observeEvent()
     }
 
     private fun observeStatusBar() {
         viewModelScope.launch {
-            _currentScreenImpl.collect { screen ->
+            _currentScreen.collect { screen ->
                 screen?.statusBarState?.collect { statusBar ->
                     _statusBarState.emit(statusBar)
                 }
@@ -50,7 +54,7 @@ class MainViewModel @Inject constructor() : ViewModel() {
 
     private fun observeNavigationBar() {
         viewModelScope.launch {
-            _currentScreenImpl.collect { screen ->
+            _currentScreen.collect { screen ->
                 screen?.navigationBarState?.collect { navigationBar ->
                     _navigationBarState.emit(navigationBar)
                 }
@@ -58,14 +62,31 @@ class MainViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun onBackClick() = _currentScreenImpl.value?.onBackClick() ?: false
+    private fun observeEvent() {
+        viewModelScope.launch {
+            _eventResolver.collect { event ->
+                Log.e("AppEvent", "observeEvent emit collect ${event}")
+                if (event == AppEvent.Main) return@collect
+                childScreen[event.eventScreenResolver]?.notifyResolveEvent(event)
+            }
+        }
+    }
+
+    internal fun processAppEvent(event: AppEvent) {
+        viewModelScope.launch {
+//            _eventResolver.emit(event) // TODO uncomment after fix keyId repo
+            childScreen[event.eventScreenResolver]?.notifyResolveEvent(event) // remove after fix Id
+        }
+    }
+
+    fun onBackClick() = _currentScreen.value?.onBackClick() ?: false
 
     fun onScreenChanged(screenType: ScreenType) {
         _currentScreenType.value = screenType
-        _currentScreenImpl.value = childScreenImpl[screenType]
+        _currentScreen.value = childScreen[screenType]
 
-        val currentStatusBar = _currentScreenImpl.value?.statusBarState
-        val currentNavigationBar = _currentScreenImpl.value?.navigationBarState
+        val currentStatusBar = _currentScreen.value?.statusBarState
+        val currentNavigationBar = _currentScreen.value?.navigationBarState
 
         viewModelScope.launch {
             currentStatusBar?.collect { statusBar ->

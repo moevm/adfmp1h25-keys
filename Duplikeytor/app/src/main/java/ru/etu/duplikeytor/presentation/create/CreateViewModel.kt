@@ -1,7 +1,6 @@
 package ru.etu.duplikeytor.presentation.create
 
 import KeyChosenState
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +11,7 @@ import ru.etu.duplikeytor.domain.models.Key
 import ru.etu.duplikeytor.domain.repository.KeyRepository
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
 import ru.etu.duplikeytor.presentation.create.model.config.KeyConfig
+import ru.etu.duplikeytor.presentation.holder.model.AppEvent
 import ru.etu.duplikeytor.presentation.holder.model.navigation.NavigationBarState
 import ru.etu.duplikeytor.presentation.holder.model.navigation.ScreenType
 import ru.etu.duplikeytor.presentation.holder.model.status.StatusBarState
@@ -42,6 +42,15 @@ internal class CreateViewModel @Inject constructor(
         } else {
             returnToPreviousState()
         }
+
+    override fun notifyResolveEvent(event: AppEvent) {
+        if (event !is AppEvent.Create) return
+        when(event) {
+            is AppEvent.Create.KeyEdit -> {
+                // TODO
+            }
+        }
+    }
 
     private val keys = getKeyTypes()
 
@@ -200,10 +209,12 @@ internal class CreateViewModel @Inject constructor(
         )
     }
 
-    internal fun onSaveKey() {
-        saveKeyIntoRepository(keyTitle, keyChosen, keyConfig, keyId)
+    internal fun onSaveKey(onSuccessSave: (Long) -> Unit): Long {
+        val savedId = keyId // TODO remove keyId and return keyId from repo result saved key
+        saveKeyIntoRepository(keyTitle, keyChosen, keyConfig, keyId, onSuccessSave)
         resetKeyInfo()
         changeState(CreateScreenState.Choose(keys = keys))
+        return savedId
     }
 
     internal fun onKeyEditIntent(id: Long) {
@@ -250,7 +261,8 @@ internal class CreateViewModel @Inject constructor(
         keyName: String,
         keyChose: KeyChosenState?,
         keyConfig: KeyConfig?,
-        keyId: Long
+        keyId: Long,
+        onSuccessSave: (Long) -> Unit
     ) {
         keyChose ?: return
         keyConfig ?: return
@@ -263,7 +275,9 @@ internal class CreateViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-            keyRepository.updateKey(key)
+            keyRepository.updateKey(key) // TODO return id
+        }.invokeOnCompletion {
+            onSuccessSave(0) // TODO
         }
     }
 

@@ -13,6 +13,7 @@ import ru.etu.duplikeytor.presentation.create.view.choose.ChooseScreen
 import ru.etu.duplikeytor.presentation.create.view.create.CreateScreen
 import ru.etu.duplikeytor.presentation.create.view.save.SaveScreen
 import ru.etu.duplikeytor.presentation.create.view.scale.ScaleScreen
+import ru.etu.duplikeytor.presentation.holder.model.AppEvent
 
 @Composable
 internal fun CreateFragment(
@@ -21,6 +22,7 @@ internal fun CreateFragment(
     onBackClick: () -> Boolean,
     onBackFailure: () -> Unit,
     onCreate: () -> Unit = {},
+    processAppEvent: (AppEvent) -> Unit,
 ) {
     onCreate()
 
@@ -83,7 +85,11 @@ internal fun CreateFragment(
                 state = (state as CreateScreenState.Save),
                 onEvent = { event ->
                     when(event) {
-                        is CreateEvent.KeySave -> viewModel.onSaveKey()
+                        is CreateEvent.KeySave -> {
+                            viewModel.onSaveKey { id ->
+                                processAppEvent(AppEvent.Archive.KeyAdded(id))
+                            }
+                        }
                         is CreateEvent.KeyTitleChange -> viewModel.keyTitleChange(event.title)
                         is CreateEvent.Share -> {}
                         else -> Unit
