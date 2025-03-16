@@ -13,6 +13,7 @@ import ru.etu.duplikeytor.domain.repository.KeyRepository
 import ru.etu.duplikeytor.domain.usecases.ShareUsecase
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
 import ru.etu.duplikeytor.presentation.create.model.config.KeyConfig
+import ru.etu.duplikeytor.presentation.holder.model.AppEvent
 import ru.etu.duplikeytor.presentation.holder.model.navigation.NavigationBarState
 import ru.etu.duplikeytor.presentation.holder.model.navigation.ScreenType
 import ru.etu.duplikeytor.presentation.holder.model.status.StatusBarState
@@ -45,12 +46,16 @@ internal class CreateViewModel @Inject constructor(
             returnToPreviousState()
         }
 
+    override fun notifyResolveEvent(event: AppEvent) {
+        if (event !is AppEvent.Create) return
+    }
+
     private val keys = getKeyTypes()
 
     private var keyChosen: KeyChosenState? = null
     private var keyScale: Float = 1f
     private var keyConfig: KeyConfig? = null
-    private var keyTitle = ""
+    private var keyTitle: String? = null
     private var keyId: Long = 0
 
     private val _interfaceVisibleState = MutableStateFlow(true)
@@ -202,8 +207,14 @@ internal class CreateViewModel @Inject constructor(
         )
     }
 
-    internal fun onSaveKey() {
-        saveKeyIntoRepository(keyTitle, keyChosen, keyConfig, keyId)
+    internal fun onSaveKey(onSuccessSave: (Long) -> Unit) {
+        saveKeyIntoRepository(
+            keyName = keyTitle ?: keyChosen?.type?.toString() ?: "No name",
+            keyChose = keyChosen,
+            keyConfig = keyConfig,
+            keyId = keyId,
+            onSuccessSave = onSuccessSave
+        )
         resetKeyInfo()
         changeState(CreateScreenState.Choose(keys = keys))
     }
@@ -265,9 +276,16 @@ internal class CreateViewModel @Inject constructor(
         }
     }
 
-    private fun saveKeyIntoRepository(keyName: String, keyChose: KeyChosenState?, keyConfig: KeyConfig?, keyId: Long) {
-        keyChose?:return
-        keyConfig?:return
+    private fun saveKeyIntoRepository(
+        keyName: String,
+        keyChose: KeyChosenState?,
+        keyConfig: KeyConfig?,
+        keyId: Long,
+        onSuccessSave: (Long) -> Unit,
+    ) {
+        keyChose ?: return
+        keyConfig ?: return
+
         val key = Key(
             id = keyId,
             name = keyName,
@@ -276,7 +294,11 @@ internal class CreateViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-            keyRepository.updateKey(key)
+            runCatching {
+                keyRepository.updateKey(key)
+            }.onSuccess {
+                onSuccessSave(if (it == -1L) key.id else it)
+            }
         }
     }
 

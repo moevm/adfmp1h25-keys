@@ -28,6 +28,7 @@ import ru.etu.duplikeytor.presentation.archive.ArchiveFragment
 import ru.etu.duplikeytor.presentation.archive.ArchiveViewModel
 import ru.etu.duplikeytor.presentation.create.CreateFragment
 import ru.etu.duplikeytor.presentation.create.CreateViewModel
+import ru.etu.duplikeytor.presentation.holder.model.AppEvent
 import ru.etu.duplikeytor.presentation.holder.model.navigation.NavigationBarState
 import ru.etu.duplikeytor.presentation.holder.model.navigation.NavigationEvent
 import ru.etu.duplikeytor.presentation.holder.model.navigation.ScreenType
@@ -46,6 +47,7 @@ internal fun MainScreen(
     statusBarStateFlow: StateFlow<StatusBarState>,
     navigationBarStateFlow: StateFlow<NavigationBarState>,
     onBackClick: () -> Boolean,
+    processAppEvent: (AppEvent) -> Unit,
 ) {
     val navController = rememberNavController()
     val navigationHandler = remember {
@@ -119,7 +121,8 @@ internal fun MainScreen(
                         bottom = navigationPaddingPx.intValue.toDp(),
                     ),
                     onBackClick = onBackClick,
-                    onBackFailure = { navigationHandler.navigateBack { activity?.finish() } }
+                    onBackFailure = { navigationHandler.navigateBack { activity?.finish() } },
+                    processAppEvent = processAppEvent,
                 )
             }
             composable(
@@ -156,7 +159,8 @@ internal fun MainScreen(
                         bottom = navigationPaddingPx.intValue.toDp(),
                     ),
                     onBackClick = onBackClick,
-                    onBackFailure = { navigationHandler.navigateBack { activity?.finish() } }
+                    onBackFailure = { navigationHandler.navigateBack { activity?.finish() } },
+                    processAppEvent = processAppEvent,
                 )
             }
             composable(

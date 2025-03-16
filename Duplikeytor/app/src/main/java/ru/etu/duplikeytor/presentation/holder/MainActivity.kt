@@ -25,6 +25,7 @@ class MainActivity : ComponentActivity() {
                     statusBarStateFlow = viewModel.statusBarState,
                     navigationBarStateFlow = viewModel.navigationBarState,
                     onBackClick = viewModel::onBackClick,
+                    processAppEvent = viewModel::processAppEvent,
                 )
             }
         }
