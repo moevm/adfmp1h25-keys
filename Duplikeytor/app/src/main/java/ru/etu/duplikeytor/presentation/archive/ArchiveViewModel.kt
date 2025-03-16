@@ -1,5 +1,7 @@
 package ru.etu.duplikeytor.presentation.archive
 
+import android.content.Context
+import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -7,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.etu.duplikeytor.domain.repository.KeyRepository
+import ru.etu.duplikeytor.domain.usecases.ShareUsecase
 import ru.etu.duplikeytor.presentation.archive.keycard.KeyState
 import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveState
 import ru.etu.duplikeytor.presentation.holder.model.navigation.NavigationBarState
@@ -19,6 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class ArchiveViewModel @Inject constructor(
+    private val shareUsecase: ShareUsecase,
     private val keyRepository: KeyRepository
 ) : ViewModel(), Screen {
 
@@ -82,6 +86,22 @@ internal class ArchiveViewModel @Inject constructor(
             keyRepository.deleteKey(id)
         }
         getKeysFromArchive()
+    }
+
+    internal fun onKeyShare(context: Context, key: KeyState) {
+        val keyType = key.type.toString()
+        val keyName = key.name
+        val pinsInfo = key.pins
+
+        shareUsecase.share(
+            context,
+            title = "Отправить информацию о ключе",
+            message = """
+                Ключ: $keyName
+                Тип ключа: $keyType
+                Параметры: $pinsInfo
+            """.trimIndent()
+        )
     }
 
     private fun returnToPreviousState(): Boolean {
