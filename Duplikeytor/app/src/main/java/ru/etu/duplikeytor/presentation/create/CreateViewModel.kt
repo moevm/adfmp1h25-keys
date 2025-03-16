@@ -51,6 +51,7 @@ internal class CreateViewModel @Inject constructor(
     private var keyScale: Float = 1f
     private var keyConfig: KeyConfig? = null
     private var keyTitle = ""
+    private var keyId: Long = 0
 
     private val _interfaceVisibleState = MutableStateFlow(true)
     val interfaceVisibleState = _interfaceVisibleState
@@ -202,12 +203,12 @@ internal class CreateViewModel @Inject constructor(
     }
 
     internal fun onSaveKey() {
-        saveKeyIntoRepository(keyTitle, keyChosen, keyConfig)
+        saveKeyIntoRepository(keyTitle, keyChosen, keyConfig, keyId)
         resetKeyInfo()
         changeState(CreateScreenState.Choose(keys = keys))
     }
 
-    internal fun onKeyRepost(context: Context) {
+    internal fun onKeyShare(context: Context) {
         val keyType = keyChosen!!.type.toString()
         val keyName = keyChosen!!.title
         val pinsInfo = keyConfig!!.pins.toString()
@@ -223,16 +224,59 @@ internal class CreateViewModel @Inject constructor(
         )
     }
 
+
+    internal fun onKeyEditIntent(id: Long) {
+        viewModelScope.launch {
+            val key = keyRepository.getKey(id)
+            val keyEditConfig = when(KeyType.valueOf(key.type)) {
+                KeyType.KWIKSET -> {
+                    KeyConfig.Kwikset(
+                        pins = key.pins
+                    )
+                }
+                KeyType.SCHLAGE -> {
+                    KeyConfig.Schlage(
+                        pins = key.pins
+                    )
+                }
+            }
+
+            keyChosen = KeyChosenState(
+                imageUri = key.type,
+                title = key.name,
+                type = KeyType.valueOf(key.type),
+            )
+            keyScale = 1f //TODO get from db
+            keyConfig = keyEditConfig
+            keyTitle = key.name
+            keyId = key.id
+
+            changeState(
+                CreateScreenState.Save(
+                    key = KeyChosenState(
+                        imageUri = key.type,
+                        title = key.name,
+                        type = KeyType.valueOf(key.type),
+                    ),
+                    scale = 1f,
+                    keyConfig = keyEditConfig,
+                )
+            )
+        }
+    }
+
     private fun saveKeyIntoRepository(keyName: String, keyChose: KeyChosenState?, keyConfig: KeyConfig?) {
         keyChose?:return
         keyConfig?:return
         val key = Key(
+            id = keyId,
             name = keyName,
             pins = keyConfig.pins,
             type = keyChose.type.toString(),
         )
+
         viewModelScope.launch {
-            keyRepository.insertKey(key)
+            keyRepository.updateKey(key)
         }
     }
 
@@ -246,6 +290,7 @@ internal class CreateViewModel @Inject constructor(
         keyScale = 1f
         keyConfig = null
         keyTitle = ""
+        keyId = 0
     }
 
     fun changeInterfaceVisibility() {

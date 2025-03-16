@@ -16,6 +16,7 @@ internal fun ArchiveFragment(
     onBackClick: () -> Boolean,
     onBackFailure: () -> Unit,
     onCreate: () -> Unit = {},
+    onKeyEditIntent: (Long) -> Unit,
 ) {
     onCreate()
 
@@ -42,7 +43,7 @@ internal fun ArchiveFragment(
                 onEvent = { event ->
                     when(event) {
                         is KeyArchiveEvent.Delete -> viewModel.onKeyDelete(event.key.id)
-                        is KeyArchiveEvent.Edit -> TODO()
+                        is KeyArchiveEvent.Edit -> onKeyEditIntent(event.key.id)
                         is KeyArchiveEvent.Share -> viewModel.onKeyShare(event.context, event.state)
                     }
                 }
