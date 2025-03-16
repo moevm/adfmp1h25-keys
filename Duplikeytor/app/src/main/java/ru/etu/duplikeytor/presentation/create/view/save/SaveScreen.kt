@@ -45,6 +45,8 @@ internal fun SaveScreen(
 ) {
     val textState = remember { mutableStateOf(state.key.title) }
 
+    onEvent(CreateEvent.KeyTitleChange(textState.value))
+
     Column(
         modifier = modifier
             .fillMaxSize()

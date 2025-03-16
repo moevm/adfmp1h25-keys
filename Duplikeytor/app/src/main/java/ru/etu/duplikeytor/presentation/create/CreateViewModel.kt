@@ -209,7 +209,7 @@ internal class CreateViewModel @Inject constructor(
 
     internal fun onSaveKey(onSuccessSave: (Long) -> Unit) {
         saveKeyIntoRepository(
-            keyName = keyTitle ?: keyChosen?.type?.toString() ?: "No name",
+            keyName = keyTitle,
             keyChose = keyChosen,
             keyConfig = keyConfig,
             keyId = keyId,
@@ -277,7 +277,7 @@ internal class CreateViewModel @Inject constructor(
     }
 
     private fun saveKeyIntoRepository(
-        keyName: String,
+        keyName: String?,
         keyChose: KeyChosenState?,
         keyConfig: KeyConfig?,
         keyId: Long,
@@ -285,10 +285,13 @@ internal class CreateViewModel @Inject constructor(
     ) {
         keyChose ?: return
         keyConfig ?: return
+        keyName ?: return
 
         val key = Key(
             id = keyId,
-            name = keyName,
+            name = keyName.ifEmpty {
+                "New key"
+            },
             pins = keyConfig.pins,
             type = keyChose.type.toString(),
         )
