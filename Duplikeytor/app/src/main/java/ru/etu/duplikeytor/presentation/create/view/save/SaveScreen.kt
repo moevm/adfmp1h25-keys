@@ -42,7 +42,7 @@ internal fun SaveScreen(
     state: CreateScreenState.Save,
     onEvent: (CreateEvent) -> Unit,
 ) {
-    val textState = remember { mutableStateOf(state.key.title) }
+    val textState = remember { mutableStateOf(state.keyTitle) }
 
     Column(
         modifier = modifier

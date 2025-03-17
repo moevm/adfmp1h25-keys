@@ -85,14 +85,14 @@ internal class CreateViewModel @Inject constructor(
             }
             is CreateScreenState.Scale -> {
                 StatusBarState.Title(
-                    title = "Масштабирование " + (keyChosen?.title ?: ""),
+                    title = "Масштабирование " + (keyChosen?.type?.title ?: ""),
                     requiredDisplay = true,
                     onBackClick = { viewModelScope.launch { returnToPreviousState() } }
                 )
             }
             is CreateScreenState.Create -> {
                 StatusBarState.Title(
-                    title = "Создание " + (keyChosen?.title ?: ""),
+                    title = "Создание " + (keyChosen?.type?.title ?: ""),
                     requiredDisplay = true,
                     onBackClick = { viewModelScope.launch { returnToPreviousState() } }
                 )
@@ -148,12 +148,12 @@ internal class CreateViewModel @Inject constructor(
     internal fun onKeyChoose(key: KeyChosenState) {
         keyChosen = key
 
-        val (title, config) = when(key.type) {
-            KeyType.KWIKSET -> "Kwikset" to KeyConfig.Kwikset.init
-            KeyType.SCHLAGE -> "Schlage" to null // TODO SCHLAGE
+        val config = when(key.type) {
+            KeyType.KWIKSET -> KeyConfig.Kwikset.init
+            KeyType.SCHLAGE -> null // TODO SCHLAGE
         }
 
-        keyTitle = title
+        keyTitle = key.type.title
         keyConfig = config
 
         changeState(
@@ -199,9 +199,11 @@ internal class CreateViewModel @Inject constructor(
     internal fun onKeyCreated() {
         val key: KeyChosenState = keyChosen ?: return
         val keyConfig = keyConfig ?: return
+        val keyTitle = keyTitle ?: return
         changeState(
             CreateScreenState.Save(
                 key = key,
+                keyTitle = keyTitle,
                 scale = keyScale,
                 keyConfig = keyConfig,
             )
@@ -221,9 +223,9 @@ internal class CreateViewModel @Inject constructor(
     }
 
     internal fun onKeyShare(context: Context) {
-        val keyType = keyChosen!!.type.toString()
-        val keyName = keyChosen!!.title
-        val pinsInfo = keyConfig!!.pins.toString()
+        val keyType = keyChosen?.type.toString()
+        val keyName = keyChosen?.type?.title
+        val pinsInfo = keyConfig?.pins.toString()
 
         shareUsecase.share(
             context,
@@ -255,7 +257,6 @@ internal class CreateViewModel @Inject constructor(
 
             keyChosen = KeyChosenState(
                 imageUri = key.type,
-                title = key.name,
                 type = KeyType.valueOf(key.type),
             )
             keyScale = 1f //TODO get from db
@@ -267,9 +268,9 @@ internal class CreateViewModel @Inject constructor(
                 CreateScreenState.Save(
                     key = KeyChosenState(
                         imageUri = key.type,
-                        title = key.name,
                         type = KeyType.valueOf(key.type),
                     ),
+                    keyTitle = key.name,
                     scale = 1f,
                     keyConfig = keyEditConfig,
                 )
@@ -335,12 +336,10 @@ internal class CreateViewModel @Inject constructor(
     private fun getKeyTypes() = listOf(
         KeyChosenState(
             imageUri = "https://images.kwikset.com/is/image/Kwikset/05991-mk-any_c3?wid=600&qlt=90&resMode=sharp",
-            title = "Kwikset",
             type = KeyType.KWIKSET,
         ),
         KeyChosenState(
             imageUri = "https://cdn.mscdirect.com/global/images/ProductImages/1716860-21.jpg",
-            title = "SCHLAGE",
             type = KeyType.SCHLAGE,
         ),
     )

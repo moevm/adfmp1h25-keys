@@ -27,6 +27,7 @@ internal sealed interface CreateScreenState {
     data class Save(
         override val createStep: CreateStep = CreateStep.SAVE,
         val key: KeyChosenState,
+        val keyTitle: String,
         val scale: Float,
         val keyConfig: KeyConfig,
     ) : CreateScreenState
