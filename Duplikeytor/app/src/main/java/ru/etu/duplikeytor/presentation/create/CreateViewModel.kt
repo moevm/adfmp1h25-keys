@@ -257,7 +257,7 @@ internal class CreateViewModel @Inject constructor(
                 title = key.name,
                 type = KeyType.valueOf(key.type),
             )
-            keyScale = 1f //TODO get from db
+            keyScale = key.scale
             keyConfig = keyEditConfig
             keyTitle = key.name
             keyId = key.id
@@ -269,7 +269,7 @@ internal class CreateViewModel @Inject constructor(
                         title = key.name,
                         type = KeyType.valueOf(key.type),
                     ),
-                    scale = 1f,
+                    scale = keyScale,
                     keyConfig = keyEditConfig,
                 )
             )
@@ -289,6 +289,7 @@ internal class CreateViewModel @Inject constructor(
         val key = Key(
             id = keyId,
             name = keyName,
+            scale = keyScale,
             pins = keyConfig.pins,
             type = keyChose.type.toString(),
         )

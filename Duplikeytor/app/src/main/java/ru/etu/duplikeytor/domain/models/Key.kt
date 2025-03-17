@@ -5,7 +5,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import ru.etu.duplikeytor.domain.converters.Converters
-import java.util.Date
 
 @Entity(tableName = "keys")
 @TypeConverters(Converters::class)
@@ -15,6 +14,8 @@ data class Key(
     var id: Long = 0,
 
     var name: String,
+
+    var scale: Float = 1f,
 
     @ColumnInfo(name="photo_uri")
     var photoUri: String? = null,
