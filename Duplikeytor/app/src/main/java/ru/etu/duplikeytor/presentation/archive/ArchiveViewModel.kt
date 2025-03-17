@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
+import ru.etu.duplikeytor.domain.models.Key
 import ru.etu.duplikeytor.domain.repository.KeyRepository
 import ru.etu.duplikeytor.domain.usecases.ShareUsecase
 import ru.etu.duplikeytor.presentation.archive.keycard.KeyState
@@ -162,22 +163,26 @@ internal class ArchiveViewModel @Inject constructor(
     private fun changeState(state: KeyArchiveState) =
         viewModelScope.launch { _state.emit(state) }
 
+    private fun mapToKeyState(key: Key): KeyState {
+        return with(key) {
+            KeyState(
+                id = id,
+                name = name,
+                imageUri = photoUri,
+                createdAt = LocalDateTime.ofInstant(
+                    Instant.ofEpochMilli(createdAt),
+                    ZoneId.systemDefault()
+                ).format(formatter),
+                type = KeyType.valueOf(type),
+                pins = pins.joinToString(separator = "-"),
+            )
+        }
+    }
+
     private fun loadKeysFromArchive() {
         viewModelScope.launch {
             val keyStates = keyRepository.getKeys().map { key ->
-                with(key) {
-                    KeyState(
-                        id = id,
-                        name = name,
-                        imageUri = photoUri,
-                        createdAt = LocalDateTime.ofInstant(
-                            Instant.ofEpochMilli(createdAt),
-                            ZoneId.systemDefault()
-                        ).format(formatter),
-                        type = KeyType.valueOf(type),
-                        pins = pins.joinToString(separator = "-"),
-                    )
-                }
+                mapToKeyState(key)
             }
             _keysState.value = keyStates
         }
@@ -187,17 +192,7 @@ internal class ArchiveViewModel @Inject constructor(
         viewModelScope.launch {
             val key = with(keyRepository.getKey(id)) {
                 KeyArchiveState.Key(
-                    key = KeyState(
-                        id = id,
-                        name = name,
-                        imageUri = photoUri,
-                        createdAt = LocalDateTime.ofInstant(
-                            Instant.ofEpochMilli(createdAt),
-                            ZoneId.systemDefault()
-                        ).format(formatter),
-                        type = KeyType.valueOf(type),
-                        pins = pins.joinToString(separator = "-"),
-                    ),
+                    key = mapToKeyState(this),
                     title = name,
                 )
             }
