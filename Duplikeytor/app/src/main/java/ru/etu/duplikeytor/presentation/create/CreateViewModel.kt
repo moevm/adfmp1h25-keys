@@ -147,14 +147,15 @@ internal class CreateViewModel @Inject constructor(
 
     internal fun onKeyChoose(key: KeyChosenState) {
         keyChosen = key
-        keyConfig = when(key.type) {
-            KeyType.KWIKSET -> {
-                KeyConfig.Kwikset.init
-            }
-            else -> {
-                null // TODO
-            }
+
+        val (title, config) = when(key.type) {
+            KeyType.KWIKSET -> "Kwikset" to KeyConfig.Kwikset.init
+            KeyType.SCHLAGE -> "Schlage" to null // TODO SCHLAGE
         }
+
+        keyTitle = title
+        keyConfig = config
+
         changeState(
             CreateScreenState.Scale(
                 key = key,
