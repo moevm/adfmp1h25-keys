@@ -133,7 +133,7 @@ private fun Chooser(
                             .offset(x = textOffsetDp)
                             .fillMaxWidth()
                             .padding(bottom = 10.dp),
-                        text = key.title,
+                        text = key.type.title,
                         style = MaterialTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center,
                     )

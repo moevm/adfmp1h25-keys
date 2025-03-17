@@ -1,6 +1,5 @@
 package ru.etu.duplikeytor.presentation.create.view.save
 
-import KeyChosenState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -43,7 +42,7 @@ internal fun SaveScreen(
     state: CreateScreenState.Save,
     onEvent: (CreateEvent) -> Unit,
 ) {
-    val textState = remember { mutableStateOf(state.key.title) }
+    val textState = remember { mutableStateOf(state.keyTitle) }
 
     Column(
         modifier = modifier
