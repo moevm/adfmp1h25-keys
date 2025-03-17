@@ -259,7 +259,7 @@ internal class CreateViewModel @Inject constructor(
                 imageUri = key.type,
                 type = KeyType.valueOf(key.type),
             )
-            keyScale = 1f //TODO get from db
+            keyScale = key.scale
             keyConfig = keyEditConfig
             keyTitle = key.name
             keyId = key.id
@@ -271,7 +271,7 @@ internal class CreateViewModel @Inject constructor(
                         type = KeyType.valueOf(key.type),
                     ),
                     keyTitle = key.name,
-                    scale = 1f,
+                    scale = keyScale,
                     keyConfig = keyEditConfig,
                 )
             )
@@ -294,6 +294,7 @@ internal class CreateViewModel @Inject constructor(
             name = keyName.ifEmpty {
                 "New key"
             },
+            scale = keyScale,
             pins = keyConfig.pins,
             type = keyChose.type.toString(),
         )
