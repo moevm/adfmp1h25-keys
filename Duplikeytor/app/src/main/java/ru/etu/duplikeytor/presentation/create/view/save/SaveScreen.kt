@@ -91,7 +91,8 @@ private fun KeyPicture(
                 .padding(vertical = 20.dp)
                 .weight(1f),
             color = Color.Transparent,
-            borderColor = MaterialTheme.colorScheme.onBackground,
+            borderColor = Color.Transparent,
+            pinsColor = MaterialTheme.colorScheme.background,
         )
         UiKitButton(
             modifier = Modifier
