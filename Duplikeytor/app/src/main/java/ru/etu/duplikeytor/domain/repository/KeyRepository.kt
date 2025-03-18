@@ -9,16 +9,12 @@ class KeyRepository @Inject constructor(private val keyDao: KeyDao) {
         return keyDao.getAll()
     }
 
-    suspend fun getKey(id: Long): Key {
+    suspend fun getKey(id: Long): Key? {
         return keyDao.getById(id)
     }
 
-    suspend fun insertKey(key: Key) : Long {
-        return keyDao.insert(key)
-    }
-
-    suspend fun updateKey(key: Key): Long {
-        return keyDao.insert(key)
+    suspend fun upsert(key: Key): Long {
+        return keyDao.upsert(key)
     }
 
     suspend fun deleteKey(id: Long) {

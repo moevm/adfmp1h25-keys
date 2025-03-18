@@ -192,7 +192,7 @@ internal class ArchiveViewModel @Inject constructor(
         viewModelScope.launch {
             val key = with(keyRepository.getKey(id)) {
                 KeyArchiveState.Key(
-                    key = mapToKeyState(this),
+                    key = mapToKeyState(this!!),
                     title = name,
                 )
             }
