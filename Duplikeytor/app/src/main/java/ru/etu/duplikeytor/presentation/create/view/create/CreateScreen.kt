@@ -23,21 +23,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import ru.etu.duplikeytor.R
 import ru.etu.duplikeytor.presentation.create.model.CreateEvent
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
-import ru.etu.duplikeytor.presentation.create.model.config.KeyConfig
 import ru.etu.duplikeytor.presentation.create.view.util.Key
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.ButtonState
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.UiKitButton
+import ru.etu.duplikeytor.presentation.ui.utils.snapshotStateListSaver
 
 @Composable
 internal fun CreateScreen(
@@ -81,16 +82,13 @@ internal fun CreateScreen(
             Row(
                 modifier = Modifier.fillMaxWidth().weight(1f),
             ) {
-                val currentState = rememberSaveable { mutableStateOf(
-                    when(state.keyConfig) {
-                        is KeyConfig.Kwikset -> {
-                            state.keyConfig.pins as MutableList
-                        }
-                        else -> {
-                            mutableListOf(0, 0, 0, 0, 0) // TODO
-                        }
+                val pins = rememberSaveable(
+                    saver = snapshotStateListSaver()
+                ) {
+                    mutableStateListOf<Int>().apply {
+                        addAll(state.keyConfig.pins)
                     }
-                ) }
+                }
                 val currentPinNumber = rememberSaveable { mutableIntStateOf(1) }
                 val currentPinDeep = rememberSaveable { mutableIntStateOf(0) }
                 AnimatedVisibility(
@@ -118,6 +116,7 @@ internal fun CreateScreen(
                         .weight(1f)
                         .align(Alignment.CenterVertically),
                     state = state,
+                    pins = pins,
                 )
                 AnimatedVisibility(
                     modifier = Modifier
@@ -131,8 +130,8 @@ internal fun CreateScreen(
                         modifier = Modifier,
                         title = "Глубина",
                         value = currentPinDeep.intValue,
-                        minValue = 0,
-                        maxValue = 4,
+                        minValue = 1,
+                        maxValue = 7,
                         onChange = { number ->
                             currentPinDeep.intValue = number
                         }
@@ -140,11 +139,11 @@ internal fun CreateScreen(
                 }
 
                 LaunchedEffect(currentPinNumber.intValue) {
-                    currentPinDeep.intValue = currentState.value[currentPinNumber.intValue - 1]
+                    currentPinDeep.intValue = pins [currentPinNumber.intValue - 1]
                 }
 
                 LaunchedEffect(currentPinDeep.intValue) {
-                    currentState.value[currentPinNumber.intValue - 1] = currentPinDeep.intValue
+                    pins[currentPinNumber.intValue - 1] = currentPinDeep.intValue
                     onEvent(
                         CreateEvent.KeyCreateChanged(
                             pin = currentPinNumber.intValue,
@@ -219,6 +218,7 @@ private fun Selector(
 private fun KeyCreate(
     modifier: Modifier,
     state: CreateScreenState.Create,
+    pins: List<Int>,
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
@@ -228,13 +228,15 @@ private fun KeyCreate(
     ) {
         Key(
             modifier = Modifier
-                .size(width = minSizeValue/3, height = minSizeValue)
+                .size(width = minSizeValue/3.5F, height = minSizeValue)
                 .graphicsLayer {
                     scaleX = state.scale
                     scaleY = state.scale
                 }
                 .align(Alignment.Center),
-            borderColor = MaterialTheme.colorScheme.onBackground,
+            pins = pins,
+            borderColor = Color.Transparent,
+            pinsColor = MaterialTheme.colorScheme.background
         )
     }
 }

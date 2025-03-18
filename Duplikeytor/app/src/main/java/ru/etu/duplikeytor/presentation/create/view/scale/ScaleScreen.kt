@@ -102,7 +102,7 @@ private fun KeyScale(
                 KeyType.KWIKSET -> {
                     Key(
                         modifier = Modifier
-                            .size(width = minSizeValue/3, height = minSizeValue)
+                            .size(width = minSizeValue/3.5F, height = minSizeValue)
                             .graphicsLayer {
                                 scaleX = animateScale.value
                                 scaleY = animateScale.value
@@ -113,7 +113,7 @@ private fun KeyScale(
                 KeyType.SCHLAGE -> {
                     Key(
                         modifier = Modifier
-                            .size(width = minSizeValue/3, height = minSizeValue)
+                            .size(width = minSizeValue/3.5F, height = minSizeValue)
                             .graphicsLayer {
                                 scaleX = animateScale.value
                                 scaleY = animateScale.value

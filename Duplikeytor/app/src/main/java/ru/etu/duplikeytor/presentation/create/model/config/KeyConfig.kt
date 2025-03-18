@@ -6,7 +6,7 @@ internal sealed interface KeyConfig {
         override val pins: List<Int>,
     ) : KeyConfig {
         companion object {
-            val init = Kwikset(listOf(0, 0, 0, 0, 0))
+            val init = Kwikset(listOf(1, 1, 1, 1, 1))
         }
     }
 
