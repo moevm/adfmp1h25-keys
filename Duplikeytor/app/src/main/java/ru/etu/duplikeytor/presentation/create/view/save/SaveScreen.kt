@@ -55,6 +55,7 @@ internal fun SaveScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 50.dp)
                 .aspectRatio(0.8f),
+            state = state,
         )
         KeyInformation(
             state = state,
@@ -72,6 +73,7 @@ internal fun SaveScreen(
 @Composable
 private fun KeyPicture(
     modifier: Modifier = Modifier,
+    state: CreateScreenState.Save,
 ) {
     Column(
         modifier = modifier
@@ -87,12 +89,13 @@ private fun KeyPicture(
     ) {
         Key(
             modifier = Modifier
-                .aspectRatio(0.33f)
-                .padding(vertical = 20.dp)
+                .aspectRatio(0.25f)
+                .padding(vertical = 15.dp)
                 .weight(1f),
-            color = Color.Transparent,
+            color = MaterialTheme.colorScheme.onBackground,
             borderColor = Color.Transparent,
-            pinsColor = MaterialTheme.colorScheme.background,
+            pinsColor = MaterialTheme.colorScheme.surface,
+            pins = state.keyConfig.pins,
         )
         UiKitButton(
             modifier = Modifier

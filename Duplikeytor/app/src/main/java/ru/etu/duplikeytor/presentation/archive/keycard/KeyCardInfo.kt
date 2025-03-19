@@ -2,11 +2,13 @@ package ru.etu.duplikeytor.presentation.archive.keycard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,6 +27,7 @@ import coil3.compose.AsyncImage
 import ru.etu.duplikeytor.R
 import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveEvent
 import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveState
+import ru.etu.duplikeytor.presentation.create.view.util.Key
 import ru.etu.duplikeytor.presentation.shared.model.KeyType
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.ButtonState
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.UiKitButton
@@ -84,10 +88,9 @@ private fun KeyInformation(
                 style = MaterialTheme.typography.bodyMedium,
             )
         }
-        AsyncImage(
-            modifier = modifier.aspectRatio(imageRatio),
-            model = state.imageUri,
-            contentDescription = null,
+        KeyPicture(
+            modifier = Modifier.aspectRatio(1f),
+            state = state,
         )
         Text(
             modifier = modifier.fillMaxWidth(),
@@ -101,6 +104,36 @@ private fun KeyInformation(
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyMedium,
         )
+    }
+}
+
+@Composable
+private fun KeyPicture(
+    modifier: Modifier = Modifier,
+    state: KeyState,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center,
+    ) {
+        if (state.imageUri.isNullOrEmpty()) {
+            Key(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .aspectRatio(0.285f),
+                color = MaterialTheme.colorScheme.onBackground,
+                borderColor = Color.Transparent,
+                pinsColor = MaterialTheme.colorScheme.background,
+                pins = state.pins.split("-").map { it.toInt() },
+            )
+        } else {
+            AsyncImage(
+                modifier = modifier.aspectRatio(imageRatio),
+                model = state.imageUri,
+                contentDescription = null,
+            )
+        }
     }
 }
 
