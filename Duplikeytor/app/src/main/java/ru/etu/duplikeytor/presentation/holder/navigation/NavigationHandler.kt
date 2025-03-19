@@ -37,7 +37,6 @@ class NavigationHandler(
             launchSingleTop = true
             restoreState = true
         }
-        onScreenChanged(screen)
     }
 
     fun navigateBack(exit: () -> Unit) {
