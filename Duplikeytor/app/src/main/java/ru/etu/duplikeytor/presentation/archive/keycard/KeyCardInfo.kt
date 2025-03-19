@@ -117,7 +117,7 @@ private fun KeyPicture(
             .fillMaxWidth(),
         contentAlignment = Alignment.Center,
     ) {
-        if (state.imageUri.isNullOrEmpty()) {
+        if (state.imageUri.isNullOrEmpty() && state.config != null) {
             Key(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -126,6 +126,7 @@ private fun KeyPicture(
                 borderColor = Color.Transparent,
                 pinsColor = MaterialTheme.colorScheme.background,
                 pins = state.pins.split("-").map { it.toInt() },
+                keyConfig = state.config,
             )
         } else {
             AsyncImage(

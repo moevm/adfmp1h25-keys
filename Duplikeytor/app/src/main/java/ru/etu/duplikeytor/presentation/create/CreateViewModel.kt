@@ -150,7 +150,7 @@ internal class CreateViewModel @Inject constructor(
 
         val config = when(key.type) {
             KeyType.KWIKSET -> KeyConfig.Kwikset.init
-            KeyType.SCHLAGE -> null // TODO SCHLAGE
+            KeyType.SCHLAGE -> KeyConfig.Schlage.init
         }
 
         keyTitle = key.type.title
@@ -190,8 +190,11 @@ internal class CreateViewModel @Inject constructor(
                 )
             }
             else -> {
-                // TODO schalge, null
-                keyConfig
+                (keyConfig as KeyConfig.Schlage).copy(
+                    pins = (keyConfig as KeyConfig.Schlage).pins.mapIndexed { index, value ->
+                        if (index == pinNumber - 1) deep else value
+                    }
+                )
             }
         }
     }

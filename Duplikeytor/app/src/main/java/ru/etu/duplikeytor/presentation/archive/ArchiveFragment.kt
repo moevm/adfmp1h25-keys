@@ -8,7 +8,6 @@ import androidx.compose.runtime.getValue
 import ru.etu.duplikeytor.presentation.archive.keycard.KeyInfoScreen
 import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveEvent
 import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveState
-import ru.etu.duplikeytor.presentation.holder.model.AppEvent
 
 @Composable
 internal fun ArchiveFragment(
@@ -18,7 +17,6 @@ internal fun ArchiveFragment(
     onBackFailure: () -> Unit,
     onCreate: () -> Unit = {},
     onKeyEditIntent: (Long) -> Unit,
-    processAppEvent: (AppEvent) -> Unit,
 ) {
     onCreate()
 

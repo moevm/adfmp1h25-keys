@@ -159,7 +159,6 @@ internal fun MainScreen(
                     ),
                     onBackClick = onBackClick,
                     onBackFailure = { navigationHandler.navigateBack { activity?.finish() } },
-                    processAppEvent = processAppEvent,
                 )
             }
             composable(
