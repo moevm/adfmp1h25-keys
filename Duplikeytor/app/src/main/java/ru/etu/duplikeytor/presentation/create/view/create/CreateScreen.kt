@@ -104,7 +104,7 @@ internal fun CreateScreen(
                         title = "Пин",
                         value = currentPinNumber.intValue,
                         minValue = 1,
-                        maxValue = 5,
+                        maxValue = state.keyConfig.totalPins,
                         onChange = { number ->
                             currentPinNumber.intValue = number
                         }
@@ -131,7 +131,7 @@ internal fun CreateScreen(
                         title = "Глубина",
                         value = currentPinDeep.intValue,
                         minValue = 1,
-                        maxValue = 7,
+                        maxValue = state.keyConfig.maxDepth,
                         onChange = { number ->
                             currentPinDeep.intValue = number
                         }
@@ -228,7 +228,7 @@ private fun KeyCreate(
     ) {
         Key(
             modifier = Modifier
-                .size(width = minSizeValue/3.5F, height = minSizeValue)
+                .size(width = minSizeValue/state.keyConfig.sizeRatio, height = minSizeValue)
                 .graphicsLayer {
                     scaleX = state.scale
                     scaleY = state.scale
@@ -236,7 +236,8 @@ private fun KeyCreate(
                 .align(Alignment.Center),
             pins = pins,
             borderColor = Color.Transparent,
-            pinsColor = MaterialTheme.colorScheme.background
+            pinsColor = MaterialTheme.colorScheme.background,
+            keyConfig = state.keyConfig,
         )
     }
 }

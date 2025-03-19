@@ -96,11 +96,12 @@ private fun KeyPicture(
             .fillMaxWidth(),
         contentAlignment = Alignment.Center,
     ) {
-        if (state.imageUri.isNullOrEmpty()) {
+        if (state.imageUri.isNullOrEmpty() && state.config != null) {
             Key(
                 modifier = Modifier
                     .fillMaxHeight()
                     .aspectRatio(0.285f),
+                keyConfig = state.config,
                 color = MaterialTheme.colorScheme.onBackground,
                 borderColor = Color.Transparent,
                 pinsColor = MaterialTheme.colorScheme.surface,

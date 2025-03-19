@@ -14,6 +14,7 @@ import ru.etu.duplikeytor.domain.repository.KeyRepository
 import ru.etu.duplikeytor.domain.usecases.ShareUsecase
 import ru.etu.duplikeytor.presentation.archive.keycard.KeyState
 import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveState
+import ru.etu.duplikeytor.presentation.create.model.config.KeyConfig
 import ru.etu.duplikeytor.presentation.holder.model.AppEvent
 import ru.etu.duplikeytor.presentation.holder.model.navigation.NavigationBarState
 import ru.etu.duplikeytor.presentation.holder.model.navigation.ScreenType
@@ -164,6 +165,7 @@ internal class ArchiveViewModel @Inject constructor(
         viewModelScope.launch { _state.emit(state) }
 
     private fun mapToKeyState(key: Key): KeyState {
+        val type = KeyType.valueOf(key.type)
         return with(key) {
             KeyState(
                 id = id,
@@ -173,11 +175,22 @@ internal class ArchiveViewModel @Inject constructor(
                     Instant.ofEpochMilli(createdAt),
                     ZoneId.systemDefault()
                 ).format(formatter),
-                type = KeyType.valueOf(type),
+                type = type,
                 pins = pins.joinToString(separator = "-"),
+                config = type.toConfig(pins),
             )
         }
     }
+
+    private fun KeyType.toConfig(pins: List<Int>) =
+        when(this) {
+            KeyType.KWIKSET -> {
+                KeyConfig.Kwikset(pins = pins)
+            }
+            KeyType.SCHLAGE -> {
+                KeyConfig.Schlage(pins = pins)
+            }
+        }
 
     private fun loadKeysFromArchive() {
         viewModelScope.launch {

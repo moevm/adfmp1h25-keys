@@ -96,6 +96,7 @@ private fun KeyPicture(
             borderColor = Color.Transparent,
             pinsColor = MaterialTheme.colorScheme.surface,
             pins = state.keyConfig.pins,
+            keyConfig = state.keyConfig,
         )
         UiKitButton(
             modifier = Modifier
@@ -159,13 +160,7 @@ private fun KeyInformation(
     }
 }
 
-private fun KeyConfig.toTitle() =
-    when(this) {
-        is KeyConfig.Kwikset -> {
-            this.pins.joinToString(separator = "–")
-        }
-        else -> "Unsupported type" // TODO
-    }
+private fun KeyConfig.toTitle() = this.pins.joinToString(separator = "–")
 
 @Composable
 private fun ButtonRow(
