@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -22,10 +23,10 @@ class MainViewModel @Inject constructor() : ViewModel() {
     private val _navigationBarState = MutableStateFlow(
         NavigationBarState(listOf())
     )
-    private val _currentScreenType = MutableStateFlow(ScreenType.CREATE)
+    private val _currentScreenType = MutableStateFlow(ScreenType.main)
     private val _currentScreen = MutableStateFlow<Screen?>(null)
 
-    private val _eventResolver = MutableStateFlow<AppEvent>(AppEvent.Main)
+    private val _eventResolver = MutableSharedFlow<AppEvent>()
 
     val statusBarState: StateFlow<StatusBarState> = _statusBarState
     val navigationBarState: StateFlow<NavigationBarState> = _navigationBarState
@@ -45,7 +46,9 @@ class MainViewModel @Inject constructor() : ViewModel() {
     private fun observeStatusBar() {
         viewModelScope.launch {
             _currentScreen.collect { screen ->
+                Log.e("Fix", "MainVM observeStatusBar _currentScreen collect screen ${screen}")
                 screen?.statusBarState?.collect { statusBar ->
+                    Log.e("Fix", "MainVM observeStatusBar _statusBarState emit statusBar ${statusBar}")
                     _statusBarState.emit(statusBar)
                 }
             }
