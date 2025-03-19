@@ -6,10 +6,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -30,6 +30,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import ru.etu.duplikeytor.presentation.create.view.util.Key
 import ru.etu.duplikeytor.presentation.shared.model.KeyType
 
 @Composable
@@ -55,16 +56,15 @@ internal fun KeyCard(
         Column(
             modifier = Modifier
                 .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             val placeholder = placeholderPainter(MaterialTheme.colorScheme.background)
-            AsyncImage(
-                modifier = Modifier.fillMaxWidth().aspectRatio(1f),
-                model = state.imageUri,
-                contentDescription = null,
-                error = placeholder,
+            KeyPicture(
+                modifier = Modifier
+                    .aspectRatio(1f)
+                    .padding(10.dp),
+                state = state,
                 placeholder = placeholder,
-                contentScale = ContentScale.FillBounds,
             )
             Text(
                 modifier = Modifier.fillMaxWidth(),
@@ -80,6 +80,40 @@ internal fun KeyCard(
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.labelMedium,
                 overflow = TextOverflow.Ellipsis,
+            )
+        }
+    }
+}
+
+@Composable
+private fun KeyPicture(
+    modifier: Modifier = Modifier,
+    state: KeyState,
+    placeholder: Painter
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center,
+    ) {
+        if (state.imageUri.isNullOrEmpty()) {
+            Key(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .aspectRatio(0.285f),
+                color = MaterialTheme.colorScheme.onBackground,
+                borderColor = Color.Transparent,
+                pinsColor = MaterialTheme.colorScheme.surface,
+                pins = state.pins.split("-").map { it.toInt() },
+            )
+        } else {
+            AsyncImage(
+                modifier = Modifier.fillMaxSize(),
+                model = state.imageUri,
+                contentDescription = null,
+                error = placeholder,
+                placeholder = placeholder,
+                contentScale = ContentScale.FillBounds,
             )
         }
     }
