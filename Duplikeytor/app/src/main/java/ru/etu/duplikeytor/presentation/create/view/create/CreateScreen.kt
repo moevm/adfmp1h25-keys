@@ -130,7 +130,7 @@ internal fun CreateScreen(
                         modifier = Modifier,
                         title = "Глубина",
                         value = currentPinDeep.intValue,
-                        minValue = 1,
+                        minValue = state.keyConfig.minDepth,
                         maxValue = state.keyConfig.maxDepth,
                         onChange = { number ->
                             currentPinDeep.intValue = number
