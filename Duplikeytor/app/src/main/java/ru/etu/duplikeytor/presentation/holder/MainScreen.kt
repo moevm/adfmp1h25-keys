@@ -56,7 +56,6 @@ internal fun MainScreen(
             onScreenChanged = onScreenChanged,
         )
     }
-    onScreenChanged(ScreenType.main)
     val activity = LocalActivity.current
     val lifecycleOwner = LocalLifecycleOwner.current
 

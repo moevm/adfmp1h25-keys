@@ -4,8 +4,11 @@ import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import ru.etu.duplikeytor.presentation.holder.model.AppEvent
 import ru.etu.duplikeytor.presentation.holder.model.navigation.NavigationBarState
@@ -22,10 +25,10 @@ class MainViewModel @Inject constructor() : ViewModel() {
     private val _navigationBarState = MutableStateFlow(
         NavigationBarState(listOf())
     )
-    private val _currentScreenType = MutableStateFlow(ScreenType.CREATE)
+    private val _currentScreenType = MutableStateFlow(ScreenType.main)
     private val _currentScreen = MutableStateFlow<Screen?>(null)
 
-    private val _eventResolver = MutableStateFlow<AppEvent>(AppEvent.Main)
+    private val _eventResolver = MutableSharedFlow<AppEvent>()
 
     val statusBarState: StateFlow<StatusBarState> = _statusBarState
     val navigationBarState: StateFlow<NavigationBarState> = _navigationBarState
@@ -39,6 +42,7 @@ class MainViewModel @Inject constructor() : ViewModel() {
     init {
         observeStatusBar()
         observeNavigationBar()
+        observeScreenChanges()
         observeEvent()
     }
 
@@ -62,6 +66,21 @@ class MainViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun observeScreenChanges() {
+        viewModelScope.launch {
+            _currentScreen.flatMapLatest { screen ->
+                screen?.statusBarState ?: MutableStateFlow(StatusBarState.Empty(false))
+            }.collect { statusBar -> _statusBarState.emit(statusBar) }
+        }
+
+        viewModelScope.launch {
+            _currentScreen.flatMapLatest { screen ->
+                screen?.navigationBarState ?: MutableStateFlow(NavigationBarState(emptyList()))
+            }.collect { navigationBar -> _navigationBarState.emit(navigationBar) }
+        }
+    }
+
     private fun observeEvent() {
         viewModelScope.launch {
             _eventResolver.collect { event ->
@@ -80,19 +99,9 @@ class MainViewModel @Inject constructor() : ViewModel() {
     fun onBackClick() = _currentScreen.value?.onBackClick() ?: false
 
     fun onScreenChanged(screenType: ScreenType) {
-        _currentScreenType.value = screenType
-        _currentScreen.value = childScreen[screenType]
-
-        val currentStatusBar = _currentScreen.value?.statusBarState
-        val currentNavigationBar = _currentScreen.value?.navigationBarState
-
         viewModelScope.launch {
-            currentStatusBar?.collect { statusBar ->
-                _statusBarState.emit(statusBar)
-            }
-            currentNavigationBar?.collect { navigationBar ->
-                _navigationBarState.emit(navigationBar)
-            }
+            _currentScreenType.emit(screenType)
+            _currentScreen.emit(childScreen[screenType])
         }
     }
 
