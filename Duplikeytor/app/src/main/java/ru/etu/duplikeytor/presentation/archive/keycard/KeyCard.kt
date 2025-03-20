@@ -101,10 +101,6 @@ private fun KeyPicture(
             Key(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .graphicsLayer {
-                        scaleX = state.scale
-                        scaleY = state.scale
-                    }
                     .aspectRatio(0.285f),
                 keyConfig = state.config,
                 color = MaterialTheme.colorScheme.onBackground,

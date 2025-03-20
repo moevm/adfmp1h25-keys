@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,6 +30,7 @@ import coil3.compose.AsyncImage
 import ru.etu.duplikeytor.R
 import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveEvent
 import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveState
+import ru.etu.duplikeytor.presentation.create.model.config.KeyConfig
 import ru.etu.duplikeytor.presentation.create.view.util.Key
 import ru.etu.duplikeytor.presentation.shared.model.KeyType
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.ButtonState
@@ -114,14 +117,19 @@ private fun KeyPicture(
     state: KeyState,
 ) {
     Box(
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center,
     ) {
         if (state.imageUri.isNullOrEmpty() && state.config != null) {
+            val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+            val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+            val minSizeValue = minOf(screenWidth, screenHeight)/2
             Key(
                 modifier = Modifier
-                    .fillMaxHeight()
+                    .size(
+                        width = minSizeValue/ KeyConfig.Kwikset.init.sizeRatio,
+                        height = minSizeValue
+                    )
                     .graphicsLayer {
                         scaleX = state.scale
                         scaleY = state.scale
