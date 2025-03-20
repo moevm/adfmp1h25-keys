@@ -170,6 +170,7 @@ internal class ArchiveViewModel @Inject constructor(
             KeyState(
                 id = id,
                 name = name,
+                scale = scale,
                 imageUri = photoUri,
                 createdAt = LocalDateTime.ofInstant(
                     Instant.ofEpochMilli(createdAt),

@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import ru.etu.duplikeytor.presentation.archive.keycard.KeyCard
-import ru.etu.duplikeytor.presentation.archive.keycard.KeyState
 import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveState
 
 @Composable
