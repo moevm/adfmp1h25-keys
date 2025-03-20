@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
@@ -100,6 +101,10 @@ private fun KeyPicture(
             Key(
                 modifier = Modifier
                     .fillMaxHeight()
+                    .graphicsLayer {
+                        scaleX = state.scale
+                        scaleY = state.scale
+                    }
                     .aspectRatio(0.285f),
                 keyConfig = state.config,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -148,6 +153,7 @@ private fun KeyCardPreview() {
         Modifier,
         KeyState(
             id = 0,
+            scale = 1f,
             name = "Ключ от Нью-Йорка",
             imageUri = "https://avatars.githubusercontent.com/u/90792387?v=4",
             createdAt = "12.02.2025 - 13:00",

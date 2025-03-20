@@ -6,6 +6,7 @@ import ru.etu.duplikeytor.presentation.shared.model.KeyType
 internal data class KeyState(
     val id: Long,
     val name: String,
+    val scale: Float,
     val imageUri: String?,
     val createdAt: String,
     val type: KeyType,

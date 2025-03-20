@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -121,6 +122,10 @@ private fun KeyPicture(
             Key(
                 modifier = Modifier
                     .fillMaxHeight()
+                    .graphicsLayer {
+                        scaleX = state.scale
+                        scaleY = state.scale
+                    }
                     .aspectRatio(0.285f),
                 color = MaterialTheme.colorScheme.onBackground,
                 borderColor = Color.Transparent,
@@ -184,6 +189,7 @@ private fun KeyCardInfoPreview() {
             key = KeyState(
                 id = 0,
                 name = "Key name",
+                scale = 1f,
                 imageUri = "https://avatars.githubusercontent.com/u/90708652?v=4",
                 createdAt = "10.10.2021 - 13:37",
                 type = KeyType.KWIKSET,
