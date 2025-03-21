@@ -52,7 +52,7 @@ internal fun SaveScreen(
     state: CreateScreenState.Save,
     onEvent: (CreateEvent) -> Unit,
 ) {
-    val textState = remember { mutableStateOf(state.keyTitle) }
+    val textState = rememberSaveable { mutableStateOf(state.keyTitle) }
 
     Column(
         modifier = modifier
@@ -73,6 +73,7 @@ internal fun SaveScreen(
             keyTitle = textState,
             onTitleChange = { title ->
                 onEvent(CreateEvent.KeyTitleChange(title))
+                textState.value = title
             }
         )
         ButtonRow(
@@ -216,7 +217,6 @@ private fun KeyInformation(
             value = keyTitle.value,
             onValueChange = {
                 onTitleChange(it)
-                keyTitle.value = it
             },
             label = { Text("Название ключа") },
             maxLines = 1,

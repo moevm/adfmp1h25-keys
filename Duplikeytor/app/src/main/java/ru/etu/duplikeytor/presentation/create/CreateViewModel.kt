@@ -223,7 +223,7 @@ internal class CreateViewModel @Inject constructor(
 
     internal fun onKeyShare(context: Context) {
         val keyType = keyChosen?.type.toString()
-        val keyName = keyChosen?.type?.title
+        val keyName = keyTitle ?: keyChosen?.type?.title
         val pinsInfo = keyConfig?.pins.toString()
 
         shareUsecase.share(
