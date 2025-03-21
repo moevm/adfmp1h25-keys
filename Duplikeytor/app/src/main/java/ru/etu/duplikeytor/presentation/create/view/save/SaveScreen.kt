@@ -43,6 +43,7 @@ import ru.etu.duplikeytor.presentation.create.model.config.KeyConfig
 import ru.etu.duplikeytor.presentation.create.view.util.Key
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.ButtonState
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.UiKitButton
+import ru.etu.duplikeytor.presentation.ui.uiKit.dialog.ApproveDialog
 
 @Composable
 internal fun SaveScreen(
@@ -146,6 +147,7 @@ private fun KeyPicture(
             AnimatedVisibility(
                 visible = state.keyImageUri != null && !isError.value
             ) {
+                val openDialog = remember { mutableStateOf(false) }
                 UiKitButton(
                     modifier = Modifier
                         .padding(bottom = 10.dp, end = 10.dp)
@@ -154,9 +156,22 @@ private fun KeyPicture(
                         icon = R.drawable.ic_trash_black,
                     ),
                     onClick = {
-                        onEvent(CreateEvent.DeleteKeyPhoto)
+                        openDialog.value = true
                     },
                 )
+                if (openDialog.value) {
+                    ApproveDialog(
+                        title = "Удаление фотографии",
+                        contentText = "Вы подтверждаете удаление фотографии? " +
+                                "После удаление восстановление фотографии невозможно",
+                        onDismissRequest = { isApprove ->
+                            if (isApprove) {
+                                onEvent(CreateEvent.DeleteKeyPhoto)
+                            }
+                            openDialog.value = false
+                        }
+                    )
+                }
             }
         }
     }
