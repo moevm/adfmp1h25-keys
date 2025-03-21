@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import ru.etu.duplikeytor.presentation.archive.keycard.KeyInfoScreen
 import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveEvent
 import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveState
 

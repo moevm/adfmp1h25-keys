@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -147,7 +148,7 @@ private fun KeyPicture(
             AnimatedVisibility(
                 visible = state.keyImageUri != null && !isError.value
             ) {
-                val openDialog = remember { mutableStateOf(false) }
+                val openDialog = rememberSaveable { mutableStateOf(false) }
                 UiKitButton(
                     modifier = Modifier
                         .padding(bottom = 10.dp, end = 10.dp)

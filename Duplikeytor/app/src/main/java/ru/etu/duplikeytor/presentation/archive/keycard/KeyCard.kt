@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import ru.etu.duplikeytor.presentation.archive.model.KeyState
 import ru.etu.duplikeytor.presentation.create.view.util.Key
 import ru.etu.duplikeytor.presentation.shared.model.KeyType
 
@@ -120,7 +121,7 @@ private fun KeyPicture(
                 model = state.imageUri,
                 contentDescription = null,
                 onError = { isError.value = true },
-                contentScale = ContentScale.FillBounds,
+                contentScale = ContentScale.Crop,
             )
         } else {
             AsyncImage(

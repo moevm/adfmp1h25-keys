@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import ru.etu.duplikeytor.domain.models.Key
 import ru.etu.duplikeytor.domain.repository.KeyRepository
 import ru.etu.duplikeytor.domain.usecases.ShareUsecase
-import ru.etu.duplikeytor.presentation.archive.keycard.KeyState
+import ru.etu.duplikeytor.presentation.archive.model.KeyState
 import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveState
 import ru.etu.duplikeytor.presentation.create.model.config.KeyConfig
 import ru.etu.duplikeytor.presentation.holder.model.AppEvent

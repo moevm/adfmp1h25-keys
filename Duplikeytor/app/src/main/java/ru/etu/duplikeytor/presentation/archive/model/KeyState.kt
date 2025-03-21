@@ -1,4 +1,4 @@
-package ru.etu.duplikeytor.presentation.archive.keycard
+package ru.etu.duplikeytor.presentation.archive.model
 
 import ru.etu.duplikeytor.presentation.create.model.config.KeyConfig
 import ru.etu.duplikeytor.presentation.shared.model.KeyType
