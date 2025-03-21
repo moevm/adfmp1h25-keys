@@ -3,6 +3,7 @@ package ru.etu.duplikeytor.presentation.create.view.save
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -35,7 +36,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import coil3.compose.AsyncImage
-import okhttp3.internal.wait
 import ru.etu.duplikeytor.R
 import ru.etu.duplikeytor.presentation.create.model.CreateEvent
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
@@ -93,9 +93,9 @@ private fun KeyPicture(
             .border(
                 width = 2.dp,
                 color = MaterialTheme.colorScheme.primary,
-                shape = RoundedCornerShape(20.dp)
+                shape = RoundedCornerShape(32.dp)
             )
-            .clip(RoundedCornerShape(20.dp))
+            .clip(RoundedCornerShape(32.dp))
             .background(MaterialTheme.colorScheme.surface),
     ) {
         val isError = remember { mutableStateOf(false) }
@@ -112,9 +112,9 @@ private fun KeyPicture(
         } else {
             Key(
                 modifier = Modifier
-                    .aspectRatio(0.285f)
                     .padding(top = 15.dp, bottom = 80.dp)
                     .align(Alignment.Center)
+                    .aspectRatio(1 / state.keyConfig.sizeRatio)
                     .zIndex(0f),
                 keyConfig = state.keyConfig,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -143,11 +143,13 @@ private fun KeyPicture(
                     isError.value = false
                 },
             )
-            if (state.keyImageUri != null && !isError.value) {
+            AnimatedVisibility(
+                visible = state.keyImageUri != null && !isError.value
+            ) {
                 UiKitButton(
                     modifier = Modifier
-                        .weight(1f)
-                        .padding(bottom = 10.dp, end = 10.dp),
+                        .padding(bottom = 10.dp, end = 10.dp)
+                        .width(64.dp),
                     button = ButtonState.Icon.Warning(
                         icon = R.drawable.ic_trash_black,
                     ),

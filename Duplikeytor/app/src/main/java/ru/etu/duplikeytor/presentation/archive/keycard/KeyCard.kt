@@ -67,18 +67,23 @@ internal fun KeyCard(
                 placeholder = placeholder,
             )
             Text(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 4.dp, end = 4.dp),
                 text = state.name,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.labelMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp),
+                    .padding(bottom = 8.dp, start = 4.dp, end = 4.dp),
                 text = state.createdAt,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.labelMedium,
+                maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
         }
@@ -102,7 +107,7 @@ private fun KeyPicture(
                 modifier = Modifier
                     .padding(10.dp)
                     .fillMaxHeight()
-                    .aspectRatio(0.285f),
+                    .aspectRatio(1 / state.config.sizeRatio),
                 keyConfig = state.config,
                 color = MaterialTheme.colorScheme.onBackground,
                 borderColor = Color.Transparent,
@@ -120,7 +125,7 @@ private fun KeyPicture(
         } else {
             AsyncImage(
                 modifier = modifier.fillMaxSize().padding(10.dp),
-                model = state.type.imageR,
+                model = placeholder,
                 contentDescription = null,
             )
         }

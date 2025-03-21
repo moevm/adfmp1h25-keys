@@ -38,8 +38,6 @@ import ru.etu.duplikeytor.presentation.shared.model.KeyType
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.ButtonState
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.UiKitButton
 
-private const val imageRatio = 3f / 2f
-
 @Composable
 internal fun KeyInfoScreen(
     modifier: Modifier = Modifier,
@@ -140,7 +138,7 @@ private fun KeyPicture(
                         scaleX = state.scale
                         scaleY = state.scale
                     }
-                    .aspectRatio(0.285f),
+                    .aspectRatio(1 / state.config.sizeRatio),
                 color = MaterialTheme.colorScheme.onBackground,
                 borderColor = Color.Transparent,
                 pinsColor = MaterialTheme.colorScheme.background,
