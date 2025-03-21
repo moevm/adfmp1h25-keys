@@ -35,6 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import coil3.compose.AsyncImage
+import okhttp3.internal.wait
 import ru.etu.duplikeytor.R
 import ru.etu.duplikeytor.presentation.create.model.CreateEvent
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
@@ -101,7 +102,7 @@ private fun KeyPicture(
         if (state.keyImageUri != null && !isError.value) {
             AsyncImage(
                 modifier = Modifier
-                    .padding(bottom = 48.dp)
+                    .fillMaxSize()
                     .zIndex(0f),
                 model = state.keyImageUri,
                 contentDescription = null,
@@ -122,20 +123,40 @@ private fun KeyPicture(
                 pins = state.keyConfig.pins,
             )
         }
-        UiKitButton(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
                 .zIndex(1f),
-            button = ButtonState.Icon.Default(
-                icon = R.drawable.ic_add_photo_white,
-            ),
-            onClick = {
-                pickMedia.launch(
-                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly),
+        ) {
+            UiKitButton(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 10.dp, bottom = 10.dp, end = 10.dp),
+                button = ButtonState.Icon.Default(
+                    icon = R.drawable.ic_add_photo_white,
+                ),
+                onClick = {
+                    pickMedia.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly),
+                    )
+                    isError.value = false
+                },
+            )
+            if (state.keyImageUri != null && !isError.value) {
+                UiKitButton(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(bottom = 10.dp, end = 10.dp),
+                    button = ButtonState.Icon.Warning(
+                        icon = R.drawable.ic_trash_black,
+                    ),
+                    onClick = {
+                        onEvent(CreateEvent.DeleteKeyPhoto)
+                    },
                 )
-            },
-        )
+            }
+        }
     }
 }
 

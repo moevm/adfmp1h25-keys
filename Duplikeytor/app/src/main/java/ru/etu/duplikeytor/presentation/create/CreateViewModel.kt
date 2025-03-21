@@ -248,6 +248,15 @@ internal class CreateViewModel @Inject constructor(
 
     internal fun onSetKeyImage(uri: Uri) {
         keyImageUri = uri
+        setActualSaveState()
+    }
+
+    internal fun onDeleteKeyPhoto() {
+        keyImageUri = null
+        setActualSaveState()
+    }
+
+    private fun setActualSaveState() {
         val key = keyChosen ?: return
         val keyConfig = keyConfig ?: return
         val keyTitle = keyTitle ?: return

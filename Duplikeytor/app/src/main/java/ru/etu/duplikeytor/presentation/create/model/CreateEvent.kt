@@ -16,4 +16,5 @@ internal sealed interface CreateEvent {
     data object KeySave : CreateEvent
     data class Share(val context: Context) : CreateEvent
     data class SetKeyImage(val uri: Uri) : CreateEvent
+    data object DeleteKeyPhoto : CreateEvent
 }
