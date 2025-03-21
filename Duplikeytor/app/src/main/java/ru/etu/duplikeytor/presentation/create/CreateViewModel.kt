@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.etu.duplikeytor.domain.models.Key
+import ru.etu.duplikeytor.domain.repository.ImageRepository
 import ru.etu.duplikeytor.domain.repository.KeyRepository
 import ru.etu.duplikeytor.domain.usecases.ShareUsecase
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
@@ -27,6 +28,7 @@ import javax.inject.Inject
 internal class CreateViewModel @Inject constructor(
     private val shareUsecase: ShareUsecase,
     private val keyRepository: KeyRepository,
+    private val imageRepository: ImageRepository,
 ) : ViewModel(), Screen {
 
     override var statusBarState = MutableStateFlow<StatusBarState>(
@@ -203,18 +205,7 @@ internal class CreateViewModel @Inject constructor(
     }
 
     internal fun onKeyCreated() {
-        val key: KeyChosenState = keyChosen ?: return
-        val keyConfig = keyConfig ?: return
-        val keyTitle = keyTitle ?: return
-        changeState(
-            CreateScreenState.Save(
-                key = key,
-                keyTitle = keyTitle,
-                scale = keyScale,
-                keyConfig = keyConfig,
-                keyImageUri = keyImageUri,
-            )
-        )
+        setActualSaveState()
     }
 
     internal fun onSaveKey(onSuccessSave: (Long) -> Unit) {
@@ -247,11 +238,14 @@ internal class CreateViewModel @Inject constructor(
     }
 
     internal fun onSetKeyImage(uri: Uri) {
-        keyImageUri = uri
+        keyImageUri?.let { imageRepository.deletePhotoByUri(it) }
+        val localUri = imageRepository.copyUriToLocalStorage(uri)
+        keyImageUri = localUri
         setActualSaveState()
     }
 
     internal fun onDeleteKeyPhoto() {
+        imageRepository.deletePhotoByUri(keyImageUri)
         keyImageUri = null
         setActualSaveState()
     }

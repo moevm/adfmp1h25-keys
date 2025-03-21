@@ -9,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ru.etu.duplikeytor.data.AppDatabase
 import ru.etu.duplikeytor.domain.dao.KeyDao
+import ru.etu.duplikeytor.domain.repository.ImageRepository
 import ru.etu.duplikeytor.domain.repository.KeyRepository
 import ru.etu.duplikeytor.domain.usecases.ShareUsecase
 import javax.inject.Singleton
@@ -42,4 +43,11 @@ object AppModule {
     fun provideShareUsecase(): ShareUsecase {
         return ShareUsecase()
     }
+
+    @Provides
+    @Singleton
+    fun provideImageRepository(@ApplicationContext context: Context): ImageRepository {
+        return ImageRepository(context)
+    }
+
 }
