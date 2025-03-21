@@ -116,7 +116,9 @@ private fun KeyPicture(
     state: KeyState,
 ) {
     Box(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(15.dp),
         contentAlignment = Alignment.Center,
     ) {
         if (state.imageUri.isNullOrEmpty() && state.config != null) {
@@ -142,7 +144,7 @@ private fun KeyPicture(
             )
         } else {
             AsyncImage(
-                modifier = modifier.aspectRatio(imageRatio),
+                modifier = modifier.fillMaxSize(),
                 model = state.imageUri,
                 contentDescription = null,
             )
