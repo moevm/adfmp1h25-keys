@@ -1,6 +1,7 @@
 package ru.etu.duplikeytor.presentation.create.model
 
 import KeyChosenState
+import android.net.Uri
 import ru.etu.duplikeytor.presentation.create.model.config.KeyConfig
 
 internal sealed interface CreateScreenState {
@@ -29,6 +30,7 @@ internal sealed interface CreateScreenState {
         val key: KeyChosenState,
         val keyTitle: String,
         val scale: Float,
+        val keyImageUri: Uri?,
         val keyConfig: KeyConfig,
     ) : CreateScreenState
 }

@@ -60,9 +60,7 @@ internal fun KeyCard(
         ) {
             val placeholder = placeholderPainter(MaterialTheme.colorScheme.background)
             KeyPicture(
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .padding(10.dp),
+                modifier = Modifier.aspectRatio(1f),
                 state = state,
                 placeholder = placeholder,
             )
@@ -99,6 +97,7 @@ private fun KeyPicture(
         if (state.imageUri.isNullOrEmpty() && state.config != null) {
             Key(
                 modifier = Modifier
+                    .padding(10.dp)
                     .fillMaxHeight()
                     .aspectRatio(0.285f),
                 keyConfig = state.config,
