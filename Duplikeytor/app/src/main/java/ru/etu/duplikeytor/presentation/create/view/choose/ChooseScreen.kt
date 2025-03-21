@@ -146,7 +146,7 @@ private fun Chooser(
                                     isUserInteracting.value = true
                                 }
                             },
-                        model = key.imageUri,
+                        model = key.type.imageR,
                         contentScale = ContentScale.Crop,
                         placeholder = remember { ColorPainter(placeholderColor) },
                         error = remember { ColorPainter(placeholderColor) },
