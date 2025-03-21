@@ -37,6 +37,7 @@ import ru.etu.duplikeytor.presentation.create.view.util.Key
 import ru.etu.duplikeytor.presentation.shared.model.KeyType
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.ButtonState
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.UiKitButton
+import ru.etu.duplikeytor.presentation.ui.uiKit.dialog.ApproveDialog
 
 @Composable
 internal fun KeyInfoScreen(
@@ -172,6 +173,7 @@ private fun ButtonRow(
     state: KeyState,
 ) {
     val context = LocalContext.current
+    val openDialog = remember { mutableStateOf(false) }
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -184,7 +186,9 @@ private fun ButtonRow(
             button = ButtonState.Icon.Warning(
                 icon = R.drawable.ic_trash_black,
             ),
-            onClick = { onEvent(KeyArchiveEvent.Delete(state)) },
+            onClick = {
+                openDialog.value = true
+            },
         )
         UiKitButton(
             modifier = Modifier,
@@ -197,6 +201,20 @@ private fun ButtonRow(
                 icon = R.drawable.ic_share_white,
             ),
             onClick = { onEvent(KeyArchiveEvent.Share(context, state)) },
+        )
+    }
+
+    if (openDialog.value) {
+        ApproveDialog(
+            title = "Удаление ключа",
+            contentText = "Вы подтверждаете удаление ключа? " +
+                    "После удаление восстановление ключа невозможно",
+            onDismissRequest = { isApprove ->
+                if (isApprove) {
+                    onEvent(KeyArchiveEvent.Delete(state))
+                }
+                openDialog.value = false
+            }
         )
     }
 }
