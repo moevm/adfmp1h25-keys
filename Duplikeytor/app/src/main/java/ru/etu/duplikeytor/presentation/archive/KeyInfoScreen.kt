@@ -210,7 +210,7 @@ private fun ButtonRow(
         ApproveDialog(
             title = "Удаление ключа",
             contentText = "Вы подтверждаете удаление ключа? " +
-                    "После удаление восстановление ключа невозможно",
+                    "После удаления восстановление ключа невозможно",
             onDismissRequest = { isApprove ->
                 if (isApprove) {
                     onEvent(KeyArchiveEvent.Delete(state))

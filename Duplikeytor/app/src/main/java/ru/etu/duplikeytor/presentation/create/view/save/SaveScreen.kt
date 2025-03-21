@@ -165,7 +165,7 @@ private fun KeyPicture(
                     ApproveDialog(
                         title = "Удаление фотографии",
                         contentText = "Вы подтверждаете удаление фотографии? " +
-                                "После удаление восстановление фотографии невозможно",
+                                "После удаления восстановление фотографии невозможно",
                         onDismissRequest = { isApprove ->
                             if (isApprove) {
                                 onEvent(CreateEvent.DeleteKeyPhoto)
