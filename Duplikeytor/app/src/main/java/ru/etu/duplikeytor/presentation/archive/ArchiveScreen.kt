@@ -9,12 +9,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import ru.etu.duplikeytor.presentation.archive.keycard.KeyCard
@@ -33,34 +37,45 @@ internal fun ArchiveScreen(
             .background(MaterialTheme.colorScheme.background)
             .padding(contentPadding),
     ) {
-        LazyVerticalGrid(
-            contentPadding = PaddingValues(16.dp),
-            columns = GridCells.Adaptive(minSize = 150.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            items(
-                items = state.keys,
-                key = { it.id }
-            ) { keyCardState ->
-                KeyCard(
-                    modifier = Modifier.animateItem(
-                        fadeInSpec = spring(
-                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                            stiffness = Spring.StiffnessMedium
+        if (state.keys.isEmpty()) {
+            Text(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentSize(Alignment.Center),
+                text = "У вас пока нет ключей",
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center,
+            )
+        } else {
+            LazyVerticalGrid(
+                contentPadding = PaddingValues(16.dp),
+                columns = GridCells.Adaptive(minSize = 150.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                items(
+                    items = state.keys,
+                    key = { it.id }
+                ) { keyCardState ->
+                    KeyCard(
+                        modifier = Modifier.animateItem(
+                            fadeInSpec = spring(
+                                dampingRatio = Spring.DampingRatioMediumBouncy,
+                                stiffness = Spring.StiffnessMedium
+                            ),
+                            placementSpec = spring(
+                                stiffness = Spring.StiffnessMediumLow,
+                                visibilityThreshold = IntOffset.VisibilityThreshold
+                            ),
+                            fadeOutSpec = spring(
+                                dampingRatio = Spring.DampingRatioNoBouncy,
+                                stiffness = Spring.StiffnessHigh
+                            )
                         ),
-                        placementSpec = spring(
-                            stiffness = Spring.StiffnessMediumLow,
-                            visibilityThreshold = IntOffset.VisibilityThreshold
-                        ),
-                        fadeOutSpec = spring(
-                            dampingRatio = Spring.DampingRatioNoBouncy,
-                            stiffness = Spring.StiffnessHigh
-                        )
-                    ),
-                    state = keyCardState,
-                    onClick = onClick,
-                )
+                        state = keyCardState,
+                        onClick = onClick,
+                    )
+                }
             }
         }
     }
