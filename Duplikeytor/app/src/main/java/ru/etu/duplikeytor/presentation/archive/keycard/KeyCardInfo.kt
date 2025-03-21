@@ -1,5 +1,6 @@
 package ru.etu.duplikeytor.presentation.archive.keycard
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +17,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,8 +37,6 @@ import ru.etu.duplikeytor.presentation.create.view.util.Key
 import ru.etu.duplikeytor.presentation.shared.model.KeyType
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.ButtonState
 import ru.etu.duplikeytor.presentation.ui.uiKit.button.UiKitButton
-
-private const val imageRatio = 3f / 2f
 
 @Composable
 internal fun KeyInfoScreen(
@@ -116,10 +117,14 @@ private fun KeyPicture(
     state: KeyState,
 ) {
     Box(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(15.dp),
         contentAlignment = Alignment.Center,
     ) {
-        if (state.imageUri.isNullOrEmpty() && state.config != null) {
+        val isError = remember { mutableStateOf(false) }
+        val context = LocalContext.current
+        if ((state.imageUri.isNullOrEmpty() || isError.value) && state.config != null) {
             val screenWidth = LocalConfiguration.current.screenWidthDp.dp
             val screenHeight = LocalConfiguration.current.screenHeightDp.dp
             val minSizeValue = minOf(screenWidth, screenHeight)/2
@@ -133,17 +138,27 @@ private fun KeyPicture(
                         scaleX = state.scale
                         scaleY = state.scale
                     }
-                    .aspectRatio(0.285f),
+                    .aspectRatio(1 / state.config.sizeRatio),
                 color = MaterialTheme.colorScheme.onBackground,
                 borderColor = Color.Transparent,
                 pinsColor = MaterialTheme.colorScheme.background,
                 pins = state.pins.split("-").map { it.toInt() },
                 keyConfig = state.config,
             )
+        } else if (state.imageUri != null && !isError.value) {
+            AsyncImage(
+                modifier = modifier.fillMaxSize(),
+                model = state.imageUri,
+                onError = {
+                    isError.value = true
+                    Toast.makeText(context, "Ошибка отображения фотографии", Toast.LENGTH_SHORT).show()
+                },
+                contentDescription = null,
+            )
         } else {
             AsyncImage(
-                modifier = modifier.aspectRatio(imageRatio),
-                model = state.imageUri,
+                modifier = modifier.fillMaxSize(),
+                model = state.type.imageR,
                 contentDescription = null,
             )
         }

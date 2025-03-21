@@ -2,6 +2,8 @@ package ru.etu.duplikeytor.presentation.create
 
 import KeyChosenState
 import android.content.Context
+import android.net.Uri
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -9,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.etu.duplikeytor.domain.models.Key
+import ru.etu.duplikeytor.domain.repository.ImageRepository
 import ru.etu.duplikeytor.domain.repository.KeyRepository
 import ru.etu.duplikeytor.domain.usecases.ShareUsecase
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
@@ -25,6 +28,7 @@ import javax.inject.Inject
 internal class CreateViewModel @Inject constructor(
     private val shareUsecase: ShareUsecase,
     private val keyRepository: KeyRepository,
+    private val imageRepository: ImageRepository,
 ) : ViewModel(), Screen {
 
     override var statusBarState = MutableStateFlow<StatusBarState>(
@@ -57,6 +61,7 @@ internal class CreateViewModel @Inject constructor(
     private var keyConfig: KeyConfig? = null
     private var keyTitle: String? = null
     private var keyId: Long = 0
+    private var keyImageUri: Uri? = null
 
     private val _interfaceVisibleState = MutableStateFlow(true)
     val interfaceVisibleState = _interfaceVisibleState
@@ -200,17 +205,7 @@ internal class CreateViewModel @Inject constructor(
     }
 
     internal fun onKeyCreated() {
-        val key: KeyChosenState = keyChosen ?: return
-        val keyConfig = keyConfig ?: return
-        val keyTitle = keyTitle ?: return
-        changeState(
-            CreateScreenState.Save(
-                key = key,
-                keyTitle = keyTitle,
-                scale = keyScale,
-                keyConfig = keyConfig,
-            )
-        )
+        setActualSaveState()
     }
 
     internal fun onSaveKey(onSuccessSave: (Long) -> Unit) {
@@ -219,6 +214,7 @@ internal class CreateViewModel @Inject constructor(
             keyChose = keyChosen,
             keyConfig = keyConfig,
             keyId = keyId,
+            keyImageUri = keyImageUri,
             onSuccessSave = onSuccessSave
         )
         resetKeyInfo()
@@ -241,6 +237,33 @@ internal class CreateViewModel @Inject constructor(
         )
     }
 
+    internal fun onSetKeyImage(uri: Uri) {
+        keyImageUri?.let { imageRepository.deletePhotoByUri(it) }
+        val localUri = imageRepository.copyUriToLocalStorage(uri)
+        keyImageUri = localUri
+        setActualSaveState()
+    }
+
+    internal fun onDeleteKeyPhoto() {
+        imageRepository.deletePhotoByUri(keyImageUri)
+        keyImageUri = null
+        setActualSaveState()
+    }
+
+    private fun setActualSaveState() {
+        val key = keyChosen ?: return
+        val keyConfig = keyConfig ?: return
+        val keyTitle = keyTitle ?: return
+        changeState(
+            CreateScreenState.Save(
+                key = key,
+                keyTitle = keyTitle,
+                scale = keyScale,
+                keyConfig = keyConfig,
+                keyImageUri = keyImageUri,
+            )
+        )
+    }
 
     internal fun onKeyEditIntent(id: Long) {
         viewModelScope.launch {
@@ -267,6 +290,7 @@ internal class CreateViewModel @Inject constructor(
             keyConfig = keyEditConfig
             keyTitle = key.name
             keyId = key.id
+            keyImageUri = key.photoUri?.toUri()
 
             changeState(
                 CreateScreenState.Save(
@@ -277,6 +301,7 @@ internal class CreateViewModel @Inject constructor(
                     keyTitle = key.name,
                     scale = keyScale,
                     keyConfig = keyEditConfig,
+                    keyImageUri = keyImageUri,
                 )
             )
         }
@@ -287,11 +312,13 @@ internal class CreateViewModel @Inject constructor(
         keyChose: KeyChosenState?,
         keyConfig: KeyConfig?,
         keyId: Long,
+        keyImageUri: Uri?,
         onSuccessSave: (Long) -> Unit,
     ) {
         keyChose ?: return
         keyConfig ?: return
         keyName ?: return
+        val photoUri = keyImageUri?.toString()
 
         val key = Key(
             id = keyId,
@@ -299,6 +326,7 @@ internal class CreateViewModel @Inject constructor(
                 "New key"
             },
             scale = keyScale,
+            photoUri = photoUri,
             pins = keyConfig.pins,
             type = keyChose.type.toString(),
         )
@@ -323,6 +351,7 @@ internal class CreateViewModel @Inject constructor(
         keyConfig = null
         keyTitle = ""
         keyId = 0
+        keyImageUri = null
     }
 
     fun changeInterfaceVisibility() {

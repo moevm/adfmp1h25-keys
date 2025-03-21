@@ -92,6 +92,8 @@ internal fun CreateFragment(
                         }
                         is CreateEvent.KeyTitleChange -> viewModel.keyTitleChange(event.title)
                         is CreateEvent.Share -> viewModel.onKeyShare(event.context)
+                        is CreateEvent.SetKeyImage -> viewModel.onSetKeyImage(event.uri)
+                        is CreateEvent.DeleteKeyPhoto -> viewModel.onDeleteKeyPhoto()
                         else -> Unit
                     }
                 }

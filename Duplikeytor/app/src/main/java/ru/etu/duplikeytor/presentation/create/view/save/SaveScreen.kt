@@ -1,8 +1,13 @@
 package ru.etu.duplikeytor.presentation.create.view.save
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,9 +30,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
+import coil3.compose.AsyncImage
 import ru.etu.duplikeytor.R
 import ru.etu.duplikeytor.presentation.create.model.CreateEvent
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
@@ -56,6 +64,7 @@ internal fun SaveScreen(
                 .padding(horizontal = 50.dp)
                 .aspectRatio(0.8f),
             state = state,
+            onEvent = onEvent,
         )
         KeyInformation(
             state = state,
@@ -74,38 +83,82 @@ internal fun SaveScreen(
 private fun KeyPicture(
     modifier: Modifier = Modifier,
     state: CreateScreenState.Save,
+    onEvent: (CreateEvent) -> Unit,
 ) {
-    Column(
+    val pickMedia = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        uri?.let { onEvent(CreateEvent.SetKeyImage(it)) }
+    }
+    Box(
         modifier = modifier
             .border(
                 width = 2.dp,
                 color = MaterialTheme.colorScheme.primary,
-                shape = RoundedCornerShape(20.dp)
+                shape = RoundedCornerShape(32.dp)
             )
-            .clip(RoundedCornerShape(20.dp))
+            .clip(RoundedCornerShape(32.dp))
             .background(MaterialTheme.colorScheme.surface),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Key(
+        val isError = remember { mutableStateOf(false) }
+        if (state.keyImageUri != null && !isError.value) {
+            AsyncImage(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .zIndex(0f),
+                model = state.keyImageUri,
+                contentDescription = null,
+                onError = { isError.value = true },
+                contentScale = ContentScale.Crop,
+            )
+        } else {
+            Key(
+                modifier = Modifier
+                    .padding(top = 15.dp, bottom = 80.dp)
+                    .align(Alignment.Center)
+                    .aspectRatio(1 / state.keyConfig.sizeRatio)
+                    .zIndex(0f),
+                keyConfig = state.keyConfig,
+                color = MaterialTheme.colorScheme.onBackground,
+                borderColor = Color.Transparent,
+                pinsColor = MaterialTheme.colorScheme.surface,
+                pins = state.keyConfig.pins,
+            )
+        }
+        Row(
             modifier = Modifier
-                .aspectRatio(0.25f)
-                .padding(vertical = 15.dp)
-                .weight(1f),
-            color = MaterialTheme.colorScheme.onBackground,
-            borderColor = Color.Transparent,
-            pinsColor = MaterialTheme.colorScheme.surface,
-            pins = state.keyConfig.pins,
-            keyConfig = state.keyConfig,
-        )
-        UiKitButton(
-            modifier = Modifier
-                .fillMaxWidth(),
-            button = ButtonState.Icon.Default(
-                icon = R.drawable.ic_add_photo_white,
-            ),
-            onClick = { },
-        )
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .zIndex(1f),
+        ) {
+            UiKitButton(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 10.dp, bottom = 10.dp, end = 10.dp),
+                button = ButtonState.Icon.Default(
+                    icon = R.drawable.ic_add_photo_white,
+                ),
+                onClick = {
+                    pickMedia.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly),
+                    )
+                    isError.value = false
+                },
+            )
+            AnimatedVisibility(
+                visible = state.keyImageUri != null && !isError.value
+            ) {
+                UiKitButton(
+                    modifier = Modifier
+                        .padding(bottom = 10.dp, end = 10.dp)
+                        .width(64.dp),
+                    button = ButtonState.Icon.Warning(
+                        icon = R.drawable.ic_trash_black,
+                    ),
+                    onClick = {
+                        onEvent(CreateEvent.DeleteKeyPhoto)
+                    },
+                )
+            }
+        }
     }
 }
 

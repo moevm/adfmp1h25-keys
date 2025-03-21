@@ -14,6 +14,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,25 +62,28 @@ internal fun KeyCard(
         ) {
             val placeholder = placeholderPainter(MaterialTheme.colorScheme.background)
             KeyPicture(
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .padding(10.dp),
+                modifier = Modifier.aspectRatio(1f),
                 state = state,
                 placeholder = placeholder,
             )
             Text(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 4.dp, end = 4.dp),
                 text = state.name,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.labelMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp),
+                    .padding(bottom = 8.dp, start = 4.dp, end = 4.dp),
                 text = state.createdAt,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.labelMedium,
+                maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
         }
@@ -96,25 +101,32 @@ private fun KeyPicture(
             .fillMaxWidth(),
         contentAlignment = Alignment.Center,
     ) {
-        if (state.imageUri.isNullOrEmpty() && state.config != null) {
+        val isError = remember { mutableStateOf(false) }
+        if ((state.imageUri.isNullOrEmpty() || isError.value) && state.config != null) {
             Key(
                 modifier = Modifier
+                    .padding(10.dp)
                     .fillMaxHeight()
-                    .aspectRatio(0.285f),
+                    .aspectRatio(1 / state.config.sizeRatio),
                 keyConfig = state.config,
                 color = MaterialTheme.colorScheme.onBackground,
                 borderColor = Color.Transparent,
                 pinsColor = MaterialTheme.colorScheme.surface,
                 pins = state.pins.split("-").map { it.toInt() },
             )
-        } else {
+        } else if (state.imageUri != null && !isError.value) {
             AsyncImage(
                 modifier = Modifier.fillMaxSize(),
                 model = state.imageUri,
                 contentDescription = null,
-                error = placeholder,
-                placeholder = placeholder,
+                onError = { isError.value = true },
                 contentScale = ContentScale.FillBounds,
+            )
+        } else {
+            AsyncImage(
+                modifier = modifier.fillMaxSize().padding(10.dp),
+                model = placeholder,
+                contentDescription = null,
             )
         }
     }
