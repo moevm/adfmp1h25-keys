@@ -1,4 +1,4 @@
-package ru.etu.duplikeytor.presentation.archive.keycard
+package ru.etu.duplikeytor.presentation.archive
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import ru.etu.duplikeytor.R
+import ru.etu.duplikeytor.presentation.archive.model.KeyState
 import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveEvent
 import ru.etu.duplikeytor.presentation.archive.model.KeyArchiveState
 import ru.etu.duplikeytor.presentation.create.model.config.KeyConfig
@@ -173,7 +175,7 @@ private fun ButtonRow(
     state: KeyState,
 ) {
     val context = LocalContext.current
-    val openDialog = remember { mutableStateOf(false) }
+    val openDialog = rememberSaveable { mutableStateOf(false) }
     Row(
         modifier = modifier
             .fillMaxWidth()
