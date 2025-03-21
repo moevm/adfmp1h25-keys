@@ -65,7 +65,7 @@ internal class ArchiveViewModel @Inject constructor(
         }
     }
 
-    private val formatter = DateTimeFormatter.ofPattern("dd.MM.yyy HH:mm")
+    private val formatter = DateTimeFormatter.ofPattern("dd.MM.yyy в HH:mm")
 
     private val _keysState = MutableStateFlow<List<KeyState>>(emptyList())
 
