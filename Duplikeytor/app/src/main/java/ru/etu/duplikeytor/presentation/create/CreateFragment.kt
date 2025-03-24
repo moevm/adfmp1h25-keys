@@ -1,5 +1,7 @@
 package ru.etu.duplikeytor.presentation.create
 
+import android.content.Context
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -7,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import ru.etu.duplikeytor.presentation.create.model.CreateEvent
 import ru.etu.duplikeytor.presentation.create.model.CreateScreenState
 import ru.etu.duplikeytor.presentation.create.view.choose.ChooseScreen
@@ -27,6 +30,7 @@ internal fun CreateFragment(
     onCreate()
 
     val state by viewModel.state.collectAsState()
+    val context = LocalContext.current
     val interfaceVisibilityState by viewModel.interfaceVisibleState.collectAsState()
 
     BackHandler {
@@ -86,8 +90,12 @@ internal fun CreateFragment(
                 onEvent = { event ->
                     when(event) {
                         is CreateEvent.KeySave -> {
-                            viewModel.onSaveKey { id ->
+                            viewModel.onSaveKey { title, id ->
                                 processAppEvent(AppEvent.Archive.KeySaved(id))
+                                showSaveToast(
+                                    context = context,
+                                    text = createSaveText(title),
+                                )
                             }
                         }
                         is CreateEvent.KeyTitleChange -> viewModel.keyTitleChange(event.title)
@@ -100,4 +108,10 @@ internal fun CreateFragment(
             )
         }
     }
+}
+
+private fun createSaveText(title: String) = "Слепок ключа ${title} сохранен"
+
+private fun showSaveToast(context: Context, text: String) {
+    Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
 }

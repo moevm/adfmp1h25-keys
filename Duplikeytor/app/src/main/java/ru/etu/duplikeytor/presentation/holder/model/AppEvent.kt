@@ -2,7 +2,7 @@ package ru.etu.duplikeytor.presentation.holder.model
 
 import ru.etu.duplikeytor.presentation.holder.model.navigation.ScreenType
 
-internal sealed  interface AppEvent {
+internal sealed interface AppEvent {
     val eventScreenResolver: ScreenType
 
     data object Main : AppEvent {
@@ -21,6 +21,4 @@ internal sealed  interface AppEvent {
 
         data class KeySaved(val id: Long) : Archive
     }
-
-    sealed interface About : AppEvent
 }

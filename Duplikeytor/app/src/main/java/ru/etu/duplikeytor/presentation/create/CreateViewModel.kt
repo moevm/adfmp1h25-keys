@@ -208,7 +208,7 @@ internal class CreateViewModel @Inject constructor(
         setActualSaveState()
     }
 
-    internal fun onSaveKey(onSuccessSave: (Long) -> Unit) {
+    internal fun onSaveKey(onSuccessSave: (String, Long) -> Unit) {
         saveKeyIntoRepository(
             keyName = keyTitle,
             keyChose = keyChosen,
@@ -313,18 +313,19 @@ internal class CreateViewModel @Inject constructor(
         keyConfig: KeyConfig?,
         keyId: Long,
         keyImageUri: Uri?,
-        onSuccessSave: (Long) -> Unit,
+        onSuccessSave: (String, Long) -> Unit,
     ) {
         keyChose ?: return
         keyConfig ?: return
         keyName ?: return
         val photoUri = keyImageUri?.toString()
+        val name = keyName.ifEmpty {
+            "New key"
+        }
 
         val key = Key(
             id = keyId,
-            name = keyName.ifEmpty {
-                "New key"
-            },
+            name = name,
             scale = keyScale,
             photoUri = photoUri,
             pins = keyConfig.pins,
@@ -335,7 +336,7 @@ internal class CreateViewModel @Inject constructor(
             runCatching {
                 keyRepository.upsert(key)
             }.onSuccess {
-                onSuccessSave(it)
+                onSuccessSave(name, it)
             }
         }
     }
