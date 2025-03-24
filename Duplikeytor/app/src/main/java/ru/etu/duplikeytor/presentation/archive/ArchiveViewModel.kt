@@ -120,12 +120,13 @@ internal class ArchiveViewModel @Inject constructor(
         loadKeyFromArchive(id)
     }
 
-    internal fun onKeyDelete(id: Long) {
+    internal fun onKeyDelete(id: Long, onSuccess: () -> Unit = {}) {
         returnToPreviousState()
         viewModelScope.launch {
             keyRepository.deleteKey(id)
             delay(10)
         }.invokeOnCompletion {
+            onSuccess()
             loadKeysFromArchive()
         }
     }
